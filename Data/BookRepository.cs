@@ -2,6 +2,7 @@
 using Domain;
 using Utils;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Data
 {
@@ -32,89 +33,105 @@ namespace Data
 
         public async Task<IEnumerable<BookEntity>> GetBooksByAuthor(string? author)
         {
-            if (string.IsNullOrWhiteSpace(author))
+            IQueryable<BookEntity> query = _bookContext.Books;
+
+            if (!string.IsNullOrWhiteSpace(author))
             {
-                return await _bookContext.Books.OrderBy(x => x.Author).ToArrayAsync();
+                author = author.ToLower();
+                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Author) && x.Author.ToLower().Contains(author));
             }
-            
-            author = author.ToLower();
-            return await _bookContext.Books
-                .Where(x=> !string.IsNullOrWhiteSpace(x.Author) && x.Author.ToLower().Contains(author))
-                .OrderBy(x => x.Author).ToArrayAsync();
+
+            return await query.OrderBy(x => x.Author).ToArrayAsync();
         }
 
         public async Task<IEnumerable<BookEntity>> GetBooksByTitle(string? title)
         {
-            if (string.IsNullOrWhiteSpace(title))
+            IQueryable<BookEntity> query = _bookContext.Books;
+
+            if (!string.IsNullOrWhiteSpace(title))
             {
-                return await _bookContext.Books.OrderBy(x => x.Title).ToArrayAsync();
+                title = title.ToLower();
+                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Title) && x.Title.ToLower().Contains(title));
             }
 
-            title = title.ToLower();
-            return await _bookContext.Books
-                .Where(x => !string.IsNullOrWhiteSpace(x.Title) && x.Title.ToLower().Contains(title))
-                .OrderBy(x => x.Title).ToArrayAsync();
+            return await query.OrderBy(x => x.Title).ToArrayAsync();
         }
 
         public async Task<IEnumerable<BookEntity>> GetBooksByGenre(string? genre)
         {
-            if (string.IsNullOrWhiteSpace(genre))
+            IQueryable<BookEntity> query = _bookContext.Books;
+
+            if (!string.IsNullOrWhiteSpace(genre))
             {
-                return await _bookContext.Books.OrderBy(x => x.Genre).ToArrayAsync();
+                genre = genre.ToLower();
+                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Genre) && x.Genre.ToLower().Contains(genre));
             }
 
-            genre = genre.ToLower();
-            return await _bookContext.Books
-                .Where(x => !string.IsNullOrWhiteSpace(x.Genre) && x.Genre.ToLower().Contains(genre))
-                .OrderBy(x => x.Genre).ToArrayAsync();
+            return await query.OrderBy(x => x.Genre).ToArrayAsync();
         }
 
         public async Task<IEnumerable<BookEntity>> GetBooksByDescription(string? description)
         {
-            if (string.IsNullOrWhiteSpace(description))
+            IQueryable<BookEntity> query = _bookContext.Books;
+
+            if (!string.IsNullOrWhiteSpace(description))
             {
-                return await _bookContext.Books.OrderBy(x => x.Description).ToArrayAsync();
+                description = description.ToLower();
+                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Description) && x.Description.ToLower().Contains(description));
             }
 
-            description = description.ToLower();
-            return await _bookContext.Books
-                .Where(x => !string.IsNullOrWhiteSpace(x.Description) && x.Description.ToLower().Contains(description))
-                .OrderBy(x => x.Description).ToArrayAsync();
+            return await query.OrderBy(x => x.Description).ToArrayAsync();
         }
 
         public async Task<IEnumerable<BookEntity>> GetBooksByPrice(string? price)
         {
-            if (price is null)
+            IQueryable<BookEntity> query = _bookContext.Books;
+
+            if (price != null)
             {
-                return await _bookContext.Books.OrderBy(x => x.Price).ToArrayAsync();
+                if (price.Contains('&'))
+                {
+                    string[] prices = price.Split('&');
+                    double minPrice = Convert.ToDouble(prices[0]);
+                    double maxPrice = Convert.ToDouble(prices[1]);
+
+                    query = query.Where(x => x.Price != null && x.Price.Value >= minPrice && x.Price.Value <= maxPrice);
+                }
+                else
+                {
+                    var priceParsed = double.Parse(price);
+                    query = query.Where(x => x.Price != null && x.Price.Value == priceParsed);
+                }
             }
 
-            if (price.Contains('&'))
-            {
-                string[] prices = price.Split('&');
-                double minPrice = Convert.ToDouble(prices[0]);
-                double maxPrice = Convert.ToDouble(prices[1]);
-
-                return await _bookContext.Books
-                .Where(x => x.Price != null && x.Price.Value >= minPrice && x.Price.Value <= maxPrice)
-                .OrderBy(x => x.Price).ToArrayAsync();
-            }
-
-            return await _bookContext.Books
-                .Where(x => x.Price != null && x.Price.Value == ValidatorHelper.ParseDouble(price))
-                .OrderBy(x => x.Price).ToArrayAsync();
+            return await query.OrderBy(x => x.Price).ToArrayAsync();
         }
 
         public async Task<IEnumerable<BookEntity>> GetBooksByPublishDate(string? publishDate)
         {
-            if (publishDate is null)
+            IQueryable<BookEntity> query = _bookContext.Books;
+
+            if (publishDate != null)
             {
-                return await _bookContext.Books.OrderBy(x => x.PublishDate).ToArrayAsync();
+                DateTime parsedDate;
+                var formatInfo = new DateTimeFormatInfo();
+
+                if (DateTime.TryParseExact(publishDate, "yyyy", formatInfo, DateTimeStyles.None, out parsedDate))
+                {
+                    query = query.Where(x => x.PublishDate != null && x.PublishDate.Value.Year == parsedDate.Year);
+                }
+                else if (DateTime.TryParseExact(publishDate, "yyyy-MM", formatInfo, DateTimeStyles.None, out parsedDate))
+                {
+                    query = query.Where(x => x.PublishDate != null && x.PublishDate.Value.Year == parsedDate.Year
+                                              && x.PublishDate.Value.Month == parsedDate.Month);
+                }
+                else if (DateTime.TryParseExact(publishDate, "yyyy-MM-dd", formatInfo, DateTimeStyles.None, out parsedDate))
+                {
+                    query = query.Where(x => x.PublishDate != null && x.PublishDate.Value.Date == parsedDate.Date);
+                }
             }
 
-            return await _bookContext.Books
-                .Where(x => x.PublishDate != null && x.PublishDate.Value == ValidatorHelper.ParseDateTime(publishDate))
-                .OrderBy(x => x.Price).ToArrayAsync();
+            return await query.OrderBy(x => x.PublishDate).ToArrayAsync();            
         }
 
         public async Task<BookEntity> AddBook(BookEntity book)

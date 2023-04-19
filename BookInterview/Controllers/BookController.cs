@@ -27,45 +27,45 @@ namespace BookInterview.Controllers
 
         [HttpGet]
         [Route("/id/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksById(string? value = null)
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksById(string? id = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.Id, value);
+            var books = await _bookService.GetBooks(BookAttribute.Id, id);
 
             return Ok(books);
         }
 
         [HttpGet]
         [Route("/author/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByAuthor(string? value = null)
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByAuthor(string? author = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.Author, value);
+            var books = await _bookService.GetBooks(BookAttribute.Author, author);
 
             return Ok(books);
         }
 
         [HttpGet]
         [Route("/description/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByDescription(string? value = null)
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByDescription(string? description = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.Description, value);
+            var books = await _bookService.GetBooks(BookAttribute.Description, description);
 
             return Ok(books);
         }
 
         [HttpGet]
         [Route("/title/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByTitle(string? value = null)
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByTitle(string? title = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.Title, value);
+            var books = await _bookService.GetBooks(BookAttribute.Title, title);
 
             return Ok(books);
         }
 
         [HttpGet]
         [Route("/genre/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByGenre(string? value = null)
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByGenre(string? genre = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.Genre, value);
+            var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
 
             return Ok(books);
         }
@@ -74,25 +74,32 @@ namespace BookInterview.Controllers
         [Route("/price")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
         {
-             var validationResult = PriceHelper.ValidatePrices(minPrice, maxPrice);
+            var validationResult = PriceHelper.ValidatePrices(minPrice, maxPrice);
 
             if (validationResult != null)
             {
                 return BadRequest(validationResult);
             }
 
-            var value = PriceHelper.GenerateValue(minPrice, maxPrice);
+            var price = PriceHelper.GenerateValue(minPrice, maxPrice);
 
-            var books = await _bookService.GetBooks(BookAttribute.Price, value);
+            var books = await _bookService.GetBooks(BookAttribute.Price, price);
 
             return Ok(books);
         }
 
         [HttpGet]
-        [Route("/published/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPublishDate(string? value = null)
+        [Route("/published/{year?}/{month?}/{day?}")]
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.PublishDate, value);
+            DateTime? parsedDate = PublishDateHelper.ParseDate(year, month, day);
+
+            if (parsedDate == null)
+            {
+                return BadRequest("Invalid date provided.");
+            }
+
+            var books = await _bookService.GetBooks(BookAttribute.PublishDate, parsedDate.ToString());
 
             return Ok(books);
         }
