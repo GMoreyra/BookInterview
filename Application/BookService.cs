@@ -1,7 +1,6 @@
 ﻿using Data.Interfaces;
 using Domain;
-using static Utils.EnumHelper;
-using static Utils.ValidatorHelper;
+using static Utils.BookAttributeEnum;
 
 namespace Application
 {

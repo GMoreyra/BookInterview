@@ -1,7 +1,7 @@
 using Application;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
-using static Utils.EnumHelper;
+using static Utils.BookAttributeEnum;
 
 namespace BookInterview.Controllers
 {

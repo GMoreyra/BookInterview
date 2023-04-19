@@ -1,5 +1,5 @@
 ﻿using Domain;
-using static Utils.EnumHelper;
+using static Utils.BookAttributeEnum;
 
 namespace Application
 {

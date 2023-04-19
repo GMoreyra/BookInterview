@@ -91,7 +91,13 @@ namespace Data
 
             if (price.Contains('&'))
             {
+                string[] prices = price.Split('&');
+                double minPrice = Convert.ToDouble(prices[0]);
+                double maxPrice = Convert.ToDouble(prices[1]);
 
+                return await _bookContext.Books
+                .Where(x => x.Price != null && x.Price.Value >= minPrice && x.Price.Value <= maxPrice)
+                .OrderBy(x => x.Price).ToArrayAsync();
             }
 
             return await _bookContext.Books
