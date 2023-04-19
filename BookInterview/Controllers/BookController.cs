@@ -1,6 +1,7 @@
 using Application;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
+using Utils;
 using static Utils.BookAttributeEnum;
 
 namespace BookInterview.Controllers
@@ -70,35 +71,17 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
-        [Route("price")]
+        [Route("/price")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
         {
-            if (minPrice.HasValue && minPrice < 0)
+             var validationResult = PriceHelper.ValidatePrices(minPrice, maxPrice);
+
+            if (validationResult != null)
             {
-                return BadRequest("Minimum price must be positive.");
+                return BadRequest(validationResult);
             }
 
-            if (maxPrice.HasValue && maxPrice < 0)
-            {
-                return BadRequest("Maximum price must be positive.");
-            }
-
-            if (minPrice.HasValue && maxPrice.HasValue && minPrice > maxPrice)
-            {
-                return BadRequest("Minimum price cannot be greater than maximum price.");
-            }
-
-            string? value = null;
-
-            if (minPrice.HasValue && !maxPrice.HasValue)
-            {
-                value = minPrice.Value.ToString();
-            }
-
-            if (minPrice.HasValue && maxPrice.HasValue)
-            {
-                value = $"{minPrice.Value}&{maxPrice.Value}";
-            }
+            var value = PriceHelper.GenerateValue(minPrice, maxPrice);
 
             var books = await _bookService.GetBooks(BookAttribute.Price, value);
 
