@@ -1,6 +1,6 @@
 ﻿using Domain;
 
-namespace Data.Interfaces
+namespace Data
 {
     public interface IBookRepository
     {
