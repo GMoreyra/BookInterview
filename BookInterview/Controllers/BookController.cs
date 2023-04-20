@@ -1,7 +1,9 @@
 using Application;
 using Domain;
+using DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Utils;
+using AutoMapper;
 using static Utils.BookAttributeEnum;
 
 namespace BookInterview.Controllers
@@ -10,11 +12,13 @@ namespace BookInterview.Controllers
     [Route("api/[controller]")]
     public class BooksController : Controller
     {
+        private readonly IMapper _mapper;
         private readonly IBookService _bookService;
 
-        public BooksController(IBookService bookService)
+        public BooksController(IBookService bookService, IMapper mapper)
         {
             _bookService = bookService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -104,11 +108,13 @@ namespace BookInterview.Controllers
             return Ok(books);
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<BookEntity>> AddBook(BookEntity book)
-        //{
-        //    var addedBook = await _bookRepository.AddBoOk(books);
-        //    return CreatedAtAction(nameof(GetBook), new { id = addedBook.Id }, addedBook);
-        //}
+        [HttpPut]
+        public async Task<ActionResult<BookEntity>> AddBook(CreateBookDto book)
+        {
+            var bookEntity = _mapper.Map<BookEntity>(book);
+            var addedBook = await _bookService.AddBook(bookEntity);
+
+            return CreatedAtAction(nameof(GetBooksById), new { id = addedBook.Id }, addedBook);
+        }
     }
 }

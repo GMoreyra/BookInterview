@@ -135,10 +135,17 @@ namespace Data
 
         public async Task<BookEntity> AddBook(BookEntity book)
         {
-            var createdBook = _bookContext.Books.Add(book);
-            await _bookContext.SaveChangesAsync();
+            try
+            {
+                var createdBook = _bookContext.Books.Add(book);
+                await _bookContext.SaveChangesAsync();
 
-            return createdBook.Entity;
+                return createdBook.Entity;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("There was an error while saving the book.", ex);
+            }
         }
 
         public async Task<BookEntity> UpdateBook(BookEntity book)

@@ -42,5 +42,10 @@ namespace Application
                     return await _bookRepository.GetBooks();
             }
         }
+
+        public async Task<BookEntity> AddBook(BookEntity book)
+        {
+            return await _bookRepository.AddBook(book);
+        }
     }
 }
