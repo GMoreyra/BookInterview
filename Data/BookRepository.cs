@@ -1,5 +1,4 @@
 ﻿using Domain;
-using Utils;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
@@ -27,7 +26,7 @@ namespace Data
             }
 
             var idParsed = int.Parse(id);
-            return await _bookContext.Books.Where(x => x.Id == idParsed).OrderBy(x => x.Id ).ToArrayAsync();
+            return await _bookContext.Books.Where(x => x.Id == idParsed).OrderBy(x => x.Id).ToArrayAsync();
         }
 
         public async Task<IEnumerable<BookEntity>> GetBooksByAuthor(string? author)
@@ -130,7 +129,7 @@ namespace Data
                 }
             }
 
-            return await query.OrderBy(x => x.PublishDate).ToArrayAsync();            
+            return await query.OrderBy(x => x.PublishDate).ToArrayAsync();
         }
 
         public async Task<BookEntity> AddBook(BookEntity book)
@@ -148,24 +147,25 @@ namespace Data
             }
         }
 
-        public async Task<BookEntity> UpdateBook(BookEntity book)
+        public async Task<BookEntity?> UpdateBook(BookEntity book)
         {
             var existingBook = await _bookContext.Books.FindAsync(book.Id);
-            if (existingBook != null)
+
+            if (existingBook is null)
             {
-                existingBook.Title = ValidatorHelper.ValidateString(book.Title) ? book.Title : existingBook.Title;
-                existingBook.Author = ValidatorHelper.ValidateString(book.Author) ? book.Author : existingBook.Author;
-                existingBook.Genre = ValidatorHelper.ValidateString(book.Genre) ? book.Genre : existingBook.Genre ;
-                existingBook.Price = book.Price ?? existingBook.Price;
-                existingBook.PublishDate = book.PublishDate ?? existingBook.PublishDate;
-                existingBook.Description = ValidatorHelper.ValidateString(book.Description) ? book.Description : existingBook.Description;
-
-                await _bookContext.SaveChangesAsync();
-
-                return existingBook;
+                return null;
             }
 
-            return book;
+            existingBook.Title = book.Title ?? existingBook.Title;
+            existingBook.Author = book.Author ?? existingBook.Author;
+            existingBook.Genre = book.Genre ?? existingBook.Genre;
+            existingBook.Price = book.Price ?? existingBook.Price;
+            existingBook.PublishDate = book.PublishDate ?? existingBook.PublishDate;
+            existingBook.Description = book.Description ?? existingBook.Description;
+
+            await _bookContext.SaveChangesAsync();
+
+            return existingBook;
         }
     }
 }

@@ -1,9 +1,9 @@
 using Application;
+using AutoMapper;
 using Domain;
 using DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Utils;
-using AutoMapper;
 using static Utils.BookAttributeEnum;
 
 namespace BookInterview.Controllers
@@ -30,7 +30,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
-        [Route("/id/{value?}")]
+        [Route("/id/{id?}")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksById(string? id = null)
         {
             var books = await _bookService.GetBooks(BookAttribute.Id, id);
@@ -39,7 +39,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
-        [Route("/author/{value?}")]
+        [Route("/author/{author?}")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByAuthor(string? author = null)
         {
             var books = await _bookService.GetBooks(BookAttribute.Author, author);
@@ -48,7 +48,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
-        [Route("/description/{value?}")]
+        [Route("/description/{description?}")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByDescription(string? description = null)
         {
             var books = await _bookService.GetBooks(BookAttribute.Description, description);
@@ -57,7 +57,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
-        [Route("/title/{value?}")]
+        [Route("/title/{title?}")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByTitle(string? title = null)
         {
             var books = await _bookService.GetBooks(BookAttribute.Title, title);
@@ -66,7 +66,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
-        [Route("/genre/{value?}")]
+        [Route("/genre/{genre?}")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByGenre(string? genre = null)
         {
             var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
@@ -108,13 +108,30 @@ namespace BookInterview.Controllers
             return Ok(books);
         }
 
+        [HttpPost]
+        [Route("/{id}")]
+        public async Task<ActionResult<BookEntity>> UpdateBook(int id, [FromBody] BookDto book)
+        {
+            var bookEntity = _mapper.Map<BookEntity>(book);
+            bookEntity.Id = id;
+
+            var updateBook = await _bookService.UpdateBook(bookEntity);
+
+            if (updateBook is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updateBook);
+        }
+
         [HttpPut]
-        public async Task<ActionResult<BookEntity>> AddBook(CreateBookDto book)
+        public async Task<ActionResult<BookEntity>> AddBook(BookDto book)
         {
             var bookEntity = _mapper.Map<BookEntity>(book);
             var addedBook = await _bookService.AddBook(bookEntity);
 
-            return CreatedAtAction(nameof(GetBooksById), new { id = addedBook.Id }, addedBook);
+            return Ok(addedBook);
         }
     }
 }

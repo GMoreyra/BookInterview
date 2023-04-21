@@ -1,6 +1,6 @@
 ﻿namespace DTOs
 {
-    public class CreateBookDto
+    public class BookDto
     {
         public string? Author { get; set; }
 
