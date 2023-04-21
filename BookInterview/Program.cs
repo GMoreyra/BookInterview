@@ -1,14 +1,14 @@
 using Application;
 using Data;
 using Microsoft.EntityFrameworkCore;
-using Profiles;
+using Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAutoMapper(typeof(Program), typeof(BookDtoToBookEntity));
+builder.Services.AddAutoMapper(typeof(Program), typeof(BookDtoToBookEntityProfile));
 
 
 builder.Services.AddScoped<IBookService, BookService>();

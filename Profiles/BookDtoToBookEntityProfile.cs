@@ -2,11 +2,11 @@
 using Domain;
 using DTOs;
 
-namespace Profiles
+namespace Mapper
 {
-    public class BookDtoToBookEntity : Profile
+    public class BookDtoToBookEntityProfile : Profile
     {
-        public BookDtoToBookEntity()
+        public BookDtoToBookEntityProfile()
         {
             CreateMap<BookDto, BookEntity>();
         }

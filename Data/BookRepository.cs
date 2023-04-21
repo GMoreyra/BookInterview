@@ -149,23 +149,30 @@ namespace Data
 
         public async Task<BookEntity?> UpdateBook(BookEntity book)
         {
-            var existingBook = await _bookContext.Books.FindAsync(book.Id);
-
-            if (existingBook is null)
+            try
             {
-                return null;
+                var existingBook = await _bookContext.Books.FindAsync(book.Id);
+
+                if (existingBook is null)
+                {
+                    return null;
+                }
+
+                existingBook.Title = book.Title ?? existingBook.Title;
+                existingBook.Author = book.Author ?? existingBook.Author;
+                existingBook.Genre = book.Genre ?? existingBook.Genre;
+                existingBook.Price = book.Price ?? existingBook.Price;
+                existingBook.PublishDate = book.PublishDate ?? existingBook.PublishDate;
+                existingBook.Description = book.Description ?? existingBook.Description;
+
+                await _bookContext.SaveChangesAsync();
+
+                return existingBook;
             }
-
-            existingBook.Title = book.Title ?? existingBook.Title;
-            existingBook.Author = book.Author ?? existingBook.Author;
-            existingBook.Genre = book.Genre ?? existingBook.Genre;
-            existingBook.Price = book.Price ?? existingBook.Price;
-            existingBook.PublishDate = book.PublishDate ?? existingBook.PublishDate;
-            existingBook.Description = book.Description ?? existingBook.Description;
-
-            await _bookContext.SaveChangesAsync();
-
-            return existingBook;
+            catch (Exception ex)
+            {
+                throw new Exception("There was an error while updating the book.", ex);
+            }
         }
     }
 }
