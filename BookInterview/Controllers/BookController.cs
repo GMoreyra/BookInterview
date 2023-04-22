@@ -1,3 +1,4 @@
+using Api;
 using Application;
 using AutoMapper;
 using Domain;
@@ -30,6 +31,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
+        [CheckBooksEmpty]
         [Route("/id/{id?}")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksById(string? id = null)
         {
@@ -39,6 +41,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
+        [CheckBooksEmpty]
         [Route("/author/{author?}")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByAuthor(string? author = null)
         {
@@ -48,6 +51,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
+        [CheckBooksEmpty]
         [Route("/description/{description?}")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByDescription(string? description = null)
         {
@@ -57,6 +61,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
+        [CheckBooksEmpty]
         [Route("/title/{title?}")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByTitle(string? title = null)
         {
@@ -66,6 +71,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
+        [CheckBooksEmpty]
         [Route("/genre/{genre?}")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByGenre(string? genre = null)
         {
@@ -75,6 +81,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
+        [CheckBooksEmpty]
         [Route("/price")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
         {
@@ -93,6 +100,7 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
+        [CheckBooksEmpty]
         [Route("/published/{year?}/{month?}/{day?}")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
         {
