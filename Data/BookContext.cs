@@ -15,9 +15,7 @@ namespace Data
 
         private static string InitializeDbPath()
         {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            return Path.Combine(path, "books.db");
+            return Path.Join(Directory.GetCurrentDirectory(),"..", "Data", "books.db");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)

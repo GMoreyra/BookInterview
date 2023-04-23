@@ -1,16 +1,22 @@
-﻿using Domain;
+﻿using Dapper;
+using Domain;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Globalization;
+using Utils;
 
 namespace Data
 {
     public class BookRepository : IBookRepository
     {
         private readonly BookContext _bookContext;
+        private readonly IConfiguration _configuration;
 
-        public BookRepository(BookContext bookContext)
+        public BookRepository(BookContext bookContext, IConfiguration configuration)
         {
             _bookContext = bookContext;
+            _configuration = configuration;
         }
 
         public async Task<IEnumerable<BookEntity>> GetBooks()
@@ -138,6 +144,9 @@ namespace Data
         {
             try
             {
+                var idToAdd = await GetBiggestNumber() ?? 0;
+                book.Id = $"{BookUtility.ID_PREFIX}{idToAdd + 1}";
+
                 var createdBook = _bookContext.Books.Add(book);
                 await _bookContext.SaveChangesAsync();
 
@@ -146,6 +155,23 @@ namespace Data
             catch (Exception ex)
             {
                 throw new Exception("There was an error while saving the book.", ex);
+            }
+        }
+        private async Task<int?> GetBiggestNumber()
+        {
+            var prefix = BookUtility.ID_PREFIX;
+            var prefixLength = BookUtility.ID_PREFIX.Length;
+
+            var biggestNumberQuery = $@"
+                SELECT MAX(CAST(SUBSTR(Id, {prefixLength + 1}, LENGTH(Id) - {prefixLength}) AS INT))
+                FROM Books
+                WHERE Id LIKE '{prefix}%'";
+
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                return await connection.QueryFirstOrDefaultAsync<int?>(biggestNumberQuery);
             }
         }
 
