@@ -7,20 +7,17 @@ namespace Data
     {
         public DbSet<BookEntity> Books { get; set; }
 
-        public string DbPath { get; }
+        public string DbPath { get; } = InitializeDbPath();
 
-        public BookContext()
+        public BookContext() { }
+
+        public BookContext(DbContextOptions<BookContext> options) : base(options) { }
+
+        private static string InitializeDbPath()
         {
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
-            DbPath = Path.Join(path, "books.db");
-        }
-
-        public BookContext(DbContextOptions<BookContext> options) : base(options)
-        {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = Path.Join(path, "books.db");
+            return Path.Combine(path, "books.db");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
