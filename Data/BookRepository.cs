@@ -20,13 +20,15 @@ namespace Data
 
         public async Task<IEnumerable<BookEntity>> GetBooksById(string? id)
         {
-            if (string.IsNullOrWhiteSpace(id))
+            IQueryable<BookEntity> query = _bookContext.Books;
+
+            if (!string.IsNullOrWhiteSpace(id))
             {
-                return await _bookContext.Books.OrderBy(x => x.Id).ToArrayAsync();
+                id = id.ToLower();
+                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Id) && x.Id.ToLower().Contains(id));
             }
 
-            var idParsed = int.Parse(id);
-            return await _bookContext.Books.Where(x => x.Id == idParsed).OrderBy(x => x.Id).ToArrayAsync();
+            return await query.OrderBy(x => x.Id).ToArrayAsync();
         }
 
         public async Task<IEnumerable<BookEntity>> GetBooksByAuthor(string? author)

@@ -118,7 +118,7 @@ namespace BookInterview.Controllers
 
         [HttpPost]
         [Route("/{id}")]
-        public async Task<ActionResult<BookEntity>> UpdateBook(int id, [FromBody] BookDto book)
+        public async Task<ActionResult<BookEntity>> UpdateBook(string id, [FromBody] BookDto book)
         {
             var bookEntity = _mapper.Map<BookEntity>(book);
             bookEntity.Id = id;

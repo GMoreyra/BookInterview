@@ -15,13 +15,12 @@ namespace Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
 
             modelBuilder.Entity("Domain.BookEntity", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Author")
                         .HasColumnType("TEXT");
@@ -48,7 +47,7 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = "B-1",
                             Author = "Kutner, Joe",
                             Description = "Deploying with JRuby is the missing link between enjoying JRuby and using it in the real world to build high-performance, scalable applications.",
                             Genre = "Computer",
@@ -58,7 +57,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = "B-2",
                             Author = "Ralls, Kim",
                             Description = "A former architect battles corporate zombies, an evil sorceress, and her own childhood to become queen of the world.",
                             Genre = "Fantasy",
@@ -68,7 +67,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 3,
+                            Id = "B-3",
                             Author = "Corets, Eva",
                             Description = "After the collapse of a nanotechnology society in England, the young survivors lay the foundation for a new society.",
                             Genre = "Fantasy",
@@ -78,7 +77,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 4,
+                            Id = "B-4",
                             Author = "Corets, Eva",
                             Description = "In post-apocalypse England, the mysterious agent known only as Oberon helps to create a new life for the inhabitants of London. Sequel to Maeve Ascendant.",
                             Genre = "Fantasy",
@@ -88,7 +87,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 5,
+                            Id = "B-5",
                             Author = "Tolkien, JRR",
                             Description = "If you care for journeys there and back, out of the comfortable Western world, over the edge of the Wild, and home again, and can take an interest in a humble hero blessed with a little wisdom and a little courage and considerable good luck, here is a record of such a journey and such a traveler.",
                             Genre = "Fantasy",
@@ -98,7 +97,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 6,
+                            Id = "B-6",
                             Author = "Randall, Cynthia",
                             Description = "When Carla meets Paul at an ornithology conference, tempers fly as feathers get ruffled.",
                             Genre = "Romance",
@@ -108,7 +107,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 7,
+                            Id = "B-7",
                             Author = "Thurman, Paula",
                             Description = "A deep sea diver finds true love twenty thousand leagues beneath the sea.",
                             Genre = "Romance",
@@ -118,7 +117,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 8,
+                            Id = "B-8",
                             Author = "Knorr, Stefan",
                             Description = "An anthology of horror stories about roaches, centipedes, scorpions  and other insects.",
                             Genre = "Horror",
@@ -128,7 +127,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 9,
+                            Id = "B-9",
                             Author = "Kress, Peter",
                             Description = "After an inadvertant trip through a Heisenberg Uncertainty Device, James Salway discovers the problems of being quantum.",
                             Genre = "Science Fiction",
@@ -138,7 +137,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 10,
+                            Id = "B-10",
                             Author = "O'Brien, Tim",
                             Description = "Microsoft's .NET initiative is explored in detail in this deep programmer's reference.",
                             Genre = "Computer",
@@ -148,7 +147,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 11,
+                            Id = "B-11",
                             Author = "Sydik, Jeremy J",
                             Description = "Accessibility has a reputation of being dull, dry, and unfriendly toward graphic design. But there is a better way: well-styled semantic markup that lets you provide the best possible results for all of your users. This book will help you provide images, video, Flash and PDF in an accessible way that looks great to your sighted users, but is still accessible to all users.",
                             Genre = "Computer",
@@ -158,7 +157,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 12,
+                            Id = "B-12",
                             Author = "Russell, Alex",
                             Description = "The last couple of years have seen big changes in server-side web programming. Now it’s the client’s turn; Dojo is the toolkit to make it happen and Mastering Dojo shows you how.",
                             Genre = "Computer",
@@ -168,7 +167,7 @@ namespace Data.Migrations
                         },
                         new
                         {
-                            Id = 13,
+                            Id = "B-13",
                             Author = "Copeland, David Bryant",
                             Description = "Speak directly to your system. With its simple commands, flags, and parameters, a well-formed command-line application is the quickest way to automate a backup, a build, or a deployment and simplify your life.",
                             Genre = "Computer",
