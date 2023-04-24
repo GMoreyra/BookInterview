@@ -1,7 +1,7 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data
+namespace Data.Contexts
 {
     public class BookContext : DbContext
     {
@@ -15,7 +15,7 @@ namespace Data
 
         private static string InitializeDbPath()
         {
-            return Path.Join(Directory.GetCurrentDirectory(),"..", "Data", "books.db");
+            return Path.Join(Directory.GetCurrentDirectory(), "..", "Data", "books.db");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace Data
+namespace Data.Contexts
 {
     public class BookContextFactory : IDesignTimeDbContextFactory<BookContext>
     {

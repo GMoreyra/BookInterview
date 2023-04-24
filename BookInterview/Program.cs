@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Mapper;
 using System.Data.Common;
 using Microsoft.Data.Sqlite;
+using Data.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
