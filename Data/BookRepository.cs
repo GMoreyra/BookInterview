@@ -23,7 +23,7 @@ namespace Data
 
         public async Task<IEnumerable<BookEntity>> GetBooks()
         {
-            return await _bookContext.Books.ToListAsync();
+            return await _bookContext.Books.ToArrayAsync();
         }
 
         public async Task<IEnumerable<BookEntity>> GetBooksById(string? id)
