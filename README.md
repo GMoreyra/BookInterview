@@ -3,21 +3,21 @@ Working on a solution for an interview exam
 # Interview-Test
 
 ## General requirements Books API:
-• The API should always return a collection of books in json format.
-• By default, it should return all books without any specific sorting.
-• If a specific field is searched it should return the result sorted on that field.
-• It should be possible to search on any field.
-• When creating a new book, use the same ID standard as the rest of the books
+* The API should always return a collection of books in json format.
+* By default, it should return all books without any specific sorting.
+* If a specific field is searched it should return the result sorted on that field.
+* It should be possible to search on any field.
+* When creating a new book, use the same ID standard as the rest of the books
 
-Use cases:
-Whatever field I ask for, it should return the result sorted by that field.
-I should be able to ask for an author, a title, a genre, or a description. It should perform the search "case insensitive" and with partial strings. So, if I ask for "/api/books/author/kim" it should return only the book by "Ralls, Kim".
-I should be able to ask for a price range or a specific price.
-I should be able to ask for published_date or part of it, that means all books, books from a certain year, books from a certain year-month or books from a certain year-month-day.
-I should be able to edit any field for any book using the book ID as a search parameter.
-I should be able to create a new book.
+## Use cases:
+* Whatever field I ask for, it should return the result sorted by that field.
+* I should be able to ask for an author, a title, a genre, or a description. It should perform the search "case insensitive" and with partial strings. So, if I ask for "/api/books/author/kim" it should return only the book by "Ralls, Kim".
+* I should be able to ask for a price range or a specific price.
+* I should be able to ask for published_date or part of it, that means all books, books from a certain year, books from a certain year-month or books from a certain year-month-day.
+* I should be able to edit any field for any book using the book ID as a search parameter.
+* I should be able to create a new book.
 
-Use case examples:
+## Use case examples:
 ```
 GET https://host:port/api/books returns all unsorted (B1-B13)
 GET https://host:port/api/books/id returns all sorted by id (B1-B13)
@@ -53,7 +53,7 @@ GET https://host:port/api/books/description/deploy returns all with description 
 sorted by description (B1, B13)
 GET https://host:port/api/books/description/applications returns all with description containing
 'applications' sorted by description (B1)
-
+```
 ```
 POST https://host:port/api/books/{id} edits an existing book
 Payload
@@ -65,7 +65,7 @@ Payload
 "publish_date": "2008-06-01",
 "description": "Test description"
 }
-
+```
 ```
 PUT https://host:port/api/books Creates a new entry. ID is generated in backend
 Payload
@@ -77,4 +77,3 @@ Payload
 "publish_date": "2008-06-01",
 "description": "Test description"
 }
-
