@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Data.Extensions;
 using Domain;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -179,23 +180,18 @@ namespace Data
         {
             try
             {
-                var existingBook = await _bookContext.Books.FindAsync(book.Id);
+                var bookToModify = await _bookContext.Books.FindAsync(book.Id);
 
-                if (existingBook is null)
+                if (bookToModify is null)
                 {
                     return null;
                 }
 
-                existingBook.Title = book.Title ?? existingBook.Title;
-                existingBook.Author = book.Author ?? existingBook.Author;
-                existingBook.Genre = book.Genre ?? existingBook.Genre;
-                existingBook.Price = book.Price ?? existingBook.Price;
-                existingBook.PublishDate = book.PublishDate ?? existingBook.PublishDate;
-                existingBook.Description = book.Description ?? existingBook.Description;
+                bookToModify.UpdateProperties(book);
 
                 await _bookContext.SaveChangesAsync();
 
-                return existingBook;
+                return bookToModify;
             }
             catch (Exception ex)
             {
