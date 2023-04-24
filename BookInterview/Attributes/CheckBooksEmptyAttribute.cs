@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api
+namespace Api.Attributes
 {
     public class CheckBooksEmptyAttribute : ActionFilterAttribute
     {
