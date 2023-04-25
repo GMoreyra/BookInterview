@@ -5,7 +5,7 @@ namespace Data.Contexts
 {
     public class BookContext : DbContext
     {
-        public DbSet<BookEntity> Books { get; set; }
+        public virtual DbSet<BookEntity> Books { get; set; }
 
         public string DbPath { get; } = InitializeDbPath();
 
