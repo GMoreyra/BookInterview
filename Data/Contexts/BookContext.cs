@@ -1,19 +1,21 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data
+namespace Data.Contexts
 {
     public class BookContext : DbContext
     {
-        public DbSet<BookEntity> Books { get; set; }
+        public virtual DbSet<BookEntity> Books { get; set; }
 
-        public string DbPath { get; }
+        public string DbPath { get; } = InitializeDbPath();
 
-        public BookContext(DbContextOptions<BookContext> options) : base(options)
+        public BookContext() { }
+
+        public BookContext(DbContextOptions<BookContext> options) : base(options) { }
+
+        private static string InitializeDbPath()
         {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = Path.Join(path, "books.db");
+            return Path.Join(Directory.GetCurrentDirectory(), "..", "Data", "books.db");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -24,7 +26,7 @@ namespace Data
             modelBuilder.Entity<BookEntity>().HasData(
                 new BookEntity
                 {
-                    Id = 1,
+                    Id = "B-1",
                     Author = "Kutner, Joe",
                     Title = "Deploying with JRuby",
                     Genre = "Computer",
@@ -34,7 +36,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 2,
+                    Id = "B-2",
                     Author = "Ralls, Kim",
                     Title = "Midnight Rain",
                     Genre = "Fantasy",
@@ -45,7 +47,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 3,
+                    Id = "B-3",
                     Author = "Corets, Eva",
                     Title = "Maeve Ascendant",
                     Genre = "Fantasy",
@@ -56,7 +58,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 4,
+                    Id = "B-4",
                     Author = "Corets, Eva",
                     Title = "Oberon's Legacy",
                     Genre = "Fantasy",
@@ -67,7 +69,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 5,
+                    Id = "B-5",
                     Author = "Tolkien, JRR",
                     Title = "The Hobbit",
                     Genre = "Fantasy",
@@ -78,7 +80,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 6,
+                    Id = "B-6",
                     Author = "Randall, Cynthia",
                     Title = "Lover Birds",
                     Genre = "Romance",
@@ -89,7 +91,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 7,
+                    Id = "B-7",
                     Author = "Thurman, Paula",
                     Title = "Splish Splash",
                     Genre = "Romance",
@@ -100,7 +102,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 8,
+                    Id = "B-8",
                     Author = "Knorr, Stefan",
                     Title = "Creepy Crawlies",
                     Genre = "Horror",
@@ -111,7 +113,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 9,
+                    Id = "B-9",
                     Author = "Kress, Peter",
                     Title = "Paradox Lost",
                     Genre = "Science Fiction",
@@ -122,7 +124,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 10,
+                    Id = "B-10",
                     Author = "O'Brien, Tim",
                     Title = "Microsoft .NET: The Programming Bible",
                     Genre = "Computer",
@@ -133,7 +135,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 11,
+                    Id = "B-11",
                     Author = "Sydik, Jeremy J",
                     Title = "Design Accessible Web Sites",
                     Genre = "Computer",
@@ -144,7 +146,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 12,
+                    Id = "B-12",
                     Author = "Russell, Alex",
                     Title = "Mastering Dojo",
                     Genre = "Computer",
@@ -155,7 +157,7 @@ namespace Data
                 },
                 new BookEntity
                 {
-                    Id = 13,
+                    Id = "B-13",
                     Author = "Copeland, David Bryant",
                     Title = "Build Awesome Command-Line Applications in Ruby",
                     Genre = "Computer",

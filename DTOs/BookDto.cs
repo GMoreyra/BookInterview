@@ -1,9 +1,7 @@
-﻿namespace Domain
+﻿namespace DTOs
 {
-    public class BookEntity
+    public class BookDto
     {
-        public string Id { get; set; }
-
         public string? Author { get; set; }
 
         public string? Description { get; set; }

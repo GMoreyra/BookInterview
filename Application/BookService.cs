@@ -1,7 +1,6 @@
-﻿using Data.Interfaces;
+﻿using Data;
 using Domain;
-using static Utils.EnumHelper;
-using static Utils.ValidatorHelper;
+using static Utils.BookAttributeEnum;
 
 namespace Application
 {
@@ -42,6 +41,16 @@ namespace Application
                 default:
                     return await _bookRepository.GetBooks();
             }
+        }
+
+        public async Task<BookEntity?> UpdateBook(BookEntity book)
+        {
+            return await _bookRepository.UpdateBook(book);
+        }
+
+        public async Task<BookEntity> AddBook(BookEntity book)
+        {
+            return await _bookRepository.AddBook(book);
         }
     }
 }

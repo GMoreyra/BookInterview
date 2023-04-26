@@ -1,6 +1,6 @@
 ﻿using Domain;
 
-namespace Data.Interfaces
+namespace Data
 {
     public interface IBookRepository
     {
@@ -12,7 +12,7 @@ namespace Data.Interfaces
         Task<IEnumerable<BookEntity>> GetBooksByDescription(string? description);
         Task<IEnumerable<BookEntity>> GetBooksByPrice(string? price);
         Task<IEnumerable<BookEntity>> GetBooksByPublishDate(string? publishDate);
-        Task<BookEntity> AddBook(BookEntity book);
-        Task<BookEntity> UpdateBook(BookEntity book);
+        Task<BookEntity?> UpdateBook(BookEntity book);
+        Task<BookEntity> AddBook(BookEntity book);      
     }
 }

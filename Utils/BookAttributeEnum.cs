@@ -1,6 +1,6 @@
 ﻿namespace Utils
 {
-    public class EnumHelper
+    public class BookAttributeEnum
     {
         public enum BookAttribute
         {

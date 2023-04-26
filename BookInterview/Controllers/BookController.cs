@@ -1,7 +1,11 @@
+using Api.Attributes;
 using Application;
+using AutoMapper;
 using Domain;
+using DTOs;
 using Microsoft.AspNetCore.Mvc;
-using static Utils.EnumHelper;
+using Utils;
+using static Utils.BookAttributeEnum;
 
 namespace BookInterview.Controllers
 {
@@ -9,11 +13,13 @@ namespace BookInterview.Controllers
     [Route("api/[controller]")]
     public class BooksController : Controller
     {
+        private readonly IMapper _mapper;
         private readonly IBookService _bookService;
 
-        public BooksController(IBookService bookService)
+        public BooksController(IBookService bookService, IMapper mapper)
         {
             _bookService = bookService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -25,100 +31,115 @@ namespace BookInterview.Controllers
         }
 
         [HttpGet]
-        [Route("/id/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksById(string? value = null)
+        [CheckBooksEmpty]
+        [Route("/id/{id?}")]
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksById(string? id = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.Id, value);
+            var books = await _bookService.GetBooks(BookAttribute.Id, id);
 
             return Ok(books);
         }
 
         [HttpGet]
-        [Route("/author/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByAuthor(string? value = null)
+        [CheckBooksEmpty]
+        [Route("/author/{author?}")]
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByAuthor(string? author = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.Author, value);
+            var books = await _bookService.GetBooks(BookAttribute.Author, author);
 
             return Ok(books);
         }
 
         [HttpGet]
-        [Route("/description/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByDescription(string? value = null)
+        [CheckBooksEmpty]
+        [Route("/description/{description?}")]
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByDescription(string? description = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.Description, value);
+            var books = await _bookService.GetBooks(BookAttribute.Description, description);
 
             return Ok(books);
         }
 
         [HttpGet]
-        [Route("/title/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByTitle(string? value = null)
+        [CheckBooksEmpty]
+        [Route("/title/{title?}")]
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByTitle(string? title = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.Title, value);
+            var books = await _bookService.GetBooks(BookAttribute.Title, title);
 
             return Ok(books);
         }
 
         [HttpGet]
-        [Route("/genre/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByGenre(string? value = null)
+        [CheckBooksEmpty]
+        [Route("/genre/{genre?}")]
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByGenre(string? genre = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.Genre, value);
+            var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
 
             return Ok(books);
         }
 
         [HttpGet]
-        [Route("price")]
+        [CheckBooksEmpty]
+        [Route("/price")]
         public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
         {
-            if (minPrice.HasValue && minPrice < 0)
+            var validationResult = PriceHelper.ValidatePrices(minPrice, maxPrice);
+
+            if (validationResult != null)
             {
-                return BadRequest("Minimum price must be positive.");
+                return BadRequest(validationResult);
             }
 
-            if (maxPrice.HasValue && maxPrice < 0)
-            {
-                return BadRequest("Maximum price must be positive.");
-            }
+            var price = PriceHelper.GenerateValue(minPrice, maxPrice);
 
-            if (minPrice.HasValue && maxPrice.HasValue && minPrice > maxPrice)
-            {
-                return BadRequest("Minimum price cannot be greater than maximum price.");
-            }
-
-            string? value = null;
-
-            if (minPrice.HasValue && !maxPrice.HasValue)
-            {
-                value = minPrice.Value.ToString();
-            }
-
-            if (minPrice.HasValue && maxPrice.HasValue)
-            {
-                value = $"{minPrice.Value}&{maxPrice.Value}";
-            }
-
-            var books = await _bookService.GetBooks(BookAttribute.Price, value);
+            var books = await _bookService.GetBooks(BookAttribute.Price, price);
 
             return Ok(books);
         }
 
         [HttpGet]
-        [Route("/published/{value?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPublishDate(string? value = null)
+        [CheckBooksEmpty]
+        [Route("/published/{year?}/{month?}/{day?}")]
+        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
         {
-            var books = await _bookService.GetBooks(BookAttribute.PublishDate, value);
+            DateTime? parsedDate = PublishDateHelper.ParseDate(year, month, day);
+
+            if (parsedDate == null)
+            {
+                return BadRequest("Invalid date provided.");
+            }
+
+            var books = await _bookService.GetBooks(BookAttribute.PublishDate, parsedDate.ToString());
 
             return Ok(books);
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<BookEntity>> AddBook(BookEntity book)
-        //{
-        //    var addedBook = await _bookRepository.AddBoOk(books);
-        //    return CreatedAtAction(nameof(GetBook), new { id = addedBook.Id }, addedBook);
-        //}
+        [HttpPost]
+        [Route("/{id}")]
+        public async Task<ActionResult<BookEntity>> UpdateBook(string id, [FromBody] BookDto book)
+        {
+            var bookEntity = _mapper.Map<BookEntity>(book);
+            bookEntity.Id = id;
+
+            var updateBook = await _bookService.UpdateBook(bookEntity);
+
+            if (updateBook is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updateBook);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<BookEntity>> AddBook(BookDto book)
+        {
+            var bookEntity = _mapper.Map<BookEntity>(book);
+            var addedBook = await _bookService.AddBook(bookEntity);
+
+            return Ok(addedBook);
+        }
     }
 }
