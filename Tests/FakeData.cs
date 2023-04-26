@@ -1,12 +1,12 @@
 ﻿using Domain;
-using System;
-using System.Collections.Generic;
 
-public static class FakeData
+namespace Tests
 {
-    public static List<BookEntity> GetFakeBooks()
+    public static class FakeData
     {
-        return new List<BookEntity>
+        public static List<BookEntity> GetFakeBooks()
+        {
+            return new List<BookEntity>
         {
             new BookEntity { Id = "B-1", Author = "Author 1", Title = "Title 1", Genre = "Genre 1", Price = 10, Description = "Test description 1", PublishDate = DateTime.Parse("2021-01-01") },
             new BookEntity { Id = "B-2", Author = "Author 2", Title = "Title 2", Genre = "Genre 2", Price = 20, Description = "Test description 2", PublishDate = DateTime.Parse("2021-02-01") },
@@ -19,5 +19,6 @@ public static class FakeData
             new BookEntity { Id = "B-9", Author = "Author 9", Title = "Title 9", Genre = "Genre 9", Price = 90, Description = "Test description 9", PublishDate = DateTime.Parse("2021-09-01") },
             new BookEntity { Id = "B-10", Author = "Author 10", Title = "Title 10", Genre = "Genre 10", Price = 100, Description = "Test description 10", PublishDate = DateTime.Parse("2021-10-01") }
         };
+        }
     }
 }
