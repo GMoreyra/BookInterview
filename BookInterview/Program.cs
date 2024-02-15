@@ -1,13 +1,13 @@
-using Application;
-using Data;
-using Microsoft.EntityFrameworkCore;
-using Mapper;
-using System.Data.Common;
-using Microsoft.Data.Sqlite;
+using Api;
 using Data.Contexts;
+using Data.Mappers;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddBookServices();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -20,8 +20,6 @@ builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddScoped<DbConnection>(provider => new SqliteConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDbContext<BookContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddScoped<IBookRepository, BookRepository>();
 
 var app = builder.Build();
 

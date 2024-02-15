@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using Domain;
-using DTOs;
-using Mapper;
+using Data.Entities;
+using Data.Mappers;
 
 namespace Tests
 {

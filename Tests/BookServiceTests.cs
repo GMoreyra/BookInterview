@@ -1,6 +1,6 @@
-﻿using Application;
-using Data;
-using Domain;
+﻿using Application.Services;
+using Data.Entities;
+using Data.Interfaces;
 using static Utils.BookAttributeEnum;
 
 namespace Tests

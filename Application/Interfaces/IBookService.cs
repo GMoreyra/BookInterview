@@ -1,7 +1,7 @@
-﻿using Domain;
+﻿using Data.Entities;
 using static Utils.BookAttributeEnum;
 
-namespace Application
+namespace Application.Interfaces
 {
     public interface IBookService
     {

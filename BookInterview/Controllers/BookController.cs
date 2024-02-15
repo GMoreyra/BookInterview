@@ -1,13 +1,13 @@
 using Api.Attributes;
-using Application;
+using Application.DTOs;
+using Application.Interfaces;
 using AutoMapper;
-using Domain;
-using DTOs;
+using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Utils;
 using static Utils.BookAttributeEnum;
 
-namespace BookInterview.Controllers
+namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

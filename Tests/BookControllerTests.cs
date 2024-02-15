@@ -1,8 +1,8 @@
-﻿using Application;
+﻿using Api.Controllers;
+using Application.DTOs;
+using Application.Interfaces;
 using AutoMapper;
-using BookInterview.Controllers;
-using Domain;
-using DTOs;
+using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using static Utils.BookAttributeEnum;
 

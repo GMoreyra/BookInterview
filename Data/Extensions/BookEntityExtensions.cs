@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Data.Entities;
 
 namespace Data.Extensions
 {

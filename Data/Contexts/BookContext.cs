@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Contexts

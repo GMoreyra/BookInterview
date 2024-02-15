@@ -1,14 +1,14 @@
 ﻿using Dapper;
 using Data.Contexts;
+using Data.Entities;
 using Data.Extensions;
-using Domain;
-using Microsoft.Data.Sqlite;
+using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Globalization;
 using Utils;
 
-namespace Data
+namespace Data.Repositories
 {
     public class BookRepository : IBookRepository
     {
@@ -32,11 +32,13 @@ namespace Data
 
             if (!string.IsNullOrWhiteSpace(id))
             {
-                id = id.ToLower();
-                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Id) && x.Id.ToLower().Contains(id));
+                return await _bookContext.Books.Where(x => !string.IsNullOrWhiteSpace(x.Id) && x.Id.Equals(id, StringComparison.CurrentCultureIgnoreCase))
+                                               .OrderBy(x => x.Id)
+                                               .ToArrayAsync();
             }
 
-            return await query.OrderBy(x => x.Id).ToArrayAsync();
+            return await _bookContext.Books.OrderBy(x => x.Id).ToArrayAsync();
+
         }
 
         public async Task<IEnumerable<BookEntity>> GetBooksByAuthor(string? author)
@@ -45,8 +47,7 @@ namespace Data
 
             if (!string.IsNullOrWhiteSpace(author))
             {
-                author = author.ToLower();
-                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Author) && x.Author.ToLower().Contains(author));
+                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Author) && x.Author.Equals(author, StringComparison.CurrentCultureIgnoreCase));
             }
 
             return await query.OrderBy(x => x.Author).ToArrayAsync();
@@ -58,8 +59,7 @@ namespace Data
 
             if (!string.IsNullOrWhiteSpace(title))
             {
-                title = title.ToLower();
-                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Title) && x.Title.ToLower().Contains(title));
+                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Title) && x.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase));
             }
 
             return await query.OrderBy(x => x.Title).ToArrayAsync();
@@ -71,8 +71,7 @@ namespace Data
 
             if (!string.IsNullOrWhiteSpace(genre))
             {
-                genre = genre.ToLower();
-                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Genre) && x.Genre.ToLower().Contains(genre));
+                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Genre) && x.Genre.Equals(genre, StringComparison.CurrentCultureIgnoreCase));
             }
 
             return await query.OrderBy(x => x.Genre).ToArrayAsync();
@@ -84,8 +83,7 @@ namespace Data
 
             if (!string.IsNullOrWhiteSpace(description))
             {
-                description = description.ToLower();
-                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Description) && x.Description.ToLower().Contains(description));
+                query = query.Where(x => !string.IsNullOrWhiteSpace(x.Description) && x.Description.Equals(description, StringComparison.CurrentCultureIgnoreCase));
             }
 
             return await query.OrderBy(x => x.Description).ToArrayAsync();
@@ -97,7 +95,7 @@ namespace Data
 
             if (price != null)
             {
-                if (price.Contains('&'))
+                if (price.Equals('&'))
                 {
                     string[] prices = price.Split('&');
                     double minPrice = Convert.ToDouble(prices[0]);
@@ -159,6 +157,7 @@ namespace Data
                 throw new Exception("There was an error while saving the book.", ex);
             }
         }
+
         private async Task<int?> GetBiggestNumber()
         {
             var prefix = BookUtility.ID_PREFIX;
@@ -171,10 +170,8 @@ namespace Data
 
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
 
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                return await connection.QueryFirstOrDefaultAsync<int?>(biggestNumberQuery);
-            }
+            using var connection = new Microsoft.Data.Sqlite.SqliteConnection(connectionString);
+            return await connection.QueryFirstOrDefaultAsync<int?>(biggestNumberQuery);
         }
 
         public async Task<BookEntity?> UpdateBook(BookEntity book)

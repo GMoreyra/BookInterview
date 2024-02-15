@@ -14,7 +14,7 @@ namespace Tests
         [InlineData(2021, null, 15, null)]
         [InlineData(2021, 13, 15, null)]
         [InlineData(2021, 8, 32, null)]
-        public void ParseDate_ReturnsExpectedResult(int? year, int? month, int? day, string expected)
+        public void ParseDate_ReturnsExpectedResult(int? year, int? month, int? day, string? expected)
         {
             DateTime? expectedResult = expected != null ? DateTime.ParseExact(expected, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null;
             DateTime? result = PublishDateHelper.ParseDate(year, month, day);

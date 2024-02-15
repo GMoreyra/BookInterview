@@ -1,5 +1,16 @@
-﻿namespace DTOs
+﻿using AutoMapper;
+using Data.Entities;
+
+namespace Data.Mappers
 {
+    public class BookDtoToBookEntityProfile : Profile
+    {
+        public BookDtoToBookEntityProfile()
+        {
+            CreateMap<BookDto, BookEntity>();
+        }
+    }
+
     public class BookDto
     {
         public string? Author { get; set; }
