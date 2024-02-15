@@ -3,14 +3,13 @@ using Application.Services;
 using Data.Interfaces;
 using Data.Repositories;
 
-namespace Api
+namespace Api;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    public static void AddBookServices(this IServiceCollection services)
     {
-        public static void AddBookServices(this IServiceCollection services)
-        {
-            services.AddScoped<IBookService, BookService>();
-            services.AddScoped<IBookRepository, BookRepository>();
-        }
+        services.AddScoped<IBookService, BookService>();
+        services.AddScoped<IBookRepository, BookRepository>();
     }
 }

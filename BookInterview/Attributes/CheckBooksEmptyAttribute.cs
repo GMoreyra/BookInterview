@@ -2,17 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Data.Entities;
 
-namespace Api.Attributes
+namespace Api.Attributes;
+
+public class CheckBooksEmptyAttribute : ActionFilterAttribute
 {
-    public class CheckBooksEmptyAttribute : ActionFilterAttribute
+    public override void OnActionExecuted(ActionExecutedContext context)
     {
-        public override void OnActionExecuted(ActionExecutedContext context)
+        if (context.Result is ObjectResult objectResult && objectResult.Value is IEnumerable<BookEntity> books && !books.Any())
         {
-            if (context.Result is ObjectResult objectResult && objectResult.Value is IEnumerable<BookEntity> books && !books.Any())
-            {
-                context.Result = new NotFoundResult();
-            }
+            context.Result = new NotFoundResult();
         }
     }
-
 }

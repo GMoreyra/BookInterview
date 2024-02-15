@@ -1,28 +1,27 @@
 ﻿using AutoMapper;
 using Data.Entities;
 
-namespace Data.Mappers
+namespace Data.Mappers;
+
+public class BookDtoToBookEntityProfile : Profile
 {
-    public class BookDtoToBookEntityProfile : Profile
+    public BookDtoToBookEntityProfile()
     {
-        public BookDtoToBookEntityProfile()
-        {
-            CreateMap<BookDto, BookEntity>();
-        }
+        CreateMap<BookDto, BookEntity>();
     }
+}
 
-    public class BookDto
-    {
-        public string? Author { get; set; }
+public class BookDto
+{
+    public string? Author { get; set; }
 
-        public string? Description { get; set; }
+    public string? Description { get; set; }
 
-        public string? Title { get; set; }
+    public string? Title { get; set; }
 
-        public string? Genre { get; set; }
+    public string? Genre { get; set; }
 
-        public double? Price { get; set; }
+    public double? Price { get; set; }
 
-        public DateTime? PublishDate { get; set; }
-    }
+    public DateTime? PublishDate { get; set; }
 }

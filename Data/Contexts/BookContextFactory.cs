@@ -2,23 +2,22 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace Data.Contexts
+namespace Data.Contexts;
+
+public class BookContextFactory : IDesignTimeDbContextFactory<BookContext>
 {
-    public class BookContextFactory : IDesignTimeDbContextFactory<BookContext>
+    public BookContext CreateDbContext(string[] args)
     {
-        public BookContext CreateDbContext(string[] args)
-        {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
 
-            var builder = new DbContextOptionsBuilder<BookContext>();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var builder = new DbContextOptionsBuilder<BookContext>();
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            builder.UseSqlite(connectionString);
+        builder.UseSqlite(connectionString);
 
-            return new BookContext(builder.Options);
-        }
+        return new BookContext(builder.Options);
     }
 }

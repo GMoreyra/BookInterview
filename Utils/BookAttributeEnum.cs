@@ -1,17 +1,16 @@
-﻿namespace Utils
+﻿namespace Utils;
+
+public class BookAttributeEnum
 {
-    public class BookAttributeEnum
+    public enum BookAttribute
     {
-        public enum BookAttribute
-        {
-            None,
-            Id,
-            Author,
-            Title,
-            Genre,
-            Price,
-            PublishDate,
-            Description
-        }
+        None,
+        Id,
+        Author,
+        Title,
+        Genre,
+        Price,
+        PublishDate,
+        Description
     }
 }

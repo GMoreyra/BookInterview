@@ -7,139 +7,138 @@ using Microsoft.AspNetCore.Mvc;
 using Utils;
 using static Utils.BookAttributeEnum;
 
-namespace Api.Controllers
+namespace Api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class BooksController : Controller
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class BooksController : Controller
+    private readonly IMapper _mapper;
+    private readonly IBookService _bookService;
+
+    public BooksController(IBookService bookService, IMapper mapper)
     {
-        private readonly IMapper _mapper;
-        private readonly IBookService _bookService;
+        _bookService = bookService;
+        _mapper = mapper;
+    }
 
-        public BooksController(IBookService bookService, IMapper mapper)
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooks()
+    {
+        var books = await _bookService.GetBooks(BookAttribute.None, null);
+
+        return Ok(books);
+    }
+
+    [HttpGet]
+    [CheckBooksEmpty]
+    [Route("/id/{id?}")]
+    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksById(string? id = null)
+    {
+        var books = await _bookService.GetBooks(BookAttribute.Id, id);
+
+        return Ok(books);
+    }
+
+    [HttpGet]
+    [CheckBooksEmpty]
+    [Route("/author/{author?}")]
+    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByAuthor(string? author = null)
+    {
+        var books = await _bookService.GetBooks(BookAttribute.Author, author);
+
+        return Ok(books);
+    }
+
+    [HttpGet]
+    [CheckBooksEmpty]
+    [Route("/description/{description?}")]
+    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByDescription(string? description = null)
+    {
+        var books = await _bookService.GetBooks(BookAttribute.Description, description);
+
+        return Ok(books);
+    }
+
+    [HttpGet]
+    [CheckBooksEmpty]
+    [Route("/title/{title?}")]
+    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByTitle(string? title = null)
+    {
+        var books = await _bookService.GetBooks(BookAttribute.Title, title);
+
+        return Ok(books);
+    }
+
+    [HttpGet]
+    [CheckBooksEmpty]
+    [Route("/genre/{genre?}")]
+    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByGenre(string? genre = null)
+    {
+        var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
+
+        return Ok(books);
+    }
+
+    [HttpGet]
+    [CheckBooksEmpty]
+    [Route("/price")]
+    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
+    {
+        var validationResult = PriceHelper.ValidatePrices(minPrice, maxPrice);
+
+        if (validationResult != null)
         {
-            _bookService = bookService;
-            _mapper = mapper;
+            return BadRequest(validationResult);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooks()
-        {
-            var books = await _bookService.GetBooks(BookAttribute.None, null);
+        var price = PriceHelper.GenerateValue(minPrice, maxPrice);
 
-            return Ok(books);
+        var books = await _bookService.GetBooks(BookAttribute.Price, price);
+
+        return Ok(books);
+    }
+
+    [HttpGet]
+    [CheckBooksEmpty]
+    [Route("/published/{year?}/{month?}/{day?}")]
+    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
+    {
+        DateTime? parsedDate = PublishDateHelper.ParseDate(year, month, day);
+
+        if (parsedDate == null)
+        {
+            return BadRequest("Invalid date provided.");
         }
 
-        [HttpGet]
-        [CheckBooksEmpty]
-        [Route("/id/{id?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksById(string? id = null)
-        {
-            var books = await _bookService.GetBooks(BookAttribute.Id, id);
+        var books = await _bookService.GetBooks(BookAttribute.PublishDate, parsedDate.ToString());
 
-            return Ok(books);
+        return Ok(books);
+    }
+
+    [HttpPost]
+    [Route("/{id}")]
+    public async Task<ActionResult<BookEntity>> UpdateBook(string id, [FromBody] BookDto book)
+    {
+        var bookEntity = _mapper.Map<BookEntity>(book);
+        bookEntity.Id = id;
+
+        var updateBook = await _bookService.UpdateBook(bookEntity);
+
+        if (updateBook is null)
+        {
+            return NotFound();
         }
 
-        [HttpGet]
-        [CheckBooksEmpty]
-        [Route("/author/{author?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByAuthor(string? author = null)
-        {
-            var books = await _bookService.GetBooks(BookAttribute.Author, author);
+        return Ok(updateBook);
+    }
 
-            return Ok(books);
-        }
+    [HttpPut]
+    public async Task<ActionResult<BookEntity>> AddBook(BookDto book)
+    {
+        var bookEntity = _mapper.Map<BookEntity>(book);
+        var addedBook = await _bookService.AddBook(bookEntity);
 
-        [HttpGet]
-        [CheckBooksEmpty]
-        [Route("/description/{description?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByDescription(string? description = null)
-        {
-            var books = await _bookService.GetBooks(BookAttribute.Description, description);
-
-            return Ok(books);
-        }
-
-        [HttpGet]
-        [CheckBooksEmpty]
-        [Route("/title/{title?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByTitle(string? title = null)
-        {
-            var books = await _bookService.GetBooks(BookAttribute.Title, title);
-
-            return Ok(books);
-        }
-
-        [HttpGet]
-        [CheckBooksEmpty]
-        [Route("/genre/{genre?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByGenre(string? genre = null)
-        {
-            var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
-
-            return Ok(books);
-        }
-
-        [HttpGet]
-        [CheckBooksEmpty]
-        [Route("/price")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
-        {
-            var validationResult = PriceHelper.ValidatePrices(minPrice, maxPrice);
-
-            if (validationResult != null)
-            {
-                return BadRequest(validationResult);
-            }
-
-            var price = PriceHelper.GenerateValue(minPrice, maxPrice);
-
-            var books = await _bookService.GetBooks(BookAttribute.Price, price);
-
-            return Ok(books);
-        }
-
-        [HttpGet]
-        [CheckBooksEmpty]
-        [Route("/published/{year?}/{month?}/{day?}")]
-        public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
-        {
-            DateTime? parsedDate = PublishDateHelper.ParseDate(year, month, day);
-
-            if (parsedDate == null)
-            {
-                return BadRequest("Invalid date provided.");
-            }
-
-            var books = await _bookService.GetBooks(BookAttribute.PublishDate, parsedDate.ToString());
-
-            return Ok(books);
-        }
-
-        [HttpPost]
-        [Route("/{id}")]
-        public async Task<ActionResult<BookEntity>> UpdateBook(string id, [FromBody] BookDto book)
-        {
-            var bookEntity = _mapper.Map<BookEntity>(book);
-            bookEntity.Id = id;
-
-            var updateBook = await _bookService.UpdateBook(bookEntity);
-
-            if (updateBook is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(updateBook);
-        }
-
-        [HttpPut]
-        public async Task<ActionResult<BookEntity>> AddBook(BookDto book)
-        {
-            var bookEntity = _mapper.Map<BookEntity>(book);
-            var addedBook = await _bookService.AddBook(bookEntity);
-
-            return Ok(addedBook);
-        }
+        return Ok(addedBook);
     }
 }
