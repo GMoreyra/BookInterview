@@ -1,5 +1,6 @@
-using Api;
+using Application.Extensions;
 using Data.Contexts;
+using Data.Extensions;
 using Data.Mappers;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,8 @@ using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBookServices();
+ApplicationConfigurationExtension.AddServices(builder.Services);
+DataConfigurationExtension.AddRepositories(builder.Services);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
