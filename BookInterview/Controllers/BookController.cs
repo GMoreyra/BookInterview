@@ -22,6 +22,10 @@ public class BooksController : Controller
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Get all books.
+    /// </summary>
+    /// <returns>A list of books.</returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooks()
     {
@@ -30,6 +34,11 @@ public class BooksController : Controller
         return Ok(books);
     }
 
+    /// <summary>
+    /// Get books by ID.
+    /// </summary>
+    /// <param name="id">The ID of the book.</param>
+    /// <returns>A list of books.</returns>
     [HttpGet]
     [CheckBooksEmpty]
     [Route("/id/{id?}")]
@@ -40,6 +49,11 @@ public class BooksController : Controller
         return Ok(books);
     }
 
+    /// <summary>
+    /// Get books by author.
+    /// </summary>
+    /// <param name="author">The author of the book.</param>
+    /// <returns>A list of books.</returns>
     [HttpGet]
     [CheckBooksEmpty]
     [Route("/author/{author?}")]
@@ -50,6 +64,11 @@ public class BooksController : Controller
         return Ok(books);
     }
 
+    /// <summary>
+    /// Get books by description.
+    /// </summary>
+    /// <param name="description">The description of the book.</param>
+    /// <returns>A list of books.</returns>
     [HttpGet]
     [CheckBooksEmpty]
     [Route("/description/{description?}")]
@@ -60,6 +79,11 @@ public class BooksController : Controller
         return Ok(books);
     }
 
+    /// <summary>
+    /// Get books by title.
+    /// </summary>
+    /// <param name="title">The title of the book.</param>
+    /// <returns>A list of books.</returns>
     [HttpGet]
     [CheckBooksEmpty]
     [Route("/title/{title?}")]
@@ -70,6 +94,11 @@ public class BooksController : Controller
         return Ok(books);
     }
 
+    /// <summary>
+    /// Get books by genre.
+    /// </summary>
+    /// <param name="genre">The genre of the book.</param>
+    /// <returns>A list of books.</returns>
     [HttpGet]
     [CheckBooksEmpty]
     [Route("/genre/{genre?}")]
@@ -80,6 +109,12 @@ public class BooksController : Controller
         return Ok(books);
     }
 
+    /// <summary>
+    /// Get books by price range.
+    /// </summary>
+    /// <param name="minPrice">The minimum price of the book.</param>
+    /// <param name="maxPrice">The maximum price of the book.</param>
+    /// <returns>A list of books.</returns>
     [HttpGet]
     [CheckBooksEmpty]
     [Route("/price")]
@@ -99,6 +134,13 @@ public class BooksController : Controller
         return Ok(books);
     }
 
+    /// <summary>
+    /// Get books by publish date.
+    /// </summary>
+    /// <param name="year">The year of the publish date.</param>
+    /// <param name="month">The month of the publish date.</param>
+    /// <param name="day">The day of the publish date.</param>
+    /// <returns>A list of books.</returns>
     [HttpGet]
     [CheckBooksEmpty]
     [Route("/published/{year?}/{month?}/{day?}")]
@@ -116,6 +158,12 @@ public class BooksController : Controller
         return Ok(books);
     }
 
+    /// <summary>
+    /// Update a book.
+    /// </summary>
+    /// <param name="id">The ID of the book to update.</param>
+    /// <param name="book">The updated book data.</param>
+    /// <returns>The updated book.</returns>
     [HttpPost]
     [Route("/{id}")]
     public async Task<ActionResult<BookEntity>> UpdateBook(string id, [FromBody] BookDto book)
@@ -133,6 +181,11 @@ public class BooksController : Controller
         return Ok(updateBook);
     }
 
+    /// <summary>
+    /// Add a new book.
+    /// </summary>
+    /// <param name="book">The book to add.</param>
+    /// <returns>The added book.</returns>
     [HttpPut]
     public async Task<ActionResult<BookEntity>> AddBook(BookDto book)
     {

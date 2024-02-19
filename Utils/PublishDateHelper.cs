@@ -2,8 +2,18 @@
 
 namespace Utils;
 
+/// <summary>
+/// Helper class for parsing publish dates.
+/// </summary>
 public static class PublishDateHelper
 {
+    /// <summary>
+    /// Parses the date from the provided year, month, and day.
+    /// </summary>
+    /// <param name="year">The year of the date.</param>
+    /// <param name="month">The month of the date.</param>
+    /// <param name="day">The day of the date.</param>
+    /// <returns>A DateTime object representing the parsed date, or null if the date could not be parsed.</returns>
     public static DateTime? ParseDate(int? year, int? month, int? day)
     {
         string? dateFormat = null;
