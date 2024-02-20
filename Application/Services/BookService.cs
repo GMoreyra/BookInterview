@@ -3,7 +3,7 @@ using Application.Extensions;
 using Application.Interfaces;
 using Data.Entities;
 using Data.Interfaces;
-using static Utils.BookAttributeEnum;
+using static Application.Enums.BookAttributeEnum;
 
 namespace Application.Services;
 

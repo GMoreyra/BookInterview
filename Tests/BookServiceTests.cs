@@ -2,7 +2,7 @@
 using Application.Services;
 using Data.Entities;
 using Data.Interfaces;
-using static Utils.BookAttributeEnum;
+using static Application.Enums.BookAttributeEnum;
 
 namespace Tests;
 

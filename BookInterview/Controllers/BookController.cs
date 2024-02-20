@@ -4,7 +4,7 @@ using Application.Interfaces;
 using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Utils;
-using static Utils.BookAttributeEnum;
+using static Application.Enums.BookAttributeEnum;
 using ResponseType = System.Net.Mime.MediaTypeNames.Application;
 
 namespace Api.Controllers;

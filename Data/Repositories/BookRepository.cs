@@ -6,7 +6,6 @@ using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Globalization;
-using Utils;
 
 namespace Data.Repositories;
 
@@ -14,6 +13,7 @@ public class BookRepository : IBookRepository
 {
     private readonly BookContext _bookContext;
     private readonly IConfiguration _configuration;
+    private const string IdPrefix = "B-";
 
     public BookRepository(BookContext bookContext, IConfiguration configuration)
     {
@@ -145,7 +145,7 @@ public class BookRepository : IBookRepository
         try
         {
             var idToAdd = await GetBiggestNumber() ?? 0;
-            book.Id = $"{BookUtility.ID_PREFIX}{idToAdd + 1}";
+            book.Id = $"{IdPrefix}{idToAdd + 1}";
 
             var createdBook = _bookContext.Books.Add(book);
             await _bookContext.SaveChangesAsync();
@@ -160,8 +160,8 @@ public class BookRepository : IBookRepository
 
     private async Task<int?> GetBiggestNumber()
     {
-        var prefix = BookUtility.ID_PREFIX;
-        var prefixLength = BookUtility.ID_PREFIX.Length;
+        var prefix = IdPrefix;
+        var prefixLength = IdPrefix.Length;
 
         var biggestNumberQuery = $@"
                 SELECT MAX(CAST(SUBSTR(Id, {prefixLength + 1}, LENGTH(Id) - {prefixLength}) AS INT))

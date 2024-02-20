@@ -3,7 +3,7 @@ using Application.DTOs;
 using Application.Interfaces;
 using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
-using static Utils.BookAttributeEnum;
+using static Application.Enums.BookAttributeEnum;
 
 namespace Tests;
 

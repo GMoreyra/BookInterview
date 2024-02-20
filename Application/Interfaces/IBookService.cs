@@ -1,6 +1,6 @@
 ﻿using Application.DTOs;
 using Data.Entities;
-using static Utils.BookAttributeEnum;
+using static Application.Enums.BookAttributeEnum;
 
 namespace Application.Interfaces;
 

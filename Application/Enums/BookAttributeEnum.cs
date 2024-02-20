@@ -1,4 +1,4 @@
-﻿namespace Utils;
+﻿namespace Application.Enums;
 
 /// <summary>
 /// Enum representing the attributes of a book.
