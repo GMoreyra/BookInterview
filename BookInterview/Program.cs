@@ -1,7 +1,6 @@
 using Application.Initialization;
-using Data.Initialization;
 using Data.Contexts;
-using Data.Mappers;
+using Data.Initialization;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
@@ -14,7 +13,6 @@ builder.Services.RegisterApplication()
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAutoMapper(typeof(Program), typeof(BookDtoToBookEntityProfile));
 
 builder.Configuration.SetBasePath(builder.Environment.ContentRootPath);
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);

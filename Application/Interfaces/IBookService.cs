@@ -1,15 +1,16 @@
-﻿using Data.Entities;
+﻿using Application.DTOs;
+using Data.Entities;
 using static Utils.BookAttributeEnum;
 
 namespace Application.Interfaces;
 
 /// <summary>
-/// Represents the interface for a book service.
+/// Defines the contract for a service that manages books.
 /// </summary>
 public interface IBookService
 {
     /// <summary>
-    /// Retrieves a list of books based on the specified attribute and value.
+    /// Fetches a list of books filtered by the specified attribute and value.
     /// </summary>
     /// <param name="attribute">The attribute to filter the books by.</param>
     /// <param name="value">The value to match the attribute.</param>
@@ -17,16 +18,17 @@ public interface IBookService
     Task<IEnumerable<BookEntity>> GetBooks(BookAttribute attribute, string? value);
 
     /// <summary>
-    /// Updates a book.
+    /// Updates an existing book.
     /// </summary>
-    /// <param name="book">The book to update.</param>
+    /// <param name="id">The id of the book to update.</param>
+    /// <param name="bookDto">The updated book data.</param>
     /// <returns>An asynchronous operation that returns the updated BookEntity object, or null if the book was not found.</returns>
-    Task<BookEntity?> UpdateBook(BookEntity book);
+    Task<BookEntity?> UpdateBook(string id, BookDto bookDto);
 
     /// <summary>
-    /// Adds a new book.
+    /// Creates a new book.
     /// </summary>
-    /// <param name="book">The book to add.</param>
-    /// <returns>An asynchronous operation that returns the added BookEntity object.</returns>
-    Task<BookEntity> AddBook(BookEntity book);
+    /// <param name="book">The book data to create a new book.</param>
+    /// <returns>An asynchronous operation that returns the created BookEntity object.</returns>
+    Task<BookEntity> CreateBook(BookDto book);
 }

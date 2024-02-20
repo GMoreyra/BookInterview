@@ -1,25 +1,25 @@
 using Api.Attributes;
 using Application.DTOs;
 using Application.Interfaces;
-using AutoMapper;
 using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Utils;
 using static Utils.BookAttributeEnum;
+using ResponseType = System.Net.Mime.MediaTypeNames.Application;
 
 namespace Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Consumes(ResponseType.Json)]
+[Produces(ResponseType.Json)]
 public class BooksController : Controller
 {
-    private readonly IMapper _mapper;
     private readonly IBookService _bookService;
 
-    public BooksController(IBookService bookService, IMapper mapper)
+    public BooksController(IBookService bookService)
     {
         _bookService = bookService;
-        _mapper = mapper;
     }
 
     /// <summary>
@@ -27,6 +27,7 @@ public class BooksController : Controller
     /// </summary>
     /// <returns>A list of books.</returns>
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooks()
     {
         var books = await _bookService.GetBooks(BookAttribute.None, null);
@@ -39,9 +40,9 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="id">The ID of the book.</param>
     /// <returns>A list of books.</returns>
-    [HttpGet]
+    [HttpGet("/id/{id?}")]
     [CheckBooksEmpty]
-    [Route("/id/{id?}")]
+    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksById(string? id = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Id, id);
@@ -54,9 +55,9 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="author">The author of the book.</param>
     /// <returns>A list of books.</returns>
-    [HttpGet]
+    [HttpGet("/author/{author?}")]
     [CheckBooksEmpty]
-    [Route("/author/{author?}")]
+    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByAuthor(string? author = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Author, author);
@@ -69,9 +70,9 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="description">The description of the book.</param>
     /// <returns>A list of books.</returns>
-    [HttpGet]
+    [HttpGet("/description/{description?}")]
     [CheckBooksEmpty]
-    [Route("/description/{description?}")]
+    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByDescription(string? description = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Description, description);
@@ -84,9 +85,9 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="title">The title of the book.</param>
     /// <returns>A list of books.</returns>
-    [HttpGet]
+    [HttpGet("/title/{title?}")]
     [CheckBooksEmpty]
-    [Route("/title/{title?}")]
+    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByTitle(string? title = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Title, title);
@@ -99,9 +100,9 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="genre">The genre of the book.</param>
     /// <returns>A list of books.</returns>
-    [HttpGet]
+    [HttpGet("/genre/{genre?}")]
     [CheckBooksEmpty]
-    [Route("/genre/{genre?}")]
+    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByGenre(string? genre = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
@@ -115,9 +116,9 @@ public class BooksController : Controller
     /// <param name="minPrice">The minimum price of the book.</param>
     /// <param name="maxPrice">The maximum price of the book.</param>
     /// <returns>A list of books.</returns>
-    [HttpGet]
+    [HttpGet("/price")]
     [CheckBooksEmpty]
-    [Route("/price")]
+    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
     {
         var validationResult = PriceHelper.ValidatePrices(minPrice, maxPrice);
@@ -141,9 +142,11 @@ public class BooksController : Controller
     /// <param name="month">The month of the publish date.</param>
     /// <param name="day">The day of the publish date.</param>
     /// <returns>A list of books.</returns>
-    [HttpGet]
+    [HttpGet("/published/{year?}/{month?}/{day?}")]
     [CheckBooksEmpty]
-    [Route("/published/{year?}/{month?}/{day?}")]
+    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
     {
         DateTime? parsedDate = PublishDateHelper.ParseDate(year, month, day);
@@ -164,14 +167,17 @@ public class BooksController : Controller
     /// <param name="id">The ID of the book to update.</param>
     /// <param name="book">The updated book data.</param>
     /// <returns>The updated book.</returns>
-    [HttpPost]
-    [Route("/{id}")]
+    [HttpPost("/{id}")]
+    [ProducesResponseType(typeof(BookEntity), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BookEntity>> UpdateBook(string id, [FromBody] BookDto book)
     {
-        var bookEntity = _mapper.Map<BookEntity>(book);
-        bookEntity.Id = id;
-
-        var updateBook = await _bookService.UpdateBook(bookEntity);
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return BadRequest();
+        }
+        var updateBook = await _bookService.UpdateBook(id, book);
 
         if (updateBook is null)
         {
@@ -187,10 +193,10 @@ public class BooksController : Controller
     /// <param name="book">The book to add.</param>
     /// <returns>The added book.</returns>
     [HttpPut]
+    [ProducesResponseType(typeof(BookEntity), StatusCodes.Status200OK)]
     public async Task<ActionResult<BookEntity>> AddBook(BookDto book)
     {
-        var bookEntity = _mapper.Map<BookEntity>(book);
-        var addedBook = await _bookService.AddBook(bookEntity);
+        var addedBook = await _bookService.CreateBook(book);
 
         return Ok(addedBook);
     }

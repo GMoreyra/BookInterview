@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs;
+using Application.Extensions;
+using Application.Interfaces;
 using Data.Entities;
 using Data.Interfaces;
 using static Utils.BookAttributeEnum;
@@ -29,13 +31,17 @@ public class BookService : IBookService
         };
     }
 
-    public async Task<BookEntity?> UpdateBook(BookEntity book)
+    public async Task<BookEntity?> UpdateBook(string id, BookDto bookDto)
     {
-        return await _bookRepository.UpdateBook(book);
+        var bookEntity = ToEntityModelExtension.ToEntityModel(bookDto, id);
+
+        return await _bookRepository.UpdateBook(bookEntity);
     }
 
-    public async Task<BookEntity> AddBook(BookEntity book)
+    public async Task<BookEntity> CreateBook(BookDto bookDto)
     {
-        return await _bookRepository.AddBook(book);
+        var bookEntity = ToEntityModelExtension.ToEntityModel(bookDto);
+
+        return await _bookRepository.AddBook(bookEntity);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Application.Services;
+﻿using Application.DTOs;
+using Application.Services;
 using Data.Entities;
 using Data.Interfaces;
 using static Utils.BookAttributeEnum;
@@ -26,7 +27,7 @@ public class BookServiceTests
     [InlineData(BookAttribute.PublishDate, "2021-01-01")]
     public async Task GetBooks_ValidAttribute_ReturnsExpectedBooks(BookAttribute attribute, string value)
     {
-        var expectedBooks = FakeData.GetFakeBooks();
+        var expectedBooks = FakeData.GetFakeEntityBooks();
 
         _bookRepositoryMock.Setup(repo => repo.GetBooksById(value)).ReturnsAsync(new List<BookEntity> { expectedBooks[0] });
         _bookRepositoryMock.Setup(repo => repo.GetBooksByAuthor(value)).ReturnsAsync(new List<BookEntity> { expectedBooks[0] });
@@ -44,7 +45,7 @@ public class BookServiceTests
     [Fact]
     public async Task GetBooks_InvalidAttribute_ReturnsAllBooks()
     {
-        var expectedBooks = FakeData.GetFakeBooks();
+        var expectedBooks = FakeData.GetFakeEntityBooks();
 
         _bookRepositoryMock.Setup(repo => repo.GetBooks()).ReturnsAsync(expectedBooks);
 
@@ -56,12 +57,13 @@ public class BookServiceTests
     [Fact]
     public async Task UpdateBook_ValidBook_ReturnsUpdatedBook()
     {
-        var bookToUpdate = FakeData.GetFakeBooks()[0];
+        var bookToUpdate = FakeData.GetFakeEntityBooks()[0];
+        var bookDto = FakeData.GetFakeDtoBooks()[0];
         var updatedBook = new BookEntity { Id = "B-1", Author = "Updated Author", Title = "Updated Title" };
 
         _bookRepositoryMock.Setup(repo => repo.UpdateBook(bookToUpdate)).ReturnsAsync(updatedBook);
 
-        var result = await _bookService.UpdateBook(bookToUpdate);
+        var result = await _bookService.UpdateBook(updatedBook.Id, bookDto);
 
         result.Should().BeEquivalentTo(updatedBook);
     }
@@ -71,10 +73,11 @@ public class BookServiceTests
     {
         var newBook = new BookEntity { Id = "B-11", Author = "Author 11", Title = "Title 11", Genre = "Genre 11", Price = 110, Description = "Test description 11", PublishDate = DateTime.Parse("2021-11-01") };
         var addedBook = new BookEntity { Id = "B-11", Author = "Author 11", Title = "Title 11", Genre = "Genre 11", Price = 110, Description = "Test description 11", PublishDate = DateTime.Parse("2021-11-01") };
+        var bookDto = new BookDto { Author = "Author 11", Title = "Title 11", Genre = "Genre 11", Price = 110, Description = "Test description 11", PublishDate = DateTime.Parse("2021-11-01") };
 
         _bookRepositoryMock.Setup(repo => repo.AddBook(newBook)).ReturnsAsync(addedBook);
 
-        var result = await _bookService.AddBook(newBook);
+        var result = await _bookService.CreateBook(bookDto);
 
         result.Should().BeEquivalentTo(addedBook);
     }

@@ -112,7 +112,7 @@ public class BookRepositoryTests
 
     private static BookContext CreateMockBookContext()
     {
-        var fakeBooks = FakeData.GetFakeBooks().AsQueryable();
+        var fakeBooks = FakeData.GetFakeEntityBooks().AsQueryable();
         var asyncFakeBooks = fakeBooks.AsAsyncEnumerable();
 
         var mockSet = new Mock<DbSet<BookEntity>>();
