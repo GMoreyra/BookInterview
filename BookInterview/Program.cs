@@ -1,6 +1,6 @@
-using Application.Extensions;
+using Application.Initialization;
+using Data.Initialization;
 using Data.Contexts;
-using Data.Extensions;
 using Data.Mappers;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +8,9 @@ using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
-ApplicationConfigurationExtension.AddServices(builder.Services);
-DataConfigurationExtension.AddRepositories(builder.Services);
+builder.Services.RegisterApplication()
+                .RegisterData();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
