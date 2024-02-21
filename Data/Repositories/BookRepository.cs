@@ -18,10 +18,16 @@ public class BookRepository : IBookRepository
     private const string ErrorMessageSaving = "There was an error while saving the book.";
     private const string ErrorMessageUpdating = "There was an error while updating the book.";
 
+    /// <summary>
+    /// Initializes a new instance of the BookRepository class.
+    /// </summary>
+    /// <param name="bookContext">The context to be used for accessing the database.</param>
+    /// <param name="configuration">The configuration to be used for accessing app settings.</param>
+    /// <exception cref="ArgumentNullException">Thrown when either <see cref="BookContext"/> or <see cref="IConfiguration"/> is null.</exception>
     public BookRepository(BookContext bookContext, IConfiguration configuration)
     {
-        _bookContext = bookContext;
-        _configuration = configuration;
+        _bookContext = bookContext ?? throw new ArgumentNullException(nameof(bookContext));
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration)); ;
     }
 
     public async Task<IEnumerable<BookEntity>> GetBooks()

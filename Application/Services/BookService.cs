@@ -11,9 +11,14 @@ public class BookService : IBookService
 {
     private readonly IBookRepository _bookRepository;
 
+    /// <summary>
+    /// Initializes a new instance of the BookService class.
+    /// </summary>
+    /// <param name="bookRepository">The book repository.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <see cref="IBookRepository"/> is null.</exception>
     public BookService(IBookRepository bookRepository)
     {
-        _bookRepository = bookRepository;
+        _bookRepository = bookRepository ?? throw new ArgumentNullException(nameof(bookRepository)); ;
     }
 
     public async Task<IEnumerable<BookEntity>> GetBooks(BookAttribute attribute, string? value)

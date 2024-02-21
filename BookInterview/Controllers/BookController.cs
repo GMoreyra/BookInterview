@@ -18,9 +18,14 @@ public class BooksController : Controller
 {
     private readonly IBookService _bookService;
 
+    /// <summary>
+    /// Initializes a new instance of the BooksController class.
+    /// </summary>
+    /// <param name="bookService">The service to interact with books.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <see cref="IBookService"/> is null.</exception>
     public BooksController(IBookService bookService)
     {
-        _bookService = bookService;
+        _bookService = bookService ?? throw new ArgumentNullException(nameof(bookService));
     }
 
     /// <summary>
