@@ -1,4 +1,5 @@
 using Api.Formatters;
+using Xunit;
 
 namespace Tests;
 
@@ -11,6 +12,7 @@ public class PriceRangeFormatterTests
     public void FormatPriceRange_ReturnsExpectedResult(double? minPrice, double? maxPrice, string? expected)
     {
         var result = PriceRangeFormatter.FormatPriceRange(minPrice, maxPrice);
-        result.Should().Be(expected);
+
+        Assert.Equal(expected, result);
     }
 }

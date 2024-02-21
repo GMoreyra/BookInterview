@@ -2,6 +2,8 @@
 using Application.Services;
 using Data.Entities;
 using Data.Interfaces;
+using Moq;
+using Xunit;
 using static Application.Enums.BookAttributeEnum;
 
 namespace Tests;
@@ -28,18 +30,19 @@ public class BookServiceTests
     public async Task GetBooks_ValidAttribute_ReturnsExpectedBooks(BookAttribute attribute, string value)
     {
         var expectedBooks = FakeData.GetFakeEntityBooks();
+        var expectedBookList = new List<BookEntity> { expectedBooks[0] };
 
-        _bookRepositoryMock.Setup(repo => repo.GetBooksById(value)).ReturnsAsync(new List<BookEntity> { expectedBooks[0] });
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByAuthor(value)).ReturnsAsync(new List<BookEntity> { expectedBooks[0] });
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByTitle(value)).ReturnsAsync(new List<BookEntity> { expectedBooks[0] });
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByGenre(value)).ReturnsAsync(new List<BookEntity> { expectedBooks[0] });
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByDescription(value)).ReturnsAsync(new List<BookEntity> { expectedBooks[0] });
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByPrice(value)).ReturnsAsync(new List<BookEntity> { expectedBooks[0] });
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByPublishDate(value)).ReturnsAsync(new List<BookEntity> { expectedBooks[0] });
+        _bookRepositoryMock.Setup(repo => repo.GetBooksById(value)).ReturnsAsync(expectedBookList);
+        _bookRepositoryMock.Setup(repo => repo.GetBooksByAuthor(value)).ReturnsAsync(expectedBookList);
+        _bookRepositoryMock.Setup(repo => repo.GetBooksByTitle(value)).ReturnsAsync(expectedBookList);
+        _bookRepositoryMock.Setup(repo => repo.GetBooksByGenre(value)).ReturnsAsync(expectedBookList);
+        _bookRepositoryMock.Setup(repo => repo.GetBooksByDescription(value)).ReturnsAsync(expectedBookList);
+        _bookRepositoryMock.Setup(repo => repo.GetBooksByPrice(value)).ReturnsAsync(expectedBookList);
+        _bookRepositoryMock.Setup(repo => repo.GetBooksByPublishDate(value)).ReturnsAsync(expectedBookList);
 
         var result = await _bookService.GetBooks(attribute, value);
 
-        result.Should().BeEquivalentTo(new List<BookEntity> { expectedBooks[0] });
+        Assert.Equal(expectedBookList, result);
     }
 
     [Fact]
@@ -51,7 +54,7 @@ public class BookServiceTests
 
         var result = await _bookService.GetBooks((BookAttribute)int.MaxValue, null);
 
-        result.Should().BeEquivalentTo(expectedBooks);
+        Assert.Equal(expectedBooks, result);
     }
 
     [Fact]
@@ -64,7 +67,7 @@ public class BookServiceTests
 
         var result = await _bookService.UpdateBook(updatedBook.Id, bookDto);
 
-        result.Should().BeEquivalentTo(updatedBook);
+        Assert.Equal(updatedBook, result);
     }
 
     [Fact]
@@ -77,6 +80,6 @@ public class BookServiceTests
 
         var result = await _bookService.CreateBook(bookDto);
 
-        result.Should().BeEquivalentTo(addedBook);
+        Assert.Equal(addedBook, result);
     }
 }

@@ -3,6 +3,8 @@ using Application.DTOs;
 using Application.Interfaces;
 using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
+using Xunit;
 using static Application.Enums.BookAttributeEnum;
 
 namespace Tests;
@@ -28,8 +30,9 @@ public class BooksControllerTests
         var result = await _booksController.GetBooks();
 
         var okResult = result.Result as OkObjectResult;
-        okResult.Should().NotBeNull();
-        (okResult?.Value ?? Enumerable.Empty<BookEntity>()).Should().BeEquivalentTo(expectedBooks);
+
+        Assert.NotNull(okResult);
+        Assert.Equal(expectedBooks, okResult?.Value);
     }
 
     [Fact]
@@ -44,8 +47,9 @@ public class BooksControllerTests
         var result = await _booksController.UpdateBook(bookToUpdate.Id, bookDto);
 
         var okResult = result.Result as OkObjectResult;
-        okResult.Should().NotBeNull();
-        (okResult?.Value ?? Enumerable.Empty<BookEntity>()).Should().BeEquivalentTo(updatedBook);
+
+        Assert.NotNull(okResult);
+        Assert.Equal(updatedBook, okResult?.Value);
     }
 
     [Fact]
@@ -59,7 +63,8 @@ public class BooksControllerTests
         var result = await _booksController.AddBook(bookDto);
 
         var okResult = result.Result as OkObjectResult;
-        okResult.Should().NotBeNull();
-        (okResult?.Value ?? Enumerable.Empty<BookEntity>()).Should().BeEquivalentTo(newBook);
+
+        Assert.NotNull(okResult);
+        Assert.Equal(newBook, okResult?.Value);
     }
 }

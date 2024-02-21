@@ -1,4 +1,5 @@
 ﻿using Api.Validators;
+using Xunit;
 
 namespace Tests;
 
@@ -13,6 +14,7 @@ public class PriceValidatorTests
     public void ValidatePrices_ReturnsExpectedResult(double? minPrice, double? maxPrice, string? expected)
     {
         var result = PriceValidator.ValidatePrices(minPrice, maxPrice);
-        result.Should().Be(expected);
+
+        Assert.Equal(expected, result);
     }
 }

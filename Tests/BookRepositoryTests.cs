@@ -3,6 +3,8 @@ using Data.Entities;
 using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Moq;
+using Xunit;
 
 namespace Tests;
 
@@ -24,90 +26,111 @@ public class BookRepositoryTests
     {
         var result = await _bookRepository.GetBooks();
 
-        result.Should().HaveCount(10);
+        Assert.Equal(10, result?.Count());
     }
 
     [Fact]
     public async Task GetBooksById_ShouldReturnBooksById()
     {
         var result = await _bookRepository.GetBooksById("B-1");
-        result.Should().HaveCount(1);
-        result.First().Id.Should().Be("B-1");
+
+        Assert.Equal(1, result?.Count());
+        Assert.Equal("B-1", result?.First().Id);
     }
 
     [Fact]
     public async Task GetBooksById_ShouldReturnAllBooks_OrderedById()
     {
         var result = await _bookRepository.GetBooksById(null);
-        result.Should().HaveCount(10);
-        result.First().Id.Should().Be("B-1");
+
+        Assert.Equal(10, result?.Count());
+        Assert.Equal("B-1", result?.First().Id);
     }
 
     [Fact]
     public async Task GetBooksByAuthor_ShouldReturnBooksByAuthor()
     {
         var result = await _bookRepository.GetBooksByAuthor("Author 1");
-        result.Should().HaveCount(1);
-        result.First().Author.Should().Be("Author 1");
+
+        Assert.Equal(1, result?.Count());
+        Assert.Equal("Author 1", result?.First().Author);
     }
 
     [Fact]
     public async Task GetBooksByAuthor_ShouldReturnAllBooks_OrderedByAuthor()
     {
         var result = await _bookRepository.GetBooksByAuthor(null);
-        result.Should().HaveCount(10);
-        result.First().Author.Should().Be("Author 1");
+
+        Assert.Equal(10, result?.Count());
+        Assert.Equal("Author 1", result?.First().Author);
     }
 
     [Fact]
     public async Task GetBooksByTitle_ShouldReturnBooksByTitle()
     {
         var result = await _bookRepository.GetBooksByTitle("Title 1");
-        result.Should().HaveCount(1);
-        result.First().Title.Should().Be("Title 1");
+
+        Assert.Equal(1, result?.Count());
+        Assert.Equal("Author 1", result?.First().Title);
+    }
+
+    [Fact]
+    public async Task GetBooksByTitle_ShouldReturnAllBooks_OrderedByTitle()
+    {
+        var result = await _bookRepository.GetBooksByAuthor(null);
+
+        Assert.Equal(10, result?.Count());
+        Assert.Equal("Author 1", result?.First().Title);
     }
 
     [Fact]
     public async Task GetBooksByGenre_ShouldReturnBooksByGenre()
     {
         var result = await _bookRepository.GetBooksByGenre("Genre 1");
-        result.Should().HaveCount(1);
-        result.First().Genre.Should().Be("Genre 1");
+
+        Assert.Equal(1, result?.Count());
+        Assert.Equal("Genre 1", result?.First().Genre);
     }
 
     [Fact]
     public async Task GetBooksByDescription_ShouldReturnBooksByDescription()
     {
         var result = await _bookRepository.GetBooksByDescription("Test description 1");
-        result.Should().HaveCount(1);
-        result.First().Description.Should().Be("Test description 1");
+
+        Assert.Equal(1, result?.Count());
+        Assert.Equal("Test description 1", result?.First().Description);
     }
 
     [Fact]
     public async Task GetBooksByPrice_ShouldReturnBooksByPrice()
     {
         var result = await _bookRepository.GetBooksByPrice("10");
-        result.Should().HaveCount(1);
-        result.First().Price.Should().Be(10);
+
+        Assert.Equal(1, result?.Count());
+        Assert.Equal(10, result?.First().Price);
 
         result = await _bookRepository.GetBooksByPrice("10&30");
-        result.Should().HaveCount(3);
-        result.All(b => b.Price >= 10 && b.Price <= 30).Should().BeTrue();
+
+        Assert.Equal(3, result?.Count());
+        Assert.True(result?.All(b => b.Price >= 10 && b.Price <= 30));
     }
 
     [Fact]
     public async Task GetBooksByPublishDate_ShouldReturnBooksByPublishDate()
     {
         var result = await _bookRepository.GetBooksByPublishDate("2021");
-        result.Should().HaveCount(10);
+
+        Assert.Equal(10, result?.Count());
 
         result = await _bookRepository.GetBooksByPublishDate("2021-01");
-        result.Should().HaveCount(1);
-        result.First().PublishDate.Should().Be(DateTime.Parse("2021-01-01"));
+
+        Assert.Equal(1, result?.Count());
+        Assert.Equal("2021-01-01", result?.First().PublishDate?.ToString("yyyy-MM-dd"));
 
         result = await _bookRepository.GetBooksByPublishDate("2021-01-01");
-        result.Should().HaveCount(1);
-        result.First().PublishDate.Should().Be(DateTime.Parse("2021-01-01"));
+
+        Assert.Equal(1, result?.Count());
+        Assert.Equal("2021-01-01", result?.First().PublishDate?.ToString("yyyy-MM-dd"));
     }
 
     private static BookContext CreateMockBookContext()
