@@ -10,6 +10,9 @@ using ResponseType = System.Net.Mime.MediaTypeNames.Application;
 
 namespace Api.Controllers;
 
+/// <summary>
+/// Controller for managing books in the system.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 [Consumes(ResponseType.Json)]
@@ -203,13 +206,29 @@ public class BooksController : Controller
     /// Add a new book.
     /// </summary>
     /// <param name="book">The book to add.</param>
-    /// <returns>The added <see cref="BookEntity"/>.</returns>
+    /// <remarks>
+    /// Sample request:
+    ///
+    ///     PUT /api/Books
+    ///     {
+    ///        "id": "1",
+    ///        "title": "Book Title",
+    ///        "author": "Author Name",
+    ///        "description": "Book Description",
+    ///        "price": 19.99,
+    ///        "publishDate": "2022-01-01T00:00:00"
+    ///     }
+    ///
+    /// </remarks>
+    /// <response code="201">Returns the newly created item</response>
+    /// <response code="400">If the item is null</response>
     [HttpPut]
-    [ProducesResponseType(typeof(BookEntity), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(BookEntity), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<BookEntity>> AddBook(BookDto book)
     {
         var addedBook = await _bookService.CreateBook(book);
 
-        return Ok(addedBook);
+        return CreatedAtAction(nameof(GetBooks), new { id = addedBook.Id }, addedBook);
     }
 }
