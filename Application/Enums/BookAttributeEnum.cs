@@ -10,7 +10,7 @@ public class BookAttributeEnum
     /// </summary>
     public enum BookAttribute
     {
-        None,
+        None = 0,
         Id,
         Author,
         Title,
