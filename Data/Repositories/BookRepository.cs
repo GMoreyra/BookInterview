@@ -106,9 +106,7 @@ public class BookRepository : IBookRepository
         {
             if (price.Equals('&'))
             {
-                string[] prices = price.Split('&');
-                double minPrice = Convert.ToDouble(prices[0]);
-                double maxPrice = Convert.ToDouble(prices[1]);
+                (var minPrice, var maxPrice) = ParsePriceRange(price);
 
                 query = query.Where(x => x.Price != null && x.Price.Value >= minPrice && x.Price.Value <= maxPrice);
             }
@@ -120,6 +118,21 @@ public class BookRepository : IBookRepository
         }
 
         return await query.OrderBy(x => x.Price).ToArrayAsync();
+    }
+
+    /// <summary>
+    /// Parses the price range from a string into a tuple of two doubles.
+    /// The price range is expected to be in the format "minPrice&maxPrice".
+    /// </summary>
+    /// <param name="price">The price range string to parse.</param>
+    /// <returns>A tuple containing the minimum and maximum prices as doubles.</returns>
+    private static (double, double) ParsePriceRange(string price)
+    {
+        string[] prices = price.Split('&');
+        double minPrice = Convert.ToDouble(prices[0]);
+        double maxPrice = Convert.ToDouble(prices[1]);
+
+        return (minPrice, maxPrice);
     }
 
     public async Task<IEnumerable<BookEntity>> GetBooksByPublishDate(string? publishDate)

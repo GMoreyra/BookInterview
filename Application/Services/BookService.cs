@@ -23,6 +23,17 @@ public class BookService : IBookService
 
     public async Task<IEnumerable<BookEntity>> GetBooks(BookAttribute attribute, string? value)
     {
+        return await GetBooksByAttribute(attribute, value);
+    }
+
+    /// <summary>
+    /// Retrieves books based on the provided attribute and value.
+    /// </summary>
+    /// <param name="attribute">The attribute of the book to filter by.</param>
+    /// <param name="value">The value of the attribute to match.</param>
+    /// <returns>A collection of books that match the provided attribute and value.</returns>
+    private async Task<IEnumerable<BookEntity>> GetBooksByAttribute(BookAttribute attribute, string? value)
+    {
         return attribute switch
         {
             BookAttribute.Id => await _bookRepository.GetBooksById(value),

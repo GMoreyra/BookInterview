@@ -138,7 +138,7 @@ public class BooksController : Controller
     {
         var validationResult = PriceValidator.ValidatePrices(minPrice, maxPrice);
 
-        if (validationResult != null)
+        if (validationResult is not null)
         {
             return BadRequest(validationResult);
         }
@@ -166,9 +166,9 @@ public class BooksController : Controller
     {
         DateTime? parsedDate = PublishDateValidator.ParsePublishDate(year, month, day);
 
-        if (parsedDate == null)
+        if (parsedDate is null)
         {
-            return BadRequest("Invalid date provided.");
+            return BadRequest();
         }
 
         var books = await _bookService.GetBooks(BookAttribute.PublishDate, parsedDate.ToString());
