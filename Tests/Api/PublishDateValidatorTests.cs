@@ -2,7 +2,7 @@
 using System.Globalization;
 using Xunit;
 
-namespace Tests;
+namespace Tests.Api;
 
 public class PublishDateValidatorTests
 {
@@ -17,7 +17,7 @@ public class PublishDateValidatorTests
     [InlineData(2021, 8, 32, null)]
     public void ParsePublishDate_ReturnsExpectedResult(int? year, int? month, int? day, string? expected)
     {
-        DateTime? expectedResult = expected != null ? DateTime.ParseExact(expected, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null;
+        DateTime? expectedResult = expected != null ? DateTime.ParseExact(expected, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) : null;
         DateTime? result = PublishDateValidator.ParsePublishDate(year, month, day);
 
         Assert.Equal(expectedResult, result);

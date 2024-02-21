@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
 
-namespace Tests;
+namespace Tests.Data;
 
 public class BookRepositoryTests
 {

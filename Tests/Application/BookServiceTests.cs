@@ -6,7 +6,7 @@ using Moq;
 using Xunit;
 using static Application.Enums.BookAttributeEnum;
 
-namespace Tests;
+namespace Tests.Application;
 
 public class BookServiceTests
 {
