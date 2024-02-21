@@ -1,9 +1,10 @@
 using Api.Attributes;
+using Api.Formatters;
+using Api.Validators;
 using Application.DTOs;
 using Application.Interfaces;
 using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Utils;
 using static Application.Enums.BookAttributeEnum;
 using ResponseType = System.Net.Mime.MediaTypeNames.Application;
 
@@ -121,14 +122,14 @@ public class BooksController : Controller
     [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
     {
-        var validationResult = PriceHelper.ValidatePrices(minPrice, maxPrice);
+        var validationResult = PriceValidator.ValidatePrices(minPrice, maxPrice);
 
         if (validationResult != null)
         {
             return BadRequest(validationResult);
         }
 
-        var price = PriceHelper.GenerateValue(minPrice, maxPrice);
+        var price = PriceRangeFormatter.FormatPriceRange(minPrice, maxPrice);
 
         var books = await _bookService.GetBooks(BookAttribute.Price, price);
 
@@ -149,7 +150,7 @@ public class BooksController : Controller
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
     {
-        DateTime? parsedDate = PublishDateHelper.ParseDate(year, month, day);
+        DateTime? parsedDate = PublishDateValidator.ParsePublishDate(year, month, day);
 
         if (parsedDate == null)
         {

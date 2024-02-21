@@ -57,11 +57,10 @@ public class BookServiceTests
     [Fact]
     public async Task UpdateBook_ValidBook_ReturnsUpdatedBook()
     {
-        var bookToUpdate = FakeData.GetFakeEntityBooks()[0];
         var bookDto = FakeData.GetFakeDtoBooks()[0];
         var updatedBook = new BookEntity { Id = "B-1", Author = "Updated Author", Title = "Updated Title" };
 
-        _bookRepositoryMock.Setup(repo => repo.UpdateBook(bookToUpdate)).ReturnsAsync(updatedBook);
+        _bookRepositoryMock.Setup(repo => repo.UpdateBook(It.IsAny<BookEntity>())).ReturnsAsync(updatedBook);
 
         var result = await _bookService.UpdateBook(updatedBook.Id, bookDto);
 
@@ -69,13 +68,12 @@ public class BookServiceTests
     }
 
     [Fact]
-    public async Task AddBook_ValidBook_ReturnsAddedBook()
+    public async Task CreateBook_ValidBook_ReturnsAddedBook()
     {
-        var newBook = new BookEntity { Id = "B-11", Author = "Author 11", Title = "Title 11", Genre = "Genre 11", Price = 110, Description = "Test description 11", PublishDate = DateTime.Parse("2021-11-01") };
         var addedBook = new BookEntity { Id = "B-11", Author = "Author 11", Title = "Title 11", Genre = "Genre 11", Price = 110, Description = "Test description 11", PublishDate = DateTime.Parse("2021-11-01") };
         var bookDto = new BookDto { Author = "Author 11", Title = "Title 11", Genre = "Genre 11", Price = 110, Description = "Test description 11", PublishDate = DateTime.Parse("2021-11-01") };
 
-        _bookRepositoryMock.Setup(repo => repo.AddBook(newBook)).ReturnsAsync(addedBook);
+        _bookRepositoryMock.Setup(repo => repo.AddBook(It.IsAny<BookEntity>())).ReturnsAsync(addedBook);
 
         var result = await _bookService.CreateBook(bookDto);
 
