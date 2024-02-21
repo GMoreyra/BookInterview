@@ -13,8 +13,8 @@ public static class ToEntityModelExtension
     /// </summary>
     /// <param name="bookDto">The BookDto to convert.</param>
     /// <param name="id">The id to assign to the BookEntity. Defaults to an empty string.</param>
-    /// <returns>A BookEntity model.</returns>
-    public static BookEntity ToEntityModel(this BookDto bookDto, string id = " ")
+    /// <returns>A <see cref="BookEntity"/>.</returns>
+    public static BookEntity FromBookDto(this BookDto bookDto, string id = " ")
     {
         return new()
         {

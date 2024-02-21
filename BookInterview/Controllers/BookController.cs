@@ -26,7 +26,7 @@ public class BooksController : Controller
     /// <summary>
     /// Get all books.
     /// </summary>
-    /// <returns>A list of books.</returns>
+    /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooks()
@@ -40,10 +40,11 @@ public class BooksController : Controller
     /// Get books by ID.
     /// </summary>
     /// <param name="id">The ID of the book.</param>
-    /// <returns>A list of books.</returns>
+    /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/id/{id?}")]
     [CheckBooksEmpty]
     [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksById(string? id = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Id, id);
@@ -55,10 +56,11 @@ public class BooksController : Controller
     /// Get books by author.
     /// </summary>
     /// <param name="author">The author of the book.</param>
-    /// <returns>A list of books.</returns>
+    /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/author/{author?}")]
     [CheckBooksEmpty]
     [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByAuthor(string? author = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Author, author);
@@ -70,10 +72,11 @@ public class BooksController : Controller
     /// Get books by description.
     /// </summary>
     /// <param name="description">The description of the book.</param>
-    /// <returns>A list of books.</returns>
+    /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/description/{description?}")]
     [CheckBooksEmpty]
     [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByDescription(string? description = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Description, description);
@@ -85,10 +88,11 @@ public class BooksController : Controller
     /// Get books by title.
     /// </summary>
     /// <param name="title">The title of the book.</param>
-    /// <returns>A list of books.</returns>
+    /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/title/{title?}")]
     [CheckBooksEmpty]
     [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByTitle(string? title = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Title, title);
@@ -100,10 +104,11 @@ public class BooksController : Controller
     /// Get books by genre.
     /// </summary>
     /// <param name="genre">The genre of the book.</param>
-    /// <returns>A list of books.</returns>
+    /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/genre/{genre?}")]
     [CheckBooksEmpty]
     [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByGenre(string? genre = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
@@ -116,10 +121,11 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="minPrice">The minimum price of the book.</param>
     /// <param name="maxPrice">The maximum price of the book.</param>
-    /// <returns>A list of books.</returns>
+    /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/price")]
     [CheckBooksEmpty]
     [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
     {
         var validationResult = PriceValidator.ValidatePrices(minPrice, maxPrice);
@@ -142,7 +148,7 @@ public class BooksController : Controller
     /// <param name="year">The year of the publish date.</param>
     /// <param name="month">The month of the publish date.</param>
     /// <param name="day">The day of the publish date.</param>
-    /// <returns>A list of books.</returns>
+    /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/published/{year?}/{month?}/{day?}")]
     [CheckBooksEmpty]
     [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
@@ -167,7 +173,7 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="id">The ID of the book to update.</param>
     /// <param name="book">The updated book data.</param>
-    /// <returns>The updated book.</returns>
+    /// <returns>The updated <see cref="BookEntity"/>.</returns>
     [HttpPost("/{id}")]
     [ProducesResponseType(typeof(BookEntity), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
@@ -192,7 +198,7 @@ public class BooksController : Controller
     /// Add a new book.
     /// </summary>
     /// <param name="book">The book to add.</param>
-    /// <returns>The added book.</returns>
+    /// <returns>The added <see cref="BookEntity"/>.</returns>
     [HttpPut]
     [ProducesResponseType(typeof(BookEntity), StatusCodes.Status200OK)]
     public async Task<ActionResult<BookEntity>> AddBook(BookDto book)

@@ -33,14 +33,14 @@ public class BookService : IBookService
 
     public async Task<BookEntity?> UpdateBook(string id, BookDto bookDto)
     {
-        var bookEntity = ToEntityModelExtension.ToEntityModel(bookDto, id);
+        var bookEntity = ToEntityModelExtension.FromBookDto(bookDto, id);
 
         return await _bookRepository.UpdateBook(bookEntity);
     }
 
     public async Task<BookEntity> CreateBook(BookDto bookDto)
     {
-        var bookEntity = ToEntityModelExtension.ToEntityModel(bookDto);
+        var bookEntity = ToEntityModelExtension.FromBookDto(bookDto);
 
         return await _bookRepository.AddBook(bookEntity);
     }

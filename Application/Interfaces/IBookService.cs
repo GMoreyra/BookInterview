@@ -14,7 +14,7 @@ public interface IBookService
     /// </summary>
     /// <param name="attribute">The attribute to filter the books by.</param>
     /// <param name="value">The value to match the attribute.</param>
-    /// <returns>An asynchronous operation that returns a collection of BookEntity objects.</returns>
+    /// <returns>An asynchronous operation that returns a collection of <see cref="BookEntity"/> objects.</returns>
     Task<IEnumerable<BookEntity>> GetBooks(BookAttribute attribute, string? value);
 
     /// <summary>
@@ -22,13 +22,13 @@ public interface IBookService
     /// </summary>
     /// <param name="id">The id of the book to update.</param>
     /// <param name="bookDto">The updated book data.</param>
-    /// <returns>An asynchronous operation that returns the updated BookEntity object, or null if the book was not found.</returns>
+    /// <returns>An asynchronous operation that returns the updated <see cref="BookEntity"/> object, or null if the book was not found.</returns>
     Task<BookEntity?> UpdateBook(string id, BookDto bookDto);
 
     /// <summary>
     /// Creates a new book.
     /// </summary>
     /// <param name="book">The book data to create a new book.</param>
-    /// <returns>An asynchronous operation that returns the created BookEntity object.</returns>
+    /// <returns>An asynchronous operation that returns the created <see cref="BookEntity"/> object.</returns>
     Task<BookEntity> CreateBook(BookDto book);
 }

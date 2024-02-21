@@ -14,6 +14,9 @@ public class BookRepository : IBookRepository
     private readonly BookContext _bookContext;
     private readonly IConfiguration _configuration;
     private const string IdPrefix = "B-";
+    private const string DefaultConnection = "DefaultConnection";
+    private const string ErrorMessageSaving = "There was an error while saving the book.";
+    private const string ErrorMessageUpdating = "There was an error while updating the book.";
 
     public BookRepository(BookContext bookContext, IConfiguration configuration)
     {
@@ -93,7 +96,7 @@ public class BookRepository : IBookRepository
     {
         IQueryable<BookEntity> query = _bookContext.Books;
 
-        if (price != null)
+        if (price is not null)
         {
             if (price.Equals('&'))
             {
@@ -117,7 +120,7 @@ public class BookRepository : IBookRepository
     {
         IQueryable<BookEntity> query = _bookContext.Books;
 
-        if (publishDate != null)
+        if (publishDate is not null)
         {
             DateTime parsedDate;
             var formatInfo = new DateTimeFormatInfo();
@@ -154,7 +157,7 @@ public class BookRepository : IBookRepository
         }
         catch (Exception ex)
         {
-            throw new Exception("There was an error while saving the book.", ex);
+            throw new Exception(ErrorMessageSaving, ex);
         }
     }
 
@@ -168,7 +171,7 @@ public class BookRepository : IBookRepository
                 FROM Books
                 WHERE Id LIKE '{prefix}%'";
 
-        var connectionString = _configuration.GetConnectionString("DefaultConnection");
+        var connectionString = _configuration.GetConnectionString(DefaultConnection);
 
         using var connection = new Microsoft.Data.Sqlite.SqliteConnection(connectionString);
         return await connection.QueryFirstOrDefaultAsync<int?>(biggestNumberQuery);
@@ -193,7 +196,7 @@ public class BookRepository : IBookRepository
         }
         catch (Exception ex)
         {
-            throw new Exception("There was an error while updating the book.", ex);
+            throw new Exception(ErrorMessageUpdating, ex);
         }
     }
 }
