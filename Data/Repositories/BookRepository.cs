@@ -187,6 +187,11 @@ public class BookRepository : IBookRepository
         }
     }
 
+    /// <summary>
+    /// Gets the biggest number from the Ids of the books in the database.
+    /// The Ids are expected to be in the format "B-<number>".
+    /// </summary>
+    /// <returns>The biggest number from the Ids of the books in the database, or null if there are no books.</returns>
     private async Task<int?> GetBiggestNumber()
     {
         var prefix = IdPrefix;

@@ -1,18 +1,12 @@
 using Application.Initialization;
-using Data.Contexts;
 using Data.Initialization;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using System.Data.Common;
 using System.Reflection;
-using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.RegisterApplication()
-                .RegisterData();
+                .RegisterData(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -40,9 +34,6 @@ builder.Configuration.SetBasePath(builder.Environment.ContentRootPath);
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 builder.Configuration.AddEnvironmentVariables();
-
-builder.Services.AddScoped<DbConnection>(provider => new SqliteConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddDbContext<BookContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
