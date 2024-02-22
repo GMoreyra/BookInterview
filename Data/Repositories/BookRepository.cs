@@ -5,6 +5,8 @@ using Data.Extensions;
 using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System.Data.Common;
 using System.Globalization;
 
 namespace Data.Repositories;
@@ -13,21 +15,25 @@ public class BookRepository : IBookRepository
 {
     private readonly BookContext _bookContext;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<BookRepository> _logger;
+
     private const string IdPrefix = "B-";
     private const string DefaultConnection = "DefaultConnection";
-    private const string ErrorMessageSaving = "There was an error while saving the book.";
-    private const string ErrorMessageUpdating = "There was an error while updating the book.";
+    private const string ErrorMessageSaving = "There was an error while saving the book: {SaveBook}.";
+    private const string ErrorMessageUpdating = "There was an error while updating the book: {UpdateBook}.";
 
     /// <summary>
     /// Initializes a new instance of the BookRepository class.
     /// </summary>
     /// <param name="bookContext">The context to be used for accessing the database.</param>
     /// <param name="configuration">The configuration to be used for accessing app settings.</param>
+    /// <param name="logger">The logger to be used for logging.</param>
     /// <exception cref="ArgumentNullException">Thrown when either <see cref="BookContext"/> or <see cref="IConfiguration"/> is null.</exception>
-    public BookRepository(BookContext bookContext, IConfiguration configuration)
+    public BookRepository(BookContext bookContext, IConfiguration configuration, ILogger<BookRepository> logger)
     {
         _bookContext = bookContext ?? throw new ArgumentNullException(nameof(bookContext));
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration)); ;
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<IEnumerable<BookEntity>> GetBooks()
@@ -162,21 +168,23 @@ public class BookRepository : IBookRepository
         return await query.OrderBy(x => x.PublishDate).ToArrayAsync();
     }
 
-    public async Task<BookEntity> AddBook(BookEntity book)
+    public async Task<BookEntity?> AddBook(BookEntity book)
     {
         try
         {
+            _logger.LogInformation(ErrorMessageSaving, book);
             var idToAdd = await GetBiggestNumber() ?? 0;
             book.Id = $"{IdPrefix}{idToAdd + 1}";
-
+     
             var createdBook = _bookContext.Books.Add(book);
             await _bookContext.SaveChangesAsync();
 
             return createdBook.Entity;
         }
-        catch (Exception ex)
+        catch (DbException ex)
         {
-            throw new Exception(ErrorMessageSaving, ex);
+            _logger.LogError(ex, ErrorMessageSaving, book);
+            return null;
         }
     }
 
@@ -193,6 +201,7 @@ public class BookRepository : IBookRepository
         var connectionString = _configuration.GetConnectionString(DefaultConnection);
 
         using var connection = new Microsoft.Data.Sqlite.SqliteConnection(connectionString);
+
         return await connection.QueryFirstOrDefaultAsync<int?>(biggestNumberQuery);
     }
 
@@ -213,9 +222,10 @@ public class BookRepository : IBookRepository
 
             return bookToModify;
         }
-        catch (Exception ex)
+        catch (DbUpdateException ex)
         {
-            throw new Exception(ErrorMessageUpdating, ex);
+            _logger.LogError(ex, ErrorMessageUpdating, book);
+            return null;
         }
     }
 }

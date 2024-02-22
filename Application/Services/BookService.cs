@@ -54,7 +54,7 @@ public class BookService : IBookService
         return await _bookRepository.UpdateBook(bookEntity);
     }
 
-    public async Task<BookEntity> CreateBook(BookDto bookDto)
+    public async Task<BookEntity?> CreateBook(BookDto bookDto)
     {
         var bookEntity = ToEntityModelExtension.FromBookDto(bookDto);
 

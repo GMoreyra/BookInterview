@@ -3,6 +3,7 @@ using Data.Entities;
 using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -13,12 +14,14 @@ public class BookRepositoryTests
     private readonly IConfiguration _configuration;
     private readonly BookContext _bookContext;
     private readonly BookRepository _bookRepository;
+    private readonly Logger<BookRepository> _logger;
 
     public BookRepositoryTests()
     {
         _bookContext = CreateMockBookContext();
         _configuration = CreateMockConfiguration();
-        _bookRepository = new BookRepository(_bookContext, _configuration);
+        _logger = new Mock<Logger<BookRepository>>().Object;
+        _bookRepository = new BookRepository(_bookContext, _configuration, _logger);
     }
 
     [Fact]

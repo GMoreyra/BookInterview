@@ -74,5 +74,5 @@ public interface IBookRepository
     /// </summary>
     /// <param name="book">The book to add.</param>
     /// <returns>The added <see cref="BookEntity"/>.</returns>
-    Task<BookEntity> AddBook(BookEntity book);
+    Task<BookEntity?> AddBook(BookEntity book);
 }

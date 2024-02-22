@@ -5,6 +5,7 @@ using Application.DTOs;
 using Application.Interfaces;
 using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using static Application.Enums.BookAttributeEnum;
 using ResponseType = System.Net.Mime.MediaTypeNames.Application;
 
@@ -186,12 +187,8 @@ public class BooksController : Controller
     [ProducesResponseType(typeof(BookEntity), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<BookEntity>> UpdateBook(string id, [FromBody] BookDto book)
+    public async Task<ActionResult<BookEntity>> UpdateBook([Required] string id, [FromBody] BookDto book)
     {
-        if (string.IsNullOrWhiteSpace(id))
-        {
-            return BadRequest();
-        }
         var updateBook = await _bookService.UpdateBook(id, book);
 
         if (updateBook is null)
@@ -229,6 +226,6 @@ public class BooksController : Controller
     {
         var addedBook = await _bookService.CreateBook(book);
 
-        return CreatedAtAction(nameof(GetBooks), new { id = addedBook.Id }, addedBook);
+        return CreatedAtAction(nameof(GetBooks), new { id = addedBook?.Id }, addedBook);
     }
 }

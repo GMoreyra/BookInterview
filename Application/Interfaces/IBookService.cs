@@ -30,5 +30,5 @@ public interface IBookService
     /// </summary>
     /// <param name="book">The book data to create a new book.</param>
     /// <returns>An asynchronous operation that returns the created <see cref="BookEntity"/> object.</returns>
-    Task<BookEntity> CreateBook(BookDto book);
+    Task<BookEntity?> CreateBook(BookDto book);
 }
