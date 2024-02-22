@@ -172,7 +172,6 @@ public class BookRepository : IBookRepository
     {
         try
         {
-            _logger.LogInformation(ErrorMessageSaving, book);
             var idToAdd = await GetBiggestNumber() ?? 0;
             book.Id = $"{IdPrefix}{idToAdd + 1}";
      

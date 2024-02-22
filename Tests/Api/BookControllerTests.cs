@@ -62,9 +62,9 @@ public class BooksControllerTests
 
         var result = await _booksController.CreateBook(bookDto);
 
-        var okResult = result.Result as OkObjectResult;
+        var okResult = result.Result as CreatedAtActionResult;
 
-        Assert.NotNull(okResult);
+        Assert.NotNull(okResult?.Value);
         Assert.Equal(newBook, okResult?.Value);
     }
 }
