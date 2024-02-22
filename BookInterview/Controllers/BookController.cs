@@ -37,8 +37,8 @@ public class BooksController : Controller
     /// </summary>
     /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooks()
+    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<BookEntity>>> GetBooks()
     {
         var books = await _bookService.GetBooks(BookAttribute.None, null);
 
@@ -52,9 +52,9 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/id/{id?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksById(string? id = null)
+    public async Task<ActionResult<List<BookEntity>>> GetBooksById(string? id = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Id, id);
 
@@ -68,9 +68,9 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/author/{author?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByAuthor(string? author = null)
+    public async Task<ActionResult<List<BookEntity>>> GetBooksByAuthor(string? author = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Author, author);
 
@@ -84,9 +84,9 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/description/{description?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByDescription(string? description = null)
+    public async Task<ActionResult<List<BookEntity>>> GetBooksByDescription(string? description = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Description, description);
 
@@ -100,9 +100,9 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/title/{title?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByTitle(string? title = null)
+    public async Task<ActionResult<List<BookEntity>>> GetBooksByTitle(string? title = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Title, title);
 
@@ -116,9 +116,9 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/genre/{genre?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByGenre(string? genre = null)
+    public async Task<ActionResult<List<BookEntity>>> GetBooksByGenre(string? genre = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
 
@@ -133,9 +133,9 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/price")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
+    public async Task<ActionResult<List<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
     {
         var validationResult = PriceValidator.ValidatePrices(minPrice, maxPrice);
 
@@ -160,10 +160,10 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="BookEntity"/>.</returns>
     [HttpGet("/published/{year?}/{month?}/{day?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(IEnumerable<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<BookEntity>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
+    public async Task<ActionResult<List<BookEntity>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
     {
         DateTime? parsedDate = PublishDateValidator.ParsePublishDate(year, month, day);
 
@@ -191,12 +191,7 @@ public class BooksController : Controller
     {
         var updateBook = await _bookService.UpdateBook(id, book);
 
-        if (updateBook is null)
-        {
-            return NotFound();
-        }
-
-        return Ok(updateBook);
+        return updateBook is null ? NotFound() : Ok(updateBook);
     }
 
     /// <summary>
@@ -222,10 +217,10 @@ public class BooksController : Controller
     [HttpPut]
     [ProducesResponseType(typeof(BookEntity), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<BookEntity>> AddBook(BookDto book)
+    public async Task<ActionResult<BookEntity>> CreateBook(BookDto book)
     {
         var addedBook = await _bookService.CreateBook(book);
 
-        return CreatedAtAction(nameof(GetBooks), new { id = addedBook?.Id }, addedBook);
+        return addedBook is null ? BadRequest(book) : CreatedAtAction(nameof(CreateBook), new { id = addedBook?.Id }, addedBook);
     }
 }

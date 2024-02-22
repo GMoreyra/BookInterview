@@ -60,7 +60,7 @@ public class BooksControllerTests
 
         _bookServiceMock.Setup(service => service.CreateBook(It.IsAny<BookDto>())).ReturnsAsync(newBook);
 
-        var result = await _booksController.AddBook(bookDto);
+        var result = await _booksController.CreateBook(bookDto);
 
         var okResult = result.Result as OkObjectResult;
 
