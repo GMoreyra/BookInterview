@@ -1,9 +1,9 @@
-﻿namespace Utils;
+﻿namespace Api.Formatters;
 
 /// <summary>
-/// Helper class for price related operations.
+/// Formatter class for price range related operations.
 /// </summary>
-public static class PriceHelper
+public static class PriceRangeFormatter
 {
     /// <summary>
     /// Generates a string value based on the minimum and maximum prices.
@@ -11,7 +11,7 @@ public static class PriceHelper
     /// <param name="minPrice">The minimum price.</param>
     /// <param name="maxPrice">The maximum price.</param>
     /// <returns>A string containing the minimum and maximum prices if both are provided, the minimum price otherwise.</returns>
-    public static string? GenerateValue(double? minPrice, double? maxPrice)
+    public static string? FormatPriceRange(double? minPrice, double? maxPrice)
     {
         string? value = null;
 
