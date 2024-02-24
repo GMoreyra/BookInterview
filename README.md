@@ -1,6 +1,4 @@
-Working on a solution for an interview exam
-
-# Interview-Test
+# Interview Book Test
 
 ## General requirements Books API:
 * The API should return a collection of books in JSON format.
