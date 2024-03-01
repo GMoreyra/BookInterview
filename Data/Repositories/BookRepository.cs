@@ -47,7 +47,8 @@ public class BookRepository : IBookRepository
 
         if (!string.IsNullOrWhiteSpace(id))
         {
-            return await _bookContext.Books.Where(x => !string.IsNullOrWhiteSpace(x.Id) && x.Id.Equals(id, StringComparison.CurrentCultureIgnoreCase))
+            id = id.ToUpper();
+            return await _bookContext.Books.Where(x => !string.IsNullOrWhiteSpace(x.Id) && x.Id.ToUpper().Contains(id))
                                            .OrderBy(x => x.Id)
                                            .ToArrayAsync();
         }
@@ -62,7 +63,8 @@ public class BookRepository : IBookRepository
 
         if (!string.IsNullOrWhiteSpace(author))
         {
-            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Author) && x.Author.Equals(author, StringComparison.CurrentCultureIgnoreCase));
+            author = author.ToUpper();
+            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Author) && x.Author.ToUpper().Contains(author));
         }
 
         return await query.OrderBy(x => x.Author).ToArrayAsync();
@@ -74,7 +76,8 @@ public class BookRepository : IBookRepository
 
         if (!string.IsNullOrWhiteSpace(title))
         {
-            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Title) && x.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase));
+            title = title.ToUpper();
+            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Title) && x.Title.ToUpper().Contains(title));
         }
 
         return await query.OrderBy(x => x.Title).ToArrayAsync();
@@ -86,7 +89,8 @@ public class BookRepository : IBookRepository
 
         if (!string.IsNullOrWhiteSpace(genre))
         {
-            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Genre) && x.Genre.Equals(genre, StringComparison.CurrentCultureIgnoreCase));
+            genre = genre.ToUpper();
+            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Genre) && x.Genre.ToUpper().Contains(genre));
         }
 
         return await query.OrderBy(x => x.Genre).ToArrayAsync();
@@ -98,7 +102,8 @@ public class BookRepository : IBookRepository
 
         if (!string.IsNullOrWhiteSpace(description))
         {
-            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Description) && x.Description.Equals(description, StringComparison.CurrentCultureIgnoreCase));
+            description = description.ToUpper();
+            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Description) && x.Description.ToUpper().Contains(description));
         }
 
         return await query.OrderBy(x => x.Description).ToArrayAsync();
