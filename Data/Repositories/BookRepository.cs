@@ -1,4 +1,6 @@
-﻿using Dapper;
+﻿namespace Data.Repositories;
+
+using Dapper;
 using Data.Contexts;
 using Data.Entities;
 using Data.Extensions;
@@ -8,8 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
 using System.Globalization;
-
-namespace Data.Repositories;
 
 public class BookRepository : IBookRepository
 {
@@ -119,12 +119,12 @@ public class BookRepository : IBookRepository
             {
                 (var minPrice, var maxPrice) = ParsePriceRange(price);
 
-                query = query.Where(x => x.Price != null && x.Price.Value >= minPrice && x.Price.Value <= maxPrice);
+                query = query.Where(x => x.Price >= minPrice && x.Price <= maxPrice);
             }
             else
             {
                 var priceParsed = double.Parse(price);
-                query = query.Where(x => x.Price != null && x.Price.Value == priceParsed);
+                query = query.Where(x => x.Price == priceParsed);
             }
         }
 
@@ -157,16 +157,16 @@ public class BookRepository : IBookRepository
 
             if (DateTime.TryParseExact(publishDate, "yyyy", formatInfo, DateTimeStyles.None, out parsedDate))
             {
-                query = query.Where(x => x.PublishDate != null && x.PublishDate.Value.Year == parsedDate.Year);
+                query = query.Where(x => x.PublishDate.Year == parsedDate.Year);
             }
             else if (DateTime.TryParseExact(publishDate, "yyyy-MM", formatInfo, DateTimeStyles.None, out parsedDate))
             {
-                query = query.Where(x => x.PublishDate != null && x.PublishDate.Value.Year == parsedDate.Year
-                                          && x.PublishDate.Value.Month == parsedDate.Month);
+                query = query.Where(x => x.PublishDate.Year == parsedDate.Year
+                                          && x.PublishDate.Month == parsedDate.Month);
             }
             else if (DateTime.TryParseExact(publishDate, "yyyy-MM-dd", formatInfo, DateTimeStyles.None, out parsedDate))
             {
-                query = query.Where(x => x.PublishDate != null && x.PublishDate.Value.Date == parsedDate.Date);
+                query = query.Where(x => x.PublishDate.Date == parsedDate.Date);
             }
         }
 

@@ -1,11 +1,13 @@
-﻿using Application.DTOs;
+﻿namespace Application.Services;
+
+using Api.Contracts.CreateBook;
+using Api.Contracts.GetBooks;
+using Api.Contracts.UpdateBook;
 using Application.Extensions;
 using Application.Interfaces;
 using Data.Entities;
 using Data.Interfaces;
 using static Application.Enums.BookAttributeEnum;
-
-namespace Application.Services;
 
 public class BookService : IBookService
 {
@@ -21,7 +23,7 @@ public class BookService : IBookService
         _bookRepository = bookRepository ?? throw new ArgumentNullException(nameof(bookRepository)); ;
     }
 
-    public async Task<IEnumerable<BookEntity>> GetBooks(BookAttribute attribute, string? value)
+    public async Task<IEnumerable<GetBooksResponse>> GetBooks(BookAttribute attribute, string? value)
     {
         return await GetBooksByAttribute(attribute, value);
     }
@@ -32,9 +34,9 @@ public class BookService : IBookService
     /// <param name="attribute">The attribute of the book to filter by.</param>
     /// <param name="value">The value of the attribute to match.</param>
     /// <returns>A collection of books that match the provided attribute and value.</returns>
-    private async Task<IEnumerable<BookEntity>> GetBooksByAttribute(BookAttribute attribute, string? value)
+    private async Task<IEnumerable<GetBooksResponse>> GetBooksByAttribute(BookAttribute attribute, string? value)
     {
-        return attribute switch
+        IEnumerable<BookEntity> response = attribute switch
         {
             BookAttribute.Id => await _bookRepository.GetBooksById(value),
             BookAttribute.Author => await _bookRepository.GetBooksByAuthor(value),
@@ -45,19 +47,27 @@ public class BookService : IBookService
             BookAttribute.PublishDate => await _bookRepository.GetBooksByPublishDate(value),
             _ => await _bookRepository.GetBooks(),
         };
+
+        IEnumerable<GetBooksResponse> books = response.Select(x => x.ToGetBooksResponse());
+
+        return books;
     }
 
-    public async Task<BookEntity?> UpdateBook(string id, BookDto bookDto)
+    public async Task<UpdateBookResponse?> UpdateBook(string id, UpdateBookRequest updateBookRequest)
     {
-        var bookEntity = ToEntityModelExtension.FromBookDto(bookDto, id);
+        var bookEntity = updateBookRequest.FromUpdateBookRequest(id);
 
-        return await _bookRepository.UpdateBook(bookEntity);
+        var updatedBook = await _bookRepository.UpdateBook(bookEntity);
+
+        return updatedBook?.ToUpdateBookResponse();
     }
 
-    public async Task<BookEntity?> CreateBook(BookDto bookDto)
+    public async Task<CreateBookResponse?> CreateBook(CreateBookRequest createBookRequest)
     {
-        var bookEntity = ToEntityModelExtension.FromBookDto(bookDto);
+        var bookEntity = createBookRequest.FromCreateBookRequest();
 
-        return await _bookRepository.AddBook(bookEntity);
+        var bookAdded = await _bookRepository.AddBook(bookEntity);
+
+        return bookAdded?.ToCreateBookResponse();
     }
 }

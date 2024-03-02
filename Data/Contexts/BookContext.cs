@@ -1,8 +1,8 @@
-﻿using Data.DummyGenerator;
+﻿namespace Data.Contexts;
+
+using Data.DummyGenerator;
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
-
-namespace Data.Contexts;
 
 /// <summary>
 /// The context for accessing the database.

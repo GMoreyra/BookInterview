@@ -1,6 +1,6 @@
-﻿using Data.Entities;
+﻿namespace Data.DummyGenerator;
 
-namespace Data.DummyGenerator;
+using Data.Entities;
 
 /// <summary>
 /// A class to generate dummy book entities for testing purposes.

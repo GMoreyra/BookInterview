@@ -1,13 +1,13 @@
-﻿using Api.Controllers;
-using Application.DTOs;
-using Application.Interfaces;
-using Data.Entities;
+﻿namespace Tests.Api;
+
+using global::Api.Contracts.CreateBook;
+using global::Api.Contracts.UpdateBook;
+using global::Api.Controllers;
+using global::Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
-using static Application.Enums.BookAttributeEnum;
-
-namespace Tests.Api;
+using static global::Application.Enums.BookAttributeEnum;
 
 public class BooksControllerTests
 {
@@ -24,47 +24,50 @@ public class BooksControllerTests
     [Fact]
     public async Task GetBooks_ReturnsAllBooks()
     {
-        var expectedBooks = FakeData.GetFakeEntityBooks();
-        _bookServiceMock.Setup(service => service.GetBooks(BookAttribute.None, null)).ReturnsAsync(expectedBooks);
+        // Arrange
+        var getBooksReponse = FakeData.GetBooksResponseMocks();
+        _bookServiceMock.Setup(service => service.GetBooks(BookAttribute.None, null)).ReturnsAsync(getBooksReponse);
 
+        // Act
         var result = await _booksController.GetBooks();
 
+        // Assert
         var okResult = result.Result as OkObjectResult;
-
         Assert.NotNull(okResult);
-        Assert.Equal(expectedBooks, okResult?.Value);
+        Assert.Equal(getBooksReponse, okResult?.Value);
     }
 
     [Fact]
     public async Task UpdateBook_ValidBook_ReturnsUpdatedBook()
     {
-        var bookToUpdate = FakeData.GetFakeEntityBooks()[0];
-        var bookDto = FakeData.GetFakeDtoBooks()[0];
+        // Arrange
+        var updateBookRequest = FakeData.UpdateBookRequestMocks()[0];
+        var updateBookResponse = FakeData.UpdateBookResponseMocks()[0];
+        _bookServiceMock.Setup(service => service.UpdateBook(It.IsAny<string>(), It.IsAny<UpdateBookRequest>())).ReturnsAsync(updateBookResponse);
 
-        var updatedBook = new BookEntity { Id = "B-1", Author = "Updated Author", Title = "Updated Title" };
-        _bookServiceMock.Setup(service => service.UpdateBook(It.IsAny<string>(), It.IsAny<BookDto>())).ReturnsAsync(updatedBook);
+        // Act
+        var result = await _booksController.UpdateBook(string.Empty, updateBookRequest);
 
-        var result = await _booksController.UpdateBook(bookToUpdate.Id, bookDto);
-
+        // Assert
         var okResult = result.Result as OkObjectResult;
-
         Assert.NotNull(okResult);
-        Assert.Equal(updatedBook, okResult?.Value);
+        Assert.Equal(updateBookResponse, okResult?.Value);
     }
 
     [Fact]
     public async Task AddBook_ValidBook_ReturnsAddedBook()
     {
-        var newBook = FakeData.GetFakeEntityBooks()[0];
-        var bookDto = FakeData.GetFakeDtoBooks()[0];
+        // Arrange
+        var createBookResponse = FakeData.CreateBookResponseMocks()[0];
+        var createBookRequest = FakeData.CreateBookRequestMocks()[0];
+        _bookServiceMock.Setup(service => service.CreateBook(It.IsAny<CreateBookRequest>())).ReturnsAsync(createBookResponse);
 
-        _bookServiceMock.Setup(service => service.CreateBook(It.IsAny<BookDto>())).ReturnsAsync(newBook);
+        // Act
+        var result = await _booksController.CreateBook(createBookRequest);
 
-        var result = await _booksController.CreateBook(bookDto);
-
+        // Assert
         var okResult = result.Result as CreatedAtActionResult;
-
         Assert.NotNull(okResult?.Value);
-        Assert.Equal(newBook, okResult?.Value);
+        Assert.Equal(createBookResponse, okResult?.Value);
     }
 }

@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿namespace Api.Attributes;
+
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Data.Entities;
-
-namespace Api.Attributes;
 
 /// <summary>
 /// This attribute checks if the result of an action is an empty list of books.

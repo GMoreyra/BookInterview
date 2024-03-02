@@ -1,4 +1,6 @@
-﻿using Data.Contexts;
+﻿namespace Data.Initialization;
+
+using Data.Contexts;
 using Data.Interfaces;
 using Data.Repositories;
 using Microsoft.Data.Sqlite;
@@ -7,13 +9,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 
-namespace Data.Initialization;
-
 /// <summary>
 /// Provides extension methods for configuring data repositories.
 /// This class is responsible for registering the necessary repositories to the provided service collection.
 /// </summary>
-public static class DataConfiguration
+public static class DataInitialization
 {
     private const string DefaultConnection = "DefaultConnection";
 
