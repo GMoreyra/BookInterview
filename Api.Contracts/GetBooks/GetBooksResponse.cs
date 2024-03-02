@@ -11,9 +11,9 @@
 /// <param name="Price"> Gets or sets the price of the book. </param>
 /// <param name="PublishDate"> Gets or sets the publish date of the book. </param>
 public record GetBooksResponse(string Id,
-                                 string Author,
-                                 string Description,
-                                 string Title,
-                                 string Genre,
-                                 double Price,
-                                 DateTime PublishDate);
+                               string Author,
+                               string Description,
+                               string Title,
+                               string Genre,
+                               double Price,
+                               DateTime PublishDate);

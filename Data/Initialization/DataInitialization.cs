@@ -13,7 +13,7 @@ using System.Data.Common;
 /// Provides extension methods for configuring data repositories.
 /// This class is responsible for registering the necessary repositories to the provided service collection.
 /// </summary>
-public static class DataConfiguration
+public static class DataInitialization
 {
     private const string DefaultConnection = "DefaultConnection";
 

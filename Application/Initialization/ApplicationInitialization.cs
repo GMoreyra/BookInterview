@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 /// <summary>
 /// Provides extension methods for configuring application services.
 /// </summary>
-public static class ApplicationConfiguration
+public static class ApplicationInitialization
 {
     /// <summary>
     /// Adds the application services to the specified IServiceCollection.
