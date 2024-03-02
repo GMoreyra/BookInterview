@@ -11,8 +11,10 @@ public class PriceRangeFormatterTests
     [InlineData(null, null, null)]
     public void FormatPriceRange_ReturnsExpectedResult(double? minPrice, double? maxPrice, string? expected)
     {
+        // Arrange & Act
         var result = PriceRangeFormatter.FormatPriceRange(minPrice, maxPrice);
 
+        // Assert
         Assert.Equal(expected, result);
     }
 }

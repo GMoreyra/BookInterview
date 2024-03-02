@@ -13,8 +13,10 @@ public class PriceValidatorTests
     [InlineData(null, null, null)]
     public void ValidatePrices_ReturnsExpectedResult(double? minPrice, double? maxPrice, string? expected)
     {
+        // Arrange & Act
         var result = PriceValidator.ValidatePrices(minPrice, maxPrice);
 
+        // Assert
         Assert.Equal(expected, result);
     }
 }
