@@ -1,8 +1,8 @@
-﻿using Application.Interfaces;
+﻿namespace Application.Initialization;
+
+using Application.Interfaces;
 using Application.Services;
 using Microsoft.Extensions.DependencyInjection;
-
-namespace Application.Initialization;
 
 /// <summary>
 /// Provides extension methods for configuring application services.

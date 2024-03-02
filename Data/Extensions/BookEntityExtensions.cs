@@ -1,6 +1,6 @@
-﻿using Data.Entities;
+﻿namespace Data.Extensions;
 
-namespace Data.Extensions;
+using Data.Entities;
 
 /// <summary>
 /// Provides extension methods for the BookEntity class.

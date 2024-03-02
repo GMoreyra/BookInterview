@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿namespace Data.Contexts;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-
-namespace Data.Contexts;
 
 /// <summary>
 /// The factory for creating a new instance of the <see cref="BookContext"/> class.

@@ -1,9 +1,9 @@
-﻿using Api.Contracts.CreateBook;
+﻿namespace Application.Extensions;
+
+using Api.Contracts.CreateBook;
 using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
 using Data.Entities;
-
-namespace Application.Extensions;
 
 public static class ToContractExtension
 {

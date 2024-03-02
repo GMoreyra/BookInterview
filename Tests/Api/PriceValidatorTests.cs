@@ -1,7 +1,7 @@
-﻿using Api.Validators;
-using Xunit;
+﻿namespace Tests.Api;
 
-namespace Tests.Api;
+using global::Api.Validators;
+using Xunit;
 
 public class PriceValidatorTests
 {

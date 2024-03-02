@@ -1,4 +1,6 @@
-﻿using Dapper;
+﻿namespace Data.Repositories;
+
+using Dapper;
 using Data.Contexts;
 using Data.Entities;
 using Data.Extensions;
@@ -8,8 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
 using System.Globalization;
-
-namespace Data.Repositories;
 
 public class BookRepository : IBookRepository
 {

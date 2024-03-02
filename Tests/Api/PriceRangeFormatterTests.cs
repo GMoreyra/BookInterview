@@ -1,7 +1,7 @@
-using Api.Formatters;
-using Xunit;
-
 namespace Tests.Api;
+
+using global::Api.Formatters;
+using Xunit;
 
 public class PriceRangeFormatterTests
 {

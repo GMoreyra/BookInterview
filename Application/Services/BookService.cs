@@ -1,4 +1,6 @@
-﻿using Api.Contracts.CreateBook;
+﻿namespace Application.Services;
+
+using Api.Contracts.CreateBook;
 using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
 using Application.Extensions;
@@ -6,8 +8,6 @@ using Application.Interfaces;
 using Data.Entities;
 using Data.Interfaces;
 using static Application.Enums.BookAttributeEnum;
-
-namespace Application.Services;
 
 public class BookService : IBookService
 {

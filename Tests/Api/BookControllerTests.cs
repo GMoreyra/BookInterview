@@ -1,13 +1,13 @@
-﻿using Api.Contracts.CreateBook;
-using Api.Contracts.UpdateBook;
-using Api.Controllers;
-using Application.Interfaces;
+﻿namespace Tests.Api;
+
+using global::Api.Contracts.CreateBook;
+using global::Api.Contracts.UpdateBook;
+using global::Api.Controllers;
+using global::Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
-using static Application.Enums.BookAttributeEnum;
-
-namespace Tests.Api;
+using static global::Application.Enums.BookAttributeEnum;
 
 public class BooksControllerTests
 {

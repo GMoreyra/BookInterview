@@ -1,8 +1,8 @@
-﻿using Api.Contracts.CreateBook;
+﻿namespace Application.Extensions;
+
+using Api.Contracts.CreateBook;
 using Api.Contracts.UpdateBook;
 using Data.Entities;
-
-namespace Application.Extensions;
 
 /// <summary>
 /// Provides extension methods for converting DTOs to Entity models.
