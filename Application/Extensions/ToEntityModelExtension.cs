@@ -1,4 +1,5 @@
-﻿using Application.DTOs;
+﻿using Api.Contracts.CreateBook;
+using Api.Contracts.UpdateBook;
 using Data.Entities;
 
 namespace Application.Extensions;
@@ -9,22 +10,42 @@ namespace Application.Extensions;
 public static class ToEntityModelExtension
 {
     /// <summary>
-    /// Converts a BookDto to a BookEntity model.
+    /// Converts a CreateBookRequest to a BookEntity model.
     /// </summary>
-    /// <param name="bookDto">The BookDto to convert.</param>
+    /// <param name="createBookRequest">The CreateBookRequest to convert.</param>
     /// <param name="id">The id to assign to the BookEntity. Defaults to an empty string.</param>
     /// <returns>A <see cref="BookEntity"/>.</returns>
-    public static BookEntity FromBookDto(this BookDto bookDto, string id = " ")
+    public static BookEntity FromCreateBookRequest(this CreateBookRequest createBookRequest)
+    {
+        return new()
+        {
+            Id = string.Empty,
+            Author = createBookRequest.Author,
+            Description = createBookRequest.Description,
+            Title = createBookRequest.Title,
+            Genre = createBookRequest.Genre,
+            Price = createBookRequest.Price,
+            PublishDate = createBookRequest.PublishDate,
+        };
+    }
+
+    /// <summary>
+    /// Converts a CreateBookRequest to a BookEntity model.
+    /// </summary>
+    /// <param name="updateBookRequest">The CreateBookRequest to convert.</param>
+    /// <param name="id">The id to assign to the BookEntity. Defaults to an empty string.</param>
+    /// <returns>A <see cref="BookEntity"/>.</returns>
+    public static BookEntity FromUpdateBookRequest(this UpdateBookRequest updateBookRequest, string id = " ")
     {
         return new()
         {
             Id = id,
-            Author = bookDto.Author,
-            Description = bookDto.Description,
-            Title = bookDto.Title,
-            Genre = bookDto.Genre,
-            Price = bookDto.Price,
-            PublishDate = bookDto.PublishDate
+            Author = updateBookRequest.Author ?? string.Empty,
+            Description = updateBookRequest.Description ?? string.Empty,
+            Title = updateBookRequest.Title ?? string.Empty,
+            Genre = updateBookRequest.Genre ?? string.Empty,
+            Price = updateBookRequest.Price ?? default,
+            PublishDate = updateBookRequest.PublishDate ?? default,
         };
     }
 }

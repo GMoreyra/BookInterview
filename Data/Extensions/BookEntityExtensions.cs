@@ -15,11 +15,11 @@ public static class BookEntityExtensions
     /// <param name="source">The BookEntity with the new values.</param>
     public static void UpdateProperties(this BookEntity target, BookEntity source)
     {
-        target.Title = source.Title ?? target.Title;
-        target.Author = source.Author ?? target.Author;
-        target.Genre = source.Genre ?? target.Genre;
-        target.Price = source.Price ?? target.Price;
-        target.PublishDate = source.PublishDate ?? target.PublishDate;
-        target.Description = source.Description ?? target.Description;
+        target.Title = source.Title;
+        target.Author = source.Author;
+        target.Genre = source.Genre;
+        target.Price = source.Price;
+        target.PublishDate = source.PublishDate;
+        target.Description = source.Description;
     }
 }

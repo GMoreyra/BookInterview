@@ -1,9 +1,10 @@
 using Api.Attributes;
+using Api.Contracts.CreateBook;
+using Api.Contracts.GetBooks;
+using Api.Contracts.UpdateBook;
 using Api.Formatters;
 using Api.Validators;
-using Application.DTOs;
 using Application.Interfaces;
-using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using static Application.Enums.BookAttributeEnum;
@@ -35,10 +36,10 @@ public class BooksController : Controller
     /// <summary>
     /// Get all books.
     /// </summary>
-    /// <returns>A list of <see cref="BookEntity"/>.</returns>
+    /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet]
-    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<BookEntity>>> GetBooks()
+    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<GetBooksResponse>>> GetBooks()
     {
         var books = await _bookService.GetBooks(BookAttribute.None, null);
 
@@ -49,12 +50,12 @@ public class BooksController : Controller
     /// Get books by ID.
     /// </summary>
     /// <param name="id">The ID of the book.</param>
-    /// <returns>A list of <see cref="BookEntity"/>.</returns>
+    /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/id/{id?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<BookEntity>>> GetBooksById(string? id = null)
+    public async Task<ActionResult<List<GetBooksResponse>>> GetBooksById(string? id = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Id, id);
 
@@ -65,12 +66,12 @@ public class BooksController : Controller
     /// Get books by author.
     /// </summary>
     /// <param name="author">The author of the book.</param>
-    /// <returns>A list of <see cref="BookEntity"/>.</returns>
+    /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/author/{author?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<BookEntity>>> GetBooksByAuthor(string? author = null)
+    public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByAuthor(string? author = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Author, author);
 
@@ -81,12 +82,12 @@ public class BooksController : Controller
     /// Get books by description.
     /// </summary>
     /// <param name="description">The description of the book.</param>
-    /// <returns>A list of <see cref="BookEntity"/>.</returns>
+    /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/description/{description?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<BookEntity>>> GetBooksByDescription(string? description = null)
+    public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByDescription(string? description = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Description, description);
 
@@ -97,12 +98,12 @@ public class BooksController : Controller
     /// Get books by title.
     /// </summary>
     /// <param name="title">The title of the book.</param>
-    /// <returns>A list of <see cref="BookEntity"/>.</returns>
+    /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/title/{title?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<BookEntity>>> GetBooksByTitle(string? title = null)
+    public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByTitle(string? title = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Title, title);
 
@@ -113,12 +114,12 @@ public class BooksController : Controller
     /// Get books by genre.
     /// </summary>
     /// <param name="genre">The genre of the book.</param>
-    /// <returns>A list of <see cref="BookEntity"/>.</returns>
+    /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/genre/{genre?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<BookEntity>>> GetBooksByGenre(string? genre = null)
+    public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByGenre(string? genre = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
 
@@ -130,12 +131,12 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="minPrice">The minimum price of the book.</param>
     /// <param name="maxPrice">The maximum price of the book.</param>
-    /// <returns>A list of <see cref="BookEntity"/>.</returns>
+    /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/price")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<BookEntity>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
+    public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
     {
         var validationResult = PriceValidator.ValidatePrices(minPrice, maxPrice);
 
@@ -157,13 +158,13 @@ public class BooksController : Controller
     /// <param name="year">The year of the publish date.</param>
     /// <param name="month">The month of the publish date.</param>
     /// <param name="day">The day of the publish date.</param>
-    /// <returns>A list of <see cref="BookEntity"/>.</returns>
+    /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/published/{year?}/{month?}/{day?}")]
     [CheckBooksEmpty]
-    [ProducesResponseType(typeof(List<BookEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<BookEntity>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
+    public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
     {
         DateTime? parsedDate = PublishDateValidator.ParsePublishDate(year, month, day);
 
@@ -181,23 +182,23 @@ public class BooksController : Controller
     /// Update a book.
     /// </summary>
     /// <param name="id">The ID of the book to update.</param>
-    /// <param name="book">The updated book data.</param>
-    /// <returns>The updated <see cref="BookEntity"/>.</returns>
+    /// <param name="updateBookRequest">The updated book data.</param>
+    /// <returns>The updated <see cref="UpdateBookResponse"/>.</returns>
     [HttpPost("/{id}")]
-    [ProducesResponseType(typeof(BookEntity), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UpdateBookResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<BookEntity>> UpdateBook([Required] string id, [FromBody] BookDto book)
+    public async Task<ActionResult<UpdateBookResponse>> UpdateBook([Required] string id, [FromBody] UpdateBookRequest updateBookRequest)
     {
-        var updateBook = await _bookService.UpdateBook(id, book);
+        var updatedBook = await _bookService.UpdateBook(id, updateBookRequest);
 
-        return updateBook is null ? NotFound() : Ok(updateBook);
+        return updatedBook is null ? NotFound() : Ok(updatedBook);
     }
 
     /// <summary>
     /// Add a new book.
     /// </summary>
-    /// <param name="book">The book to add.</param>
+    /// <param name="createBookRequest">The book to add.</param>
     /// <remarks>
     /// Sample request:
     ///
@@ -215,12 +216,12 @@ public class BooksController : Controller
     /// <response code="201">Returns the newly created item</response>
     /// <response code="400">If the item is null</response>
     [HttpPut]
-    [ProducesResponseType(typeof(BookEntity), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(CreateBookResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<BookEntity>> CreateBook(BookDto book)
+    public async Task<ActionResult<CreateBookResponse>> CreateBook(CreateBookRequest createBookRequest)
     {
-        var addedBook = await _bookService.CreateBook(book);
+        var addedBook = await _bookService.CreateBook(createBookRequest);
 
-        return addedBook is null ? BadRequest(book) : CreatedAtAction(nameof(CreateBook), new { id = addedBook?.Id }, addedBook);
+        return addedBook is null ? BadRequest(createBookRequest) : CreatedAtAction(nameof(CreateBook), new { id = addedBook?.Id }, addedBook);
     }
 }
