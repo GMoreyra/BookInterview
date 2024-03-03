@@ -7,6 +7,7 @@ using Api.Contracts.UpdateBook;
 using Api.Formatters;
 using Api.Validators;
 using Application.Interfaces;
+using CrossCutting.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using static Application.Enums.BookAttributeEnum;
@@ -30,7 +31,9 @@ public class BooksController : Controller
     /// <exception cref="ArgumentNullException">Thrown when <see cref="IBookService"/> is null.</exception>
     public BooksController(IBookService bookService)
     {
-        _bookService = bookService ?? throw new ArgumentNullException(nameof(bookService));
+        Argument.ThrowIfNull(() => bookService);
+
+        _bookService = bookService;
     }
 
     /// <summary>
