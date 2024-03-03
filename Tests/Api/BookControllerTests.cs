@@ -22,6 +22,16 @@ public class BooksControllerTests
     }
 
     [Fact]
+    public void Constructor_WhenNotInitialized_ThrowsException()
+    {
+        // Arrange
+        IBookService? nullService = null;
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => new BooksController(nullService));
+    }
+
+    [Fact]
     public async Task GetBooks_ReturnsAllBooks()
     {
         // Arrange

@@ -5,6 +5,7 @@ using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
 using Application.Extensions;
 using Application.Interfaces;
+using CrossCutting.Exceptions;
 using Data.Entities;
 using Data.Interfaces;
 using static Application.Enums.BookAttributeEnum;
@@ -20,7 +21,9 @@ public class BookService : IBookService
     /// <exception cref="ArgumentNullException">Thrown when <see cref="IBookRepository"/> is null.</exception>
     public BookService(IBookRepository bookRepository)
     {
-        _bookRepository = bookRepository ?? throw new ArgumentNullException(nameof(bookRepository)); ;
+        Argument.ThrowIfNull(() => bookRepository);
+
+        _bookRepository = bookRepository;
     }
 
     public async Task<IEnumerable<GetBooksResponse>> GetBooks(BookAttribute attribute, string? value)

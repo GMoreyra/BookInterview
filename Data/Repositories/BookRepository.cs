@@ -1,5 +1,6 @@
 ﻿namespace Data.Repositories;
 
+using CrossCutting.Exceptions;
 using Dapper;
 using Data.Contexts;
 using Data.Entities;
@@ -31,9 +32,13 @@ public class BookRepository : IBookRepository
     /// <exception cref="ArgumentNullException">Thrown when either <see cref="BookContext"/> or <see cref="IConfiguration"/> is null.</exception>
     public BookRepository(BookContext bookContext, IConfiguration configuration, ILogger<BookRepository> logger)
     {
-        _bookContext = bookContext ?? throw new ArgumentNullException(nameof(bookContext));
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        Argument.ThrowIfNull(() => bookContext);
+        Argument.ThrowIfNull(() => configuration);
+        Argument.ThrowIfNull(() => logger);
+
+        _bookContext = bookContext;
+        _configuration = configuration;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<BookEntity>> GetBooks()
