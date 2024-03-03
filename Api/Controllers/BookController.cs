@@ -1,6 +1,5 @@
 namespace Api.Controllers;
 
-using Api.Attributes;
 using Api.Contracts.CreateBook;
 using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
