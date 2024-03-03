@@ -60,9 +60,7 @@ public class BooksController : Controller
     /// <param name="id">The ID of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/id/{id?}")]
-    [CheckBooksEmpty]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksById(string? id = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Id, id);
@@ -76,9 +74,7 @@ public class BooksController : Controller
     /// <param name="author">The author of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/author/{author?}")]
-    [CheckBooksEmpty]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByAuthor(string? author = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Author, author);
@@ -92,9 +88,7 @@ public class BooksController : Controller
     /// <param name="description">The description of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/description/{description?}")]
-    [CheckBooksEmpty]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByDescription(string? description = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Description, description);
@@ -108,9 +102,7 @@ public class BooksController : Controller
     /// <param name="title">The title of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/title/{title?}")]
-    [CheckBooksEmpty]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByTitle(string? title = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Title, title);
@@ -124,9 +116,7 @@ public class BooksController : Controller
     /// <param name="genre">The genre of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/genre/{genre?}")]
-    [CheckBooksEmpty]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByGenre(string? genre = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
@@ -141,9 +131,8 @@ public class BooksController : Controller
     /// <param name="maxPrice">The maximum price of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/price")]
-    [CheckBooksEmpty]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
     {
         var validationResult = PriceValidator.ValidatePrices(minPrice, maxPrice);
@@ -168,10 +157,8 @@ public class BooksController : Controller
     /// <param name="day">The day of the publish date.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/published/{year?}/{month?}/{day?}")]
-    [CheckBooksEmpty]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
     {
         DateTime? parsedDate = PublishDateValidator.ParsePublishDate(year, month, day);
