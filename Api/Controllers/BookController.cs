@@ -24,6 +24,11 @@ public class BooksController : Controller
 {
     private readonly IBookService _bookService;
 
+    private const string PublishDateErrorMessage = "The provided date is not valid. Please ensure the date is in the correct format.";
+    private const string PriceRangeErrorMessage = "The provided price range is not valid. Please ensure the minimum price is less than the maximum price.";
+    private const string CreateBookErrorMessage = "Failed to create a Book. Please check the provided details and try again.";
+    private const string UpdateBookNotFoundErrorMessage = "The book to be updated could not be found. Please check the provided ID.";
+
     /// <summary>
     /// Initializes a new instance of the BooksController class.
     /// </summary>
@@ -145,7 +150,7 @@ public class BooksController : Controller
 
         if (validationResult is not null)
         {
-            return BadRequest(validationResult);
+            return BadRequest(PriceRangeErrorMessage);
         }
 
         var price = PriceRangeFormatter.FormatPriceRange(minPrice, maxPrice);
@@ -173,7 +178,7 @@ public class BooksController : Controller
 
         if (parsedDate is null)
         {
-            return BadRequest();
+            return BadRequest(PublishDateErrorMessage);
         }
 
         var books = await _bookService.GetBooks(BookAttribute.PublishDate, parsedDate.ToString());
@@ -195,7 +200,7 @@ public class BooksController : Controller
     {
         var updatedBook = await _bookService.UpdateBook(id, updateBookRequest);
 
-        return updatedBook is null ? NotFound() : Ok(updatedBook);
+        return updatedBook is null ? NotFound(UpdateBookNotFoundErrorMessage) : Ok(updatedBook);
     }
 
     /// <summary>
@@ -225,6 +230,6 @@ public class BooksController : Controller
     {
         var addedBook = await _bookService.CreateBook(createBookRequest);
 
-        return addedBook is null ? BadRequest(createBookRequest) : CreatedAtAction(nameof(CreateBook), new { id = addedBook?.Id }, addedBook);
+        return addedBook is null ? BadRequest(CreateBookErrorMessage) : CreatedAtAction(nameof(CreateBook), new { id = addedBook?.Id }, addedBook);
     }
 }
