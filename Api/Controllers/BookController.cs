@@ -60,7 +60,7 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/id/{id?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksById(string? id = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Id, id);
@@ -75,7 +75,7 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/author/{author?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByAuthor(string? author = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Author, author);
@@ -90,7 +90,7 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/description/{description?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByDescription(string? description = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Description, description);
@@ -105,7 +105,7 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/title/{title?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByTitle(string? title = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Title, title);
@@ -120,7 +120,7 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/genre/{genre?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByGenre(string? genre = null)
     {
         var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
@@ -136,7 +136,7 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/price")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
     {
@@ -163,7 +163,7 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/published/{year?}/{month?}/{day?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
     {
