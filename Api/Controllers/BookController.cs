@@ -5,11 +5,11 @@ using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
 using Api.Formatters;
 using Api.Validators;
+using Application.Enums;
 using Application.Interfaces;
 using CrossCutting.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using static Application.Enums.BookFilterEnum;
 using ResponseType = System.Net.Mime.MediaTypeNames.Application;
 
 /// <summary>

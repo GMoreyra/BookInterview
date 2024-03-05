@@ -3,12 +3,12 @@
 using Api.Contracts.CreateBook;
 using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
+using Application.Enums;
 using Application.Extensions;
 using Application.Interfaces;
 using CrossCutting.Exceptions;
 using Data.Entities;
 using Data.Interfaces;
-using static Application.Enums.BookFilterEnum;
 
 public class BookService : IBookService
 {

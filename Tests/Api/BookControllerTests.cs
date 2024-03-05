@@ -3,11 +3,11 @@
 using global::Api.Contracts.CreateBook;
 using global::Api.Contracts.UpdateBook;
 using global::Api.Controllers;
+using global::Application.Enums;
 using global::Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
-using static global::Application.Enums.BookFilterEnum;
 
 public class BooksControllerTests
 {

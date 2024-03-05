@@ -3,11 +3,11 @@
 using Data.Entities;
 using Data.Interfaces;
 using global::Api.Contracts.CreateBook;
+using global::Application.Enums;
 using global::Application.Services;
 using Moq;
 using System.Globalization;
 using Xunit;
-using static global::Application.Enums.BookFilterEnum;
 
 public class BookServiceTests
 {

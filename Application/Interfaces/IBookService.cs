@@ -3,7 +3,7 @@
 using Api.Contracts.CreateBook;
 using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
-using static Application.Enums.BookFilterEnum;
+using Application.Enums;
 
 /// <summary>
 /// Defines the contract for a service that manages books in the application.
