@@ -7,7 +7,7 @@ using global::Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
-using static global::Application.Enums.BookAttributeEnum;
+using static global::Application.Enums.BookFilterEnum;
 
 public class BooksControllerTests
 {
@@ -36,7 +36,7 @@ public class BooksControllerTests
     {
         // Arrange
         var getBooksReponse = FakeData.GetBooksResponseMocks();
-        _bookServiceMock.Setup(service => service.GetBooks(BookAttribute.None, null)).ReturnsAsync(getBooksReponse);
+        _bookServiceMock.Setup(service => service.GetBooks(BookFilterBy.None, null)).ReturnsAsync(getBooksReponse);
 
         // Act
         var result = await _booksController.GetBooks();

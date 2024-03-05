@@ -1,14 +1,14 @@
 ﻿namespace Application.Enums;
 
 /// <summary>
-/// Enum representing the attributes of a book.
+/// Static class containing the BookFilterBy enum.
 /// </summary>
-public class BookAttributeEnum
+public static class BookFilterEnum
 {
     /// <summary>
-    /// Enum values for book attributes.
+    /// Enum for specifying the attribute to filter books by.
     /// </summary>
-    public enum BookAttribute
+    public enum BookFilterBy
     {
         None = 0,
         Id,

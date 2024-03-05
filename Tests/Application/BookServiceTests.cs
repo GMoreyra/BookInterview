@@ -7,7 +7,7 @@ using global::Application.Services;
 using Moq;
 using System.Globalization;
 using Xunit;
-using static global::Application.Enums.BookAttributeEnum;
+using static global::Application.Enums.BookFilterEnum;
 
 public class BookServiceTests
 {
@@ -21,25 +21,25 @@ public class BookServiceTests
     }
 
     [Theory]
-    [InlineData(BookAttribute.Id, "B-1")]
-    [InlineData(BookAttribute.Author, "Author 1")]
-    [InlineData(BookAttribute.Title, "Title 1")]
-    [InlineData(BookAttribute.Genre, "Genre 1")]
-    [InlineData(BookAttribute.Description, "Test description 1")]
-    [InlineData(BookAttribute.Price, "10")]
-    [InlineData(BookAttribute.PublishDate, "2021-01-01")]
-    public async Task GetBooks_ValidAttribute_ReturnsExpectedBooks(BookAttribute attribute, string value)
+    [InlineData(BookFilterBy.Id, "B-1")]
+    [InlineData(BookFilterBy.Author, "Author 1")]
+    [InlineData(BookFilterBy.Title, "Title 1")]
+    [InlineData(BookFilterBy.Genre, "Genre 1")]
+    [InlineData(BookFilterBy.Description, "Test description 1")]
+    [InlineData(BookFilterBy.Price, "10")]
+    [InlineData(BookFilterBy.PublishDate, "2021-01-01")]
+    public async Task GetBooks_ValidAttribute_ReturnsExpectedBooks(BookFilterBy attribute, string value)
     {
         // Arrange
         var expectedBookList = FakeData.EntityBookMocks();
         var getBookResponse = FakeData.GetBooksResponseMocks().Where(book =>
-            (attribute == BookAttribute.Id && book.Id == value) ||
-            (attribute == BookAttribute.Author && book.Author == value) ||
-            (attribute == BookAttribute.Title && book.Title == value) ||
-            (attribute == BookAttribute.Genre && book.Genre == value) ||
-            (attribute == BookAttribute.Description && book.Description == value) ||
-            (attribute == BookAttribute.Price && book.Price.ToString() == value) ||
-            (attribute == BookAttribute.PublishDate && book.PublishDate.ToString() == value)
+            (attribute == BookFilterBy.Id && book.Id == value) ||
+            (attribute == BookFilterBy.Author && book.Author == value) ||
+            (attribute == BookFilterBy.Title && book.Title == value) ||
+            (attribute == BookFilterBy.Genre && book.Genre == value) ||
+            (attribute == BookFilterBy.Description && book.Description == value) ||
+            (attribute == BookFilterBy.Price && book.Price.ToString() == value) ||
+            (attribute == BookFilterBy.PublishDate && book.PublishDate.ToString() == value)
         );
 
         _bookRepositoryMock.Setup(repo => repo.GetBooksById(value)).ReturnsAsync(expectedBookList.Where(x => x.Id == value));
@@ -67,7 +67,7 @@ public class BookServiceTests
         _bookRepositoryMock.Setup(repo => repo.GetBooks()).ReturnsAsync(expectedBooks);
 
         // Act
-        var result = await _bookService.GetBooks((BookAttribute)int.MaxValue, null);
+        var result = await _bookService.GetBooks((BookFilterBy)int.MaxValue, null);
 
         // Assert
         Assert.Equal(getBookResponse, result);
