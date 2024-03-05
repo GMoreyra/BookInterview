@@ -223,6 +223,6 @@ public class BooksController : Controller
     {
         var addedBook = await _bookService.CreateBook(createBookRequest);
 
-        return addedBook is null ? BadRequest(CreateBookErrorMessage) : CreatedAtAction(nameof(CreateBook), new { id = addedBook?.Id }, addedBook);
+        return addedBook is null ? BadRequest(CreateBookErrorMessage) : CreatedAtAction(nameof(CreateBook), new { id = addedBook.Id }, addedBook);
     }
 }

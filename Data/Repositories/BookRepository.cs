@@ -18,6 +18,7 @@ public class BookRepository : IBookRepository
     private readonly IConfiguration _configuration;
     private readonly ILogger<BookRepository> _logger;
 
+    private const double toleranceComparison = 0.01;
     private const string IdPrefix = "B-";
     private const string DefaultConnection = "DefaultConnection";
     private const string ErrorMessageSaving = "There was an error while saving the book: {SaveBook}.";
@@ -53,12 +54,12 @@ public class BookRepository : IBookRepository
         if (!string.IsNullOrWhiteSpace(id))
         {
             id = id.ToUpper();
-            return await _bookContext.Books.Where(x => !string.IsNullOrWhiteSpace(x.Id) && x.Id.ToUpper().Contains(id))
+            return await query.Where(x => !string.IsNullOrWhiteSpace(x.Id) && x.Id.ToUpper().Contains(id))
                                            .OrderBy(x => x.Id)
                                            .ToArrayAsync();
         }
 
-        return await _bookContext.Books.OrderBy(x => x.Id).ToArrayAsync();
+        return await query.OrderBy(x => x.Id).ToArrayAsync();
 
     }
 
@@ -129,7 +130,7 @@ public class BookRepository : IBookRepository
             else
             {
                 var priceParsed = double.Parse(price);
-                query = query.Where(x => x.Price == priceParsed);
+                query = query.Where(x => Math.Abs(x.Price - priceParsed) < toleranceComparison);
             }
         }
 

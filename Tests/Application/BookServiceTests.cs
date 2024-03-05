@@ -5,6 +5,7 @@ using Data.Interfaces;
 using global::Api.Contracts.CreateBook;
 using global::Application.Services;
 using Moq;
+using System.Globalization;
 using Xunit;
 using static global::Application.Enums.BookAttributeEnum;
 
@@ -93,9 +94,9 @@ public class BookServiceTests
     public async Task CreateBook_ValidBook_ReturnsAddedBook()
     {
         // Arrange
-        var addedBook = new BookEntity { Id = "B-11", Author = "Author 11", Title = "Title 11", Genre = "Genre 11", Price = 110, Description = "Test description 11", PublishDate = DateTime.Parse("2021-11-01") };
-        var createBookRequest = new CreateBookRequest("Author 11", "Test description 11", "Title 11", "Genre 11", 110, DateTime.Parse("2021-11-01"));
-        var createBookResponse = new CreateBookResponse("B-11", "Author 11", "Test description 11", "Title 11", "Genre 11", 110, DateTime.Parse("2021-11-01"));
+        var addedBook = new BookEntity { Id = "B-11", Author = "Author 11", Title = "Title 11", Genre = "Genre 11", Price = 110, Description = "Test description 11", PublishDate = DateTime.Parse("2021-11-01", CultureInfo.InvariantCulture) };
+        var createBookRequest = new CreateBookRequest("Author 11", "Test description 11", "Title 11", "Genre 11", 110, DateTime.Parse("2021-11-01", CultureInfo.InvariantCulture));
+        var createBookResponse = new CreateBookResponse("B-11", "Author 11", "Test description 11", "Title 11", "Genre 11", 110, DateTime.Parse("2021-11-01", CultureInfo.InvariantCulture));
 
         _bookRepositoryMock.Setup(repo => repo.AddBook(It.IsAny<BookEntity>())).ReturnsAsync(addedBook);
 
