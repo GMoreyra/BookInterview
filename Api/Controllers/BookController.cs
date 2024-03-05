@@ -222,7 +222,7 @@ public class BooksController : Controller
     public async Task<ActionResult<CreateBookResponse>> CreateBook(CreateBookRequest createBookRequest)
     {
         var addedBook = await _bookService.CreateBook(createBookRequest);
-
+        
         return addedBook is null ? BadRequest(CreateBookErrorMessage) : CreatedAtAction(nameof(CreateBook), new { id = addedBook.Id }, addedBook);
     }
 }
