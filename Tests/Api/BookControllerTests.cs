@@ -3,11 +3,11 @@
 using global::Api.Contracts.CreateBook;
 using global::Api.Contracts.UpdateBook;
 using global::Api.Controllers;
+using global::Application.Enums;
 using global::Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
-using static global::Application.Enums.BookAttributeEnum;
 
 public class BooksControllerTests
 {
@@ -28,7 +28,7 @@ public class BooksControllerTests
         IBookService? nullService = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => new BooksController(nullService));
+        Assert.Throws<ArgumentNullException>(() => new BooksController(nullService!));
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class BooksControllerTests
     {
         // Arrange
         var getBooksReponse = FakeData.GetBooksResponseMocks();
-        _bookServiceMock.Setup(service => service.GetBooks(BookAttribute.None, null)).ReturnsAsync(getBooksReponse);
+        _bookServiceMock.Setup(service => service.GetBooks(BookFilterBy.None, null)).ReturnsAsync(getBooksReponse);
 
         // Act
         var result = await _booksController.GetBooks();
@@ -44,7 +44,7 @@ public class BooksControllerTests
         // Assert
         var okResult = result.Result as OkObjectResult;
         Assert.NotNull(okResult);
-        Assert.Equal(getBooksReponse, okResult?.Value);
+        Assert.Equal(getBooksReponse, okResult.Value);
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public class BooksControllerTests
         // Assert
         var okResult = result.Result as OkObjectResult;
         Assert.NotNull(okResult);
-        Assert.Equal(updateBookResponse, okResult?.Value);
+        Assert.Equal(updateBookResponse, okResult.Value);
     }
 
     [Fact]

@@ -36,8 +36,8 @@ public class BookContext : DbContext
     /// Configures the context for use with a SQLite database.
     /// </summary>
     /// <param name="options">The options builder to be used for configuration.</param>
-    protected override void OnConfiguring(DbContextOptionsBuilder options) =>
-        options.UseSqlite($"Data Source={DbPath}");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+        optionsBuilder.UseSqlite($"Data Source={DbPath}");
 
     /// <summary>
     /// Configures the model that was discovered by convention from the entity types

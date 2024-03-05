@@ -3,7 +3,7 @@
 using Api.Contracts.CreateBook;
 using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
-using static Application.Enums.BookAttributeEnum;
+using Application.Enums;
 
 /// <summary>
 /// Defines the contract for a service that manages books in the application.
@@ -16,7 +16,7 @@ public interface IBookService
     /// <param name="attribute">The attribute to filter the books by.</param>
     /// <param name="value">The value to match the attribute.</param>
     /// <returns>An asynchronous operation that returns a collection of <see cref="GetBooksResponse"/> objects.</returns>
-    Task<IEnumerable<GetBooksResponse>> GetBooks(BookAttribute attribute, string? value);
+    Task<IEnumerable<GetBooksResponse>> GetBooks(BookFilterBy attribute, string? value);
 
     /// <summary>
     /// Updates the details of an existing book in the database.

@@ -5,11 +5,11 @@ using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
 using Api.Formatters;
 using Api.Validators;
+using Application.Enums;
 using Application.Interfaces;
 using CrossCutting.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using static Application.Enums.BookAttributeEnum;
 using ResponseType = System.Net.Mime.MediaTypeNames.Application;
 
 /// <summary>
@@ -48,7 +48,7 @@ public class BooksController : Controller
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooks()
     {
-        var books = await _bookService.GetBooks(BookAttribute.None, null);
+        var books = await _bookService.GetBooks(BookFilterBy.None, null);
 
         return Ok(books);
     }
@@ -60,11 +60,12 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/id/{id?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksById(string? id = null)
     {
-        var books = await _bookService.GetBooks(BookAttribute.Id, id);
+        var books = await _bookService.GetBooks(BookFilterBy.Id, id);
 
-        return Ok(books);
+        return books!.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -74,11 +75,12 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/author/{author?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByAuthor(string? author = null)
     {
-        var books = await _bookService.GetBooks(BookAttribute.Author, author);
+        var books = await _bookService.GetBooks(BookFilterBy.Author, author);
 
-        return Ok(books);
+        return books!.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -88,11 +90,12 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/description/{description?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByDescription(string? description = null)
     {
-        var books = await _bookService.GetBooks(BookAttribute.Description, description);
+        var books = await _bookService.GetBooks(BookFilterBy.Description, description);
 
-        return Ok(books);
+        return books!.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -102,11 +105,12 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/title/{title?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByTitle(string? title = null)
     {
-        var books = await _bookService.GetBooks(BookAttribute.Title, title);
+        var books = await _bookService.GetBooks(BookFilterBy.Title, title);
 
-        return Ok(books);
+        return books!.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -116,11 +120,12 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/genre/{genre?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByGenre(string? genre = null)
     {
-        var books = await _bookService.GetBooks(BookAttribute.Genre, genre);
+        var books = await _bookService.GetBooks(BookFilterBy.Genre, genre);
 
-        return Ok(books);
+        return books!.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -131,6 +136,7 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/price")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByPriceRange([FromQuery] double? minPrice, [FromQuery] double? maxPrice)
     {
@@ -143,9 +149,9 @@ public class BooksController : Controller
 
         var price = PriceRangeFormatter.FormatPriceRange(minPrice, maxPrice);
 
-        var books = await _bookService.GetBooks(BookAttribute.Price, price);
+        var books = await _bookService.GetBooks(BookFilterBy.Price, price);
 
-        return Ok(books);
+        return books!.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -157,6 +163,7 @@ public class BooksController : Controller
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
     [HttpGet("/published/{year?}/{month?}/{day?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByPublishDate(int? year = null, int? month = null, int? day = null)
     {
@@ -167,9 +174,9 @@ public class BooksController : Controller
             return BadRequest(PublishDateErrorMessage);
         }
 
-        var books = await _bookService.GetBooks(BookAttribute.PublishDate, parsedDate.ToString());
+        var books = await _bookService.GetBooks(BookFilterBy.PublishDate, parsedDate.ToString());
 
-        return Ok(books);
+        return books!.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -215,7 +222,7 @@ public class BooksController : Controller
     public async Task<ActionResult<CreateBookResponse>> CreateBook(CreateBookRequest createBookRequest)
     {
         var addedBook = await _bookService.CreateBook(createBookRequest);
-
-        return addedBook is null ? BadRequest(CreateBookErrorMessage) : CreatedAtAction(nameof(CreateBook), new { id = addedBook?.Id }, addedBook);
+        
+        return addedBook is null ? BadRequest(CreateBookErrorMessage) : CreatedAtAction(nameof(CreateBook), new { id = addedBook.Id }, addedBook);
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace CrossCutting.Exceptions;
 
+using System.Globalization;
 using System.Linq.Expressions;
 
 /// <summary>
@@ -31,6 +32,9 @@ public static class Argument
         var evaluatedValue = evaluateExpression();
 
         if (evaluatedValue is null)
-            throw new ArgumentNullException(memberExpression.Member.Name, string.Format(ArgumentCannotBeNullMessageFormat, memberExpression.Member.Name));
+        {
+            string name = memberExpression.Member.Name;
+            throw new ArgumentNullException(memberExpression.Member.Name, string.Format(CultureInfo.InvariantCulture, ArgumentCannotBeNullMessageFormat, name));
+        }
     }
 }
