@@ -10,6 +10,7 @@ using Application.Interfaces;
 using CrossCutting.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using ResponseType = System.Net.Mime.MediaTypeNames.Application;
 
 /// <summary>
@@ -25,6 +26,7 @@ public class BooksController : Controller
 
     private const string PublishDateErrorMessage = "The provided date is not valid. Please ensure the date is in the correct format.";
     private const string PriceRangeErrorMessage = "The provided price range is not valid. Please ensure the minimum price is less than the maximum price.";
+    private const string PriceErrorMessage = "The provided price is not valid. It should be a number greater than or equal to zero.";
     private const string CreateBookErrorMessage = "Failed to create a Book. Please check the provided details and try again.";
     private const string UpdateBookNotFoundErrorMessage = "The book to be updated could not be found. Please check the provided ID.";
 
@@ -191,6 +193,15 @@ public class BooksController : Controller
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UpdateBookResponse>> UpdateBook([Required] string id, [Required] [FromBody] UpdateBookRequest updateBookRequest)
     {
+        if (!DateTime.TryParse(updateBookRequest.PublishDate, CultureInfo.InvariantCulture, out DateTime publishDate))
+        {
+            return BadRequest(PublishDateErrorMessage);
+        }
+        if (!double.TryParse(updateBookRequest.Price, out double price))
+        {
+            return BadRequest(PriceErrorMessage);
+        }
+
         var updatedBook = await _bookService.UpdateBook(id, updateBookRequest);
 
         return updatedBook is null ? NotFound(UpdateBookNotFoundErrorMessage) : Ok(updatedBook);
@@ -221,6 +232,15 @@ public class BooksController : Controller
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CreateBookResponse>> CreateBook([Required] CreateBookRequest createBookRequest)
     {
+        if (!DateTime.TryParse(createBookRequest.PublishDate, CultureInfo.InvariantCulture, out DateTime publishDate))
+        {
+            return BadRequest(PublishDateErrorMessage);
+        }
+        if (!double.TryParse(createBookRequest.Price, out double price) || price < 0)
+        {
+            return BadRequest(PriceErrorMessage);
+        }   
+
         var addedBook = await _bookService.CreateBook(createBookRequest);
         
         return addedBook is null ? BadRequest(CreateBookErrorMessage) : CreatedAtAction(nameof(CreateBook), new { id = addedBook.Id }, addedBook);
