@@ -9,20 +9,21 @@ using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 using System.Data.Common;
 using System.Globalization;
 
 public class BookRepository : IBookRepository
 {
     private readonly BookContext _bookContext;
-    private readonly IConfiguration _configuration;
     private readonly ILogger<BookRepository> _logger;
 
     private const double toleranceComparison = 0.01;
     private const string IdPrefix = "B-";
-    private const string DefaultConnection = "DefaultConnection";
-    private const string ErrorMessageSaving = "There was an error while saving the book: {SaveBook}.";
-    private const string ErrorMessageUpdating = "There was an error while updating the book: {UpdateBook}.";
+    private const string ErrorMessageQuery = "An error occurred while fetching the last ID.";
+    private const string ErrorMessageSaving = "An error occurred while saving the book: {SaveBook}.";
+    private const string ErrorMessageFindBook = "An error occurred while searching for the book with ID: {FindBookId}.";
+    private const string ErrorMessageUpdating = "An error occurred while updating the book: {UpdateBook}.";
 
     /// <summary>
     /// Initializes a new instance of the BookRepository class.
@@ -31,14 +32,12 @@ public class BookRepository : IBookRepository
     /// <param name="configuration">The configuration to be used for accessing app settings.</param>
     /// <param name="logger">The logger to be used for logging.</param>
     /// <exception cref="ArgumentNullException">Thrown when either <see cref="BookContext"/> or <see cref="IConfiguration"/> is null.</exception>
-    public BookRepository(BookContext bookContext, IConfiguration configuration, ILogger<BookRepository> logger)
+    public BookRepository(BookContext bookContext, ILogger<BookRepository> logger)
     {
         Argument.ThrowIfNull(() => bookContext);
-        Argument.ThrowIfNull(() => configuration);
         Argument.ThrowIfNull(() => logger);
 
         _bookContext = bookContext;
-        _configuration = configuration;
         _logger = logger;
     }
 
@@ -54,7 +53,7 @@ public class BookRepository : IBookRepository
         if (!string.IsNullOrWhiteSpace(id))
         {
             id = id.ToUpper();
-            query = query.Where(x => x.Id.ToUpper().Contains(id)).OrderBy(x => x.Id);
+            query = query.Where(x => x.Id.ToUpper().Contains(id));
         }
 
         return await query.OrderBy(x => x.Id).ToArrayAsync();
@@ -127,7 +126,7 @@ public class BookRepository : IBookRepository
             }
             else
             {
-                var priceParsed = double.Parse(price);
+                var priceParsed = double.Parse(price, CultureInfo.InvariantCulture);
                 query = query.Where(x => Math.Abs(x.Price - priceParsed) < toleranceComparison);
             }
         }
@@ -179,12 +178,20 @@ public class BookRepository : IBookRepository
 
     public async Task<BookEntity?> AddBook(BookEntity book)
     {
+        var idToAdd = await GetBiggestNumber() ?? 0;
+
+        if (idToAdd == 0)
+        {
+            return null;
+
+        }
+
+        book.Id = $"{IdPrefix}{idToAdd + 1}";
+
         try
         {
-            var idToAdd = await GetBiggestNumber() ?? 0;
-            book.Id = $"{IdPrefix}{idToAdd + 1}";
-
             var createdBook = _bookContext.Books.Add(book);
+
             await _bookContext.SaveChangesAsync();
 
             return createdBook.Entity;
@@ -192,6 +199,7 @@ public class BookRepository : IBookRepository
         catch (DbException ex)
         {
             _logger.LogError(ex, ErrorMessageSaving, book);
+
             return null;
         }
     }
@@ -207,15 +215,21 @@ public class BookRepository : IBookRepository
         var prefixLength = IdPrefix.Length;
 
         var biggestNumberQuery = $@"
-                SELECT MAX(CAST(SUBSTR(Id, {prefixLength + 1}, LENGTH(Id) - {prefixLength}) AS INT))
-                FROM Books
-                WHERE Id LIKE '{prefix}%'";
+                SELECT MAX(CAST(SUBSTR(""Id"", {prefixLength + 1}, LENGTH(""Id"") - {prefixLength}) AS INT))
+                FROM public.""Books""
+                WHERE ""Id"" LIKE '{prefix}%'";
 
-        var connectionString = _configuration.GetConnectionString(DefaultConnection);
+        try
+        {
+            return await _bookContext.Database.GetDbConnection()
+                      .QueryFirstOrDefaultAsync<int?>(biggestNumberQuery);
+        }
+        catch (NpgsqlException ex)
+        {
+            _logger.LogError(ex, ErrorMessageQuery);
 
-        using var connection = new Microsoft.Data.Sqlite.SqliteConnection(connectionString);
-
-        return await connection.QueryFirstOrDefaultAsync<int?>(biggestNumberQuery);
+            return null;
+        }
     }
 
     public async Task<BookEntity?> UpdateBook(BookEntity book)
@@ -226,6 +240,7 @@ public class BookRepository : IBookRepository
 
             if (bookToModify is null)
             {
+                _logger.LogError(ErrorMessageFindBook, book.Id);
                 return null;
             }
 
@@ -238,6 +253,7 @@ public class BookRepository : IBookRepository
         catch (DbUpdateException ex)
         {
             _logger.LogError(ex, ErrorMessageUpdating, book);
+
             return null;
         }
     }

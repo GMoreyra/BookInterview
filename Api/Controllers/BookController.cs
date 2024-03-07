@@ -189,7 +189,7 @@ public class BooksController : Controller
     [ProducesResponseType(typeof(UpdateBookResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UpdateBookResponse>> UpdateBook([Required] string id, [FromBody] UpdateBookRequest updateBookRequest)
+    public async Task<ActionResult<UpdateBookResponse>> UpdateBook([Required] string id, [Required] [FromBody] UpdateBookRequest updateBookRequest)
     {
         var updatedBook = await _bookService.UpdateBook(id, updateBookRequest);
 
@@ -205,10 +205,10 @@ public class BooksController : Controller
     ///
     ///     PUT /api/Books
     ///     {
-    ///        "id": "1",
-    ///        "title": "Book Title",
     ///        "author": "Author Name",
     ///        "description": "Book Description",
+    ///        "title": "Book Title",
+    ///        "genre": "Fiction",
     ///        "price": 19.99,
     ///        "publishDate": "2022-01-01T00:00:00"
     ///     }
@@ -219,7 +219,7 @@ public class BooksController : Controller
     [HttpPut]
     [ProducesResponseType(typeof(CreateBookResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<CreateBookResponse>> CreateBook(CreateBookRequest createBookRequest)
+    public async Task<ActionResult<CreateBookResponse>> CreateBook([Required] CreateBookRequest createBookRequest)
     {
         var addedBook = await _bookService.CreateBook(createBookRequest);
         
