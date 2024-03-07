@@ -3,10 +3,10 @@
 using Data.Contexts;
 using Data.Interfaces;
 using Data.Repositories;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using System.Data.Common;
 
 /// <summary>
@@ -15,7 +15,7 @@ using System.Data.Common;
 /// </summary>
 public static class DataInitialization
 {
-    private const string DefaultConnection = "DefaultConnection";
+    private const string PostgresDbConnection = "PostgresDB";
 
     /// <summary>
     /// Adds the necessary repositories to the provided service collection.
@@ -25,8 +25,8 @@ public static class DataInitialization
     {
         services.AddScoped<IBookRepository, BookRepository>();
 
-        services.AddScoped<DbConnection>(provider => new SqliteConnection(configuration.GetConnectionString(DefaultConnection)));
-        services.AddDbContext<BookContext>(options => options.UseSqlite(configuration.GetConnectionString(DefaultConnection)));
+        services.AddScoped<DbConnection>(provider => new NpgsqlConnection(configuration.GetConnectionString(PostgresDbConnection)));
+        services.AddDbContext<BookContext>(options => options.UseNpgsql(configuration.GetConnectionString(PostgresDbConnection)));
 
         return services;
     }

@@ -4,6 +4,7 @@ using Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,34 +16,42 @@ namespace Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Domain.BookEntity", b =>
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Data.Entities.BookEntity", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Author")
-                        .HasColumnType("TEXT");
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Description")
-                        .HasColumnType("TEXT");
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Genre")
-                        .HasColumnType("TEXT");
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<double?>("Price")
-                        .HasColumnType("REAL");
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision");
 
-                    b.Property<DateTime?>("PublishDate")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime>("PublishDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Title")
-                        .HasColumnType("TEXT");
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
 
                     b.HasData(
                         new
@@ -52,7 +61,7 @@ namespace Data.Migrations
                             Description = "Deploying with JRuby is the missing link between enjoying JRuby and using it in the real world to build high-performance, scalable applications.",
                             Genre = "Computer",
                             Price = 33.0,
-                            PublishDate = new DateTime(2012, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2012, 8, 14, 22, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Deploying with JRuby"
                         },
                         new
@@ -62,7 +71,7 @@ namespace Data.Migrations
                             Description = "A former architect battles corporate zombies, an evil sorceress, and her own childhood to become queen of the world.",
                             Genre = "Fantasy",
                             Price = 5.9500000000000002,
-                            PublishDate = new DateTime(2000, 12, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2000, 12, 15, 23, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Midnight Rain"
                         },
                         new
@@ -72,7 +81,7 @@ namespace Data.Migrations
                             Description = "After the collapse of a nanotechnology society in England, the young survivors lay the foundation for a new society.",
                             Genre = "Fantasy",
                             Price = 5.9500000000000002,
-                            PublishDate = new DateTime(2000, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2000, 11, 16, 23, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Maeve Ascendant"
                         },
                         new
@@ -82,7 +91,7 @@ namespace Data.Migrations
                             Description = "In post-apocalypse England, the mysterious agent known only as Oberon helps to create a new life for the inhabitants of London. Sequel to Maeve Ascendant.",
                             Genre = "Fantasy",
                             Price = 5.9500000000000002,
-                            PublishDate = new DateTime(2001, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2001, 3, 9, 23, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Oberon's Legacy"
                         },
                         new
@@ -92,7 +101,7 @@ namespace Data.Migrations
                             Description = "If you care for journeys there and back, out of the comfortable Western world, over the edge of the Wild, and home again, and can take an interest in a humble hero blessed with a little wisdom and a little courage and considerable good luck, here is a record of such a journey and such a traveler.",
                             Genre = "Fantasy",
                             Price = 11.949999999999999,
-                            PublishDate = new DateTime(1985, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(1985, 9, 9, 22, 0, 0, 0, DateTimeKind.Utc),
                             Title = "The Hobbit"
                         },
                         new
@@ -102,7 +111,7 @@ namespace Data.Migrations
                             Description = "When Carla meets Paul at an ornithology conference, tempers fly as feathers get ruffled.",
                             Genre = "Romance",
                             Price = 4.9500000000000002,
-                            PublishDate = new DateTime(2000, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2000, 9, 1, 22, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Lover Birds"
                         },
                         new
@@ -112,7 +121,7 @@ namespace Data.Migrations
                             Description = "A deep sea diver finds true love twenty thousand leagues beneath the sea.",
                             Genre = "Romance",
                             Price = 4.9500000000000002,
-                            PublishDate = new DateTime(2000, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2000, 11, 1, 23, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Splish Splash"
                         },
                         new
@@ -122,7 +131,7 @@ namespace Data.Migrations
                             Description = "An anthology of horror stories about roaches, centipedes, scorpions  and other insects.",
                             Genre = "Horror",
                             Price = 4.9500000000000002,
-                            PublishDate = new DateTime(2000, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2000, 12, 5, 23, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Creepy Crawlies"
                         },
                         new
@@ -132,7 +141,7 @@ namespace Data.Migrations
                             Description = "After an inadvertant trip through a Heisenberg Uncertainty Device, James Salway discovers the problems of being quantum.",
                             Genre = "Science Fiction",
                             Price = 6.9500000000000002,
-                            PublishDate = new DateTime(2000, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2000, 11, 1, 23, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Paradox Lost"
                         },
                         new
@@ -142,7 +151,7 @@ namespace Data.Migrations
                             Description = "Microsoft's .NET initiative is explored in detail in this deep programmer's reference.",
                             Genre = "Computer",
                             Price = 36.950000000000003,
-                            PublishDate = new DateTime(2000, 12, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2000, 12, 8, 23, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Microsoft .NET: The Programming Bible"
                         },
                         new
@@ -152,7 +161,7 @@ namespace Data.Migrations
                             Description = "Accessibility has a reputation of being dull, dry, and unfriendly toward graphic design. But there is a better way: well-styled semantic markup that lets you provide the best possible results for all of your users. This book will help you provide images, video, Flash and PDF in an accessible way that looks great to your sighted users, but is still accessible to all users.",
                             Genre = "Computer",
                             Price = 34.950000000000003,
-                            PublishDate = new DateTime(2007, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2007, 11, 30, 23, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Design Accessible Web Sites"
                         },
                         new
@@ -162,7 +171,7 @@ namespace Data.Migrations
                             Description = "The last couple of years have seen big changes in server-side web programming. Now it’s the client’s turn; Dojo is the toolkit to make it happen and Mastering Dojo shows you how.",
                             Genre = "Computer",
                             Price = 38.950000000000003,
-                            PublishDate = new DateTime(2008, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2008, 5, 31, 22, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Mastering Dojo"
                         },
                         new
@@ -172,7 +181,7 @@ namespace Data.Migrations
                             Description = "Speak directly to your system. With its simple commands, flags, and parameters, a well-formed command-line application is the quickest way to automate a backup, a build, or a deployment and simplify your life.",
                             Genre = "Computer",
                             Price = 20.0,
-                            PublishDate = new DateTime(2012, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublishDate = new DateTime(2012, 2, 29, 23, 0, 0, 0, DateTimeKind.Utc),
                             Title = "Build Awesome Command-Line Applications in Ruby"
                         });
                 });
