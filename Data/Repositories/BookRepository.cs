@@ -18,6 +18,7 @@ public class BookRepository : IBookRepository
     private readonly BookContext _bookContext;
     private readonly ILogger<BookRepository> _logger;
 
+    private const char PriceCharSeparator = '&';
     private const double toleranceComparison = 0.01;
     private const string IdPrefix = "B-";
     private const string ErrorMessageQuery = "An error occurred while fetching the last ID.";
@@ -118,10 +119,9 @@ public class BookRepository : IBookRepository
 
         if (price is not null)
         {
-            if (price.Equals('&'))
+            if (price.Equals(PriceCharSeparator))
             {
-                (var minPrice, var maxPrice) = ParsePriceRange(price);
-
+                (var minPrice, var maxPrice) = ObtainMinAndMaxPrice(price);
                 query = query.Where(x => x.Price >= minPrice && x.Price <= maxPrice);
             }
             else
@@ -135,12 +135,12 @@ public class BookRepository : IBookRepository
     }
 
     /// <summary>
-    /// Parses the price range from a string into a tuple of two doubles.
-    /// The price range is expected to be in the format "minPrice&maxPrice".
+    /// Converts a price range string into a tuple of two doubles.
+    /// The price range string should be in the format "minPrice&maxPrice".
     /// </summary>
-    /// <param name="price">The price range string to parse.</param>
-    /// <returns>A tuple containing the minimum and maximum prices as doubles.</returns>
-    private static (double, double) ParsePriceRange(string price)
+    /// <param name="price">The price range string to convert.</param>
+    /// <returns>A tuple with the minimum and maximum prices as doubles.</returns>
+    private static (double, double) ObtainMinAndMaxPrice(string price)
     {
         string[] prices = price.Split('&');
         double minPrice = Convert.ToDouble(prices[0]);
@@ -178,15 +178,15 @@ public class BookRepository : IBookRepository
 
     public async Task<BookEntity?> AddBook(BookEntity book)
     {
-        var idToAdd = await GetBiggestNumber() ?? 0;
+        var lastId = await LastIdNumberOfEntityBook() ?? 0;
 
-        if (idToAdd == 0)
+        if (lastId == 0)
         {
             return null;
 
         }
 
-        book.Id = $"{IdPrefix}{idToAdd + 1}";
+        book.Id = $"{IdPrefix}{lastId + 1}";
 
         try
         {
@@ -205,11 +205,11 @@ public class BookRepository : IBookRepository
     }
 
     /// <summary>
-    /// Gets the biggest number from the Ids of the books in the database.
-    /// The Ids are expected to be in the format "B-<number>".
+    /// Retrieves the highest number from the book IDs in the database.
+    /// The IDs are expected to follow the pattern "B-<number>".
     /// </summary>
-    /// <returns>The biggest number from the Ids of the books in the database, or null if there are no books.</returns>
-    private async Task<int?> GetBiggestNumber()
+    /// <returns>The highest number from the book IDs in the database, or null if no books exist.</returns>
+    private async Task<int?> LastIdNumberOfEntityBook()
     {
         var prefix = IdPrefix;
         var prefixLength = IdPrefix.Length;
@@ -241,6 +241,7 @@ public class BookRepository : IBookRepository
             if (bookToModify is null)
             {
                 _logger.LogError(ErrorMessageFindBook, book.Id);
+
                 return null;
             }
 
