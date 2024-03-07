@@ -1,6 +1,7 @@
 ﻿namespace Data.Repositories;
 
 using CrossCutting.Exceptions;
+using CrossCutting.Messages;
 using Dapper;
 using Data.Contexts;
 using Data.Entities;
@@ -21,10 +22,6 @@ public class BookRepository : IBookRepository
     private const char PriceCharSeparator = '&';
     private const double toleranceComparison = 0.01;
     private const string IdPrefix = "B-";
-    private const string ErrorMessageQuery = "An error occurred while fetching the last ID.";
-    private const string ErrorMessageSaving = "An error occurred while saving the book: {SaveBook}.";
-    private const string ErrorMessageFindBook = "An error occurred while searching for the book with ID: {FindBookId}.";
-    private const string ErrorMessageUpdating = "An error occurred while updating the book: {UpdateBook}.";
 
     /// <summary>
     /// Initializes a new instance of the BookRepository class.
@@ -198,7 +195,7 @@ public class BookRepository : IBookRepository
         }
         catch (DbException ex)
         {
-            _logger.LogError(ex, ErrorMessageSaving, book);
+            _logger.LogError(ex, LogMessages.ErrorSavingLogMessage, book);
 
             return null;
         }
@@ -226,7 +223,7 @@ public class BookRepository : IBookRepository
         }
         catch (NpgsqlException ex)
         {
-            _logger.LogError(ex, ErrorMessageQuery);
+            _logger.LogError(ex, LogMessages.ErrorQueryLogMessage);
 
             return null;
         }
@@ -240,7 +237,7 @@ public class BookRepository : IBookRepository
 
             if (bookToModify is null)
             {
-                _logger.LogError(ErrorMessageFindBook, book.Id);
+                _logger.LogError(LogMessages.ErrorFindBookLogMessage, book.Id);
 
                 return null;
             }
@@ -253,7 +250,7 @@ public class BookRepository : IBookRepository
         }
         catch (DbUpdateException ex)
         {
-            _logger.LogError(ex, ErrorMessageUpdating, book);
+            _logger.LogError(ex, LogMessages.ErrorUpdatingLogMessage, book);
 
             return null;
         }

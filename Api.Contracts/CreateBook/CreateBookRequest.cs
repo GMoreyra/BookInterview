@@ -14,4 +14,4 @@ public record CreateBookRequest(string Author,
                                 string Title,
                                 string Genre,
                                 string Price,
-                                string PublishDate);
+                                string PublishDate) : IBookRequest;
