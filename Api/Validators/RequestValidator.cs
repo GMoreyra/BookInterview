@@ -15,7 +15,7 @@ public static class RequestValidator
     /// </summary>
     /// <param name="request">The book request to validate.</param>
     /// <returns>A string containing error messages if the request is invalid, null otherwise.</returns>
-    public static string? ValidateRequest<T>(T request) where T : IBookRequest
+    public static string? ValidateRequest<TRequest>(TRequest request) where TRequest : class, IBookRequest
     {
         StringBuilder message = new();
 
