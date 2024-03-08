@@ -6,6 +6,9 @@ using Xunit;
 public class PriceRangeFormatterTests
 {
     [Theory]
+    [InlineData(0.0, 0.0, "0&0")]
+    [InlineData(0.0, null, "0")]
+    [InlineData(null, 0.0, "0")]
     [InlineData(5.0, null, "5")]
     [InlineData(5.0, 10.0, "5&10")]
     [InlineData(null, null, null)]

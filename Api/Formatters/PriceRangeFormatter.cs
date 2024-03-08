@@ -13,18 +13,11 @@ public static class PriceRangeFormatter
     /// <returns>A string containing the minimum and maximum prices if both are provided, the minimum price otherwise.</returns>
     public static string? FormatPriceRange(double? minPrice, double? maxPrice)
     {
-        string? value = null;
-
-        if (minPrice.HasValue && !maxPrice.HasValue)
-        {
-            value = minPrice.Value.ToString();
-        }
-
         if (minPrice.HasValue && maxPrice.HasValue)
         {
-            value = $"{minPrice.Value}&{maxPrice.Value}";
+            return $"{minPrice.Value}&{maxPrice.Value}";
         }
 
-        return value;
+        return minPrice?.ToString() ?? maxPrice?.ToString();
     }
 }
