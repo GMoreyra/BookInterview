@@ -11,7 +11,6 @@ using CrossCutting.Exceptions;
 using CrossCutting.Messages;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using ResponseType = System.Net.Mime.MediaTypeNames.Application;
 
 /// <summary>
