@@ -1,3 +1,4 @@
+using Api.Extensions;
 using Application.Initialization;
 using Data.Initialization;
 using Microsoft.OpenApi.Models;
@@ -41,6 +42,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();
