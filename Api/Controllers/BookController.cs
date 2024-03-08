@@ -8,6 +8,7 @@ using Api.Validators;
 using Application.Enums;
 using Application.Interfaces;
 using CrossCutting.Exceptions;
+using CrossCutting.Messages;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using ResponseType = System.Net.Mime.MediaTypeNames.Application;
@@ -22,11 +23,6 @@ using ResponseType = System.Net.Mime.MediaTypeNames.Application;
 public class BooksController : Controller
 {
     private readonly IBookService _bookService;
-
-    private const string PublishDateErrorMessage = "The provided date is not valid. Please ensure the date is in the correct format.";
-    private const string PriceRangeErrorMessage = "The provided price range is not valid. Please ensure the minimum price is less than the maximum price.";
-    private const string CreateBookErrorMessage = "Failed to create a Book. Please check the provided details and try again.";
-    private const string UpdateBookNotFoundErrorMessage = "The book to be updated could not be found. Please check the provided ID.";
 
     /// <summary>
     /// Initializes a new instance of the BooksController class.
@@ -144,7 +140,7 @@ public class BooksController : Controller
 
         if (validationResult is not null)
         {
-            return BadRequest(PriceRangeErrorMessage);
+            return BadRequest(ErrorMessages.PriceRangeErrorMessage);
         }
 
         var price = PriceRangeFormatter.FormatPriceRange(minPrice, maxPrice);
@@ -171,7 +167,7 @@ public class BooksController : Controller
 
         if (parsedDate is null)
         {
-            return BadRequest(PublishDateErrorMessage);
+            return BadRequest(ErrorMessages.PublishDateErrorMessage);
         }
 
         var books = await _bookService.GetBooks(BookFilterBy.PublishDate, parsedDate.ToString());
@@ -189,11 +185,18 @@ public class BooksController : Controller
     [ProducesResponseType(typeof(UpdateBookResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UpdateBookResponse>> UpdateBook([Required] string id, [FromBody] UpdateBookRequest updateBookRequest)
+    public async Task<ActionResult<UpdateBookResponse>> UpdateBook([Required] string id, [FromBody] [Required] UpdateBookRequest updateBookRequest)
     {
+        var errorMessage = RequestValidator.ValidateRequest(updateBookRequest);
+
+        if (errorMessage is not null) 
+        { 
+            return BadRequest(errorMessage);
+        }
+
         var updatedBook = await _bookService.UpdateBook(id, updateBookRequest);
 
-        return updatedBook is null ? NotFound(UpdateBookNotFoundErrorMessage) : Ok(updatedBook);
+        return updatedBook is null ? NotFound(ErrorMessages.UpdateBookNotFoundErrorMessage) : Ok(updatedBook);
     }
 
     /// <summary>
@@ -205,11 +208,11 @@ public class BooksController : Controller
     ///
     ///     PUT /api/Books
     ///     {
-    ///        "id": "1",
-    ///        "title": "Book Title",
     ///        "author": "Author Name",
     ///        "description": "Book Description",
-    ///        "price": 19.99,
+    ///        "title": "Book Title",
+    ///        "genre": "Fiction",
+    ///        "price": "19.99",
     ///        "publishDate": "2022-01-01T00:00:00"
     ///     }
     ///
@@ -219,10 +222,17 @@ public class BooksController : Controller
     [HttpPut]
     [ProducesResponseType(typeof(CreateBookResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<CreateBookResponse>> CreateBook(CreateBookRequest createBookRequest)
+    public async Task<ActionResult<CreateBookResponse>> CreateBook([FromBody] [Required] CreateBookRequest createBookRequest)
     {
+        var errorMessage = RequestValidator.ValidateRequest(createBookRequest);
+
+        if (errorMessage is not null)
+        {
+            return BadRequest(errorMessage);
+        }
+
         var addedBook = await _bookService.CreateBook(createBookRequest);
         
-        return addedBook is null ? BadRequest(CreateBookErrorMessage) : CreatedAtAction(nameof(CreateBook), new { id = addedBook.Id }, addedBook);
+        return addedBook is null ? BadRequest(ErrorMessages.CreateBookErrorMessage) : CreatedAtAction(nameof(CreateBook), new { id = addedBook.Id }, addedBook);
     }
 }

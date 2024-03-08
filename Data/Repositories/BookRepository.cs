@@ -1,6 +1,7 @@
 ﻿namespace Data.Repositories;
 
 using CrossCutting.Exceptions;
+using CrossCutting.Messages;
 using Dapper;
 using Data.Contexts;
 using Data.Entities;
@@ -9,20 +10,18 @@ using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 using System.Data.Common;
 using System.Globalization;
 
 public class BookRepository : IBookRepository
 {
     private readonly BookContext _bookContext;
-    private readonly IConfiguration _configuration;
     private readonly ILogger<BookRepository> _logger;
 
+    private const char PriceCharSeparator = '&';
     private const double toleranceComparison = 0.01;
     private const string IdPrefix = "B-";
-    private const string DefaultConnection = "DefaultConnection";
-    private const string ErrorMessageSaving = "There was an error while saving the book: {SaveBook}.";
-    private const string ErrorMessageUpdating = "There was an error while updating the book: {UpdateBook}.";
 
     /// <summary>
     /// Initializes a new instance of the BookRepository class.
@@ -31,14 +30,12 @@ public class BookRepository : IBookRepository
     /// <param name="configuration">The configuration to be used for accessing app settings.</param>
     /// <param name="logger">The logger to be used for logging.</param>
     /// <exception cref="ArgumentNullException">Thrown when either <see cref="BookContext"/> or <see cref="IConfiguration"/> is null.</exception>
-    public BookRepository(BookContext bookContext, IConfiguration configuration, ILogger<BookRepository> logger)
+    public BookRepository(BookContext bookContext, ILogger<BookRepository> logger)
     {
         Argument.ThrowIfNull(() => bookContext);
-        Argument.ThrowIfNull(() => configuration);
         Argument.ThrowIfNull(() => logger);
 
         _bookContext = bookContext;
-        _configuration = configuration;
         _logger = logger;
     }
 
@@ -54,9 +51,7 @@ public class BookRepository : IBookRepository
         if (!string.IsNullOrWhiteSpace(id))
         {
             id = id.ToUpper();
-            return await query.Where(x => !string.IsNullOrWhiteSpace(x.Id) && x.Id.ToUpper().Contains(id))
-                                           .OrderBy(x => x.Id)
-                                           .ToArrayAsync();
+            query = query.Where(x => x.Id.ToUpper().Contains(id));
         }
 
         return await query.OrderBy(x => x.Id).ToArrayAsync();
@@ -70,7 +65,7 @@ public class BookRepository : IBookRepository
         if (!string.IsNullOrWhiteSpace(author))
         {
             author = author.ToUpper();
-            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Author) && x.Author.ToUpper().Contains(author));
+            query = query.Where(x => x.Author.ToUpper().Contains(author));
         }
 
         return await query.OrderBy(x => x.Author).ToArrayAsync();
@@ -83,7 +78,7 @@ public class BookRepository : IBookRepository
         if (!string.IsNullOrWhiteSpace(title))
         {
             title = title.ToUpper();
-            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Title) && x.Title.ToUpper().Contains(title));
+            query = query.Where(x => x.Title.ToUpper().Contains(title));
         }
 
         return await query.OrderBy(x => x.Title).ToArrayAsync();
@@ -96,7 +91,7 @@ public class BookRepository : IBookRepository
         if (!string.IsNullOrWhiteSpace(genre))
         {
             genre = genre.ToUpper();
-            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Genre) && x.Genre.ToUpper().Contains(genre));
+            query = query.Where(x => x.Genre.ToUpper().Contains(genre));
         }
 
         return await query.OrderBy(x => x.Genre).ToArrayAsync();
@@ -109,7 +104,7 @@ public class BookRepository : IBookRepository
         if (!string.IsNullOrWhiteSpace(description))
         {
             description = description.ToUpper();
-            query = query.Where(x => !string.IsNullOrWhiteSpace(x.Description) && x.Description.ToUpper().Contains(description));
+            query = query.Where(x => x.Description.ToUpper().Contains(description));
         }
 
         return await query.OrderBy(x => x.Description).ToArrayAsync();
@@ -121,15 +116,14 @@ public class BookRepository : IBookRepository
 
         if (price is not null)
         {
-            if (price.Equals('&'))
+            if (price.Equals(PriceCharSeparator))
             {
-                (var minPrice, var maxPrice) = ParsePriceRange(price);
-
+                (var minPrice, var maxPrice) = ObtainMinAndMaxPrice(price);
                 query = query.Where(x => x.Price >= minPrice && x.Price <= maxPrice);
             }
             else
             {
-                var priceParsed = double.Parse(price);
+                var priceParsed = double.Parse(price, CultureInfo.InvariantCulture);
                 query = query.Where(x => Math.Abs(x.Price - priceParsed) < toleranceComparison);
             }
         }
@@ -138,12 +132,12 @@ public class BookRepository : IBookRepository
     }
 
     /// <summary>
-    /// Parses the price range from a string into a tuple of two doubles.
-    /// The price range is expected to be in the format "minPrice&maxPrice".
+    /// Converts a price range string into a tuple of two doubles.
+    /// The price range string should be in the format "minPrice&maxPrice".
     /// </summary>
-    /// <param name="price">The price range string to parse.</param>
-    /// <returns>A tuple containing the minimum and maximum prices as doubles.</returns>
-    private static (double, double) ParsePriceRange(string price)
+    /// <param name="price">The price range string to convert.</param>
+    /// <returns>A tuple with the minimum and maximum prices as doubles.</returns>
+    private static (double, double) ObtainMinAndMaxPrice(string price)
     {
         string[] prices = price.Split('&');
         double minPrice = Convert.ToDouble(prices[0]);
@@ -181,43 +175,58 @@ public class BookRepository : IBookRepository
 
     public async Task<BookEntity?> AddBook(BookEntity book)
     {
+        var lastId = await LastIdNumberOfEntityBook() ?? 0;
+
+        if (lastId == 0)
+        {
+            return null;
+
+        }
+
+        book.Id = $"{IdPrefix}{lastId + 1}";
+
         try
         {
-            var idToAdd = await GetBiggestNumber() ?? 0;
-            book.Id = $"{IdPrefix}{idToAdd + 1}";
-     
             var createdBook = _bookContext.Books.Add(book);
+
             await _bookContext.SaveChangesAsync();
 
             return createdBook.Entity;
         }
         catch (DbException ex)
         {
-            _logger.LogError(ex, ErrorMessageSaving, book);
+            _logger.LogError(ex, LogMessages.ErrorSavingLogMessage, book);
+
             return null;
         }
     }
 
     /// <summary>
-    /// Gets the biggest number from the Ids of the books in the database.
-    /// The Ids are expected to be in the format "B-<number>".
+    /// Retrieves the highest number from the book IDs in the database.
+    /// The IDs are expected to follow the pattern "B-<number>".
     /// </summary>
-    /// <returns>The biggest number from the Ids of the books in the database, or null if there are no books.</returns>
-    private async Task<int?> GetBiggestNumber()
+    /// <returns>The highest number from the book IDs in the database, or null if no books exist.</returns>
+    private async Task<int?> LastIdNumberOfEntityBook()
     {
         var prefix = IdPrefix;
         var prefixLength = IdPrefix.Length;
 
         var biggestNumberQuery = $@"
-                SELECT MAX(CAST(SUBSTR(Id, {prefixLength + 1}, LENGTH(Id) - {prefixLength}) AS INT))
-                FROM Books
-                WHERE Id LIKE '{prefix}%'";
+                SELECT MAX(CAST(SUBSTR(""Id"", {prefixLength + 1}, LENGTH(""Id"") - {prefixLength}) AS INT))
+                FROM public.""Books""
+                WHERE ""Id"" LIKE '{prefix}%'";
 
-        var connectionString = _configuration.GetConnectionString(DefaultConnection);
+        try
+        {
+            return await _bookContext.Database.GetDbConnection()
+                      .QueryFirstOrDefaultAsync<int?>(biggestNumberQuery);
+        }
+        catch (NpgsqlException ex)
+        {
+            _logger.LogError(ex, LogMessages.ErrorQueryLogMessage);
 
-        using var connection = new Microsoft.Data.Sqlite.SqliteConnection(connectionString);
-
-        return await connection.QueryFirstOrDefaultAsync<int?>(biggestNumberQuery);
+            return null;
+        }
     }
 
     public async Task<BookEntity?> UpdateBook(BookEntity book)
@@ -228,6 +237,8 @@ public class BookRepository : IBookRepository
 
             if (bookToModify is null)
             {
+                _logger.LogError(LogMessages.ErrorFindBookLogMessage, book.Id);
+
                 return null;
             }
 
@@ -239,7 +250,8 @@ public class BookRepository : IBookRepository
         }
         catch (DbUpdateException ex)
         {
-            _logger.LogError(ex, ErrorMessageUpdating, book);
+            _logger.LogError(ex, LogMessages.ErrorUpdatingLogMessage, book);
+
             return null;
         }
     }

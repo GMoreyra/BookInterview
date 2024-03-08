@@ -96,3 +96,4 @@ insert_final_newline = true
 dotnet_style_namespace_match_folder = true:suggestion
 dotnet_diagnostic.CA2007.severity = suggestion
 dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1062.severity = suggestion

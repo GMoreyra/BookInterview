@@ -3,6 +3,7 @@
 using Api.Contracts.CreateBook;
 using Api.Contracts.UpdateBook;
 using Data.Entities;
+using System.Globalization;
 
 /// <summary>
 /// Provides extension methods for converting DTOs to Entity models.
@@ -24,8 +25,8 @@ public static class ToEntityModelExtension
             Description = createBookRequest.Description,
             Title = createBookRequest.Title,
             Genre = createBookRequest.Genre,
-            Price = createBookRequest.Price,
-            PublishDate = createBookRequest.PublishDate,
+            Price = double.Parse(createBookRequest.Price, CultureInfo.InvariantCulture),
+            PublishDate = DateTime.Parse(createBookRequest.PublishDate, CultureInfo.InvariantCulture),
         };
     }
 
@@ -44,8 +45,8 @@ public static class ToEntityModelExtension
             Description = updateBookRequest.Description ?? string.Empty,
             Title = updateBookRequest.Title ?? string.Empty,
             Genre = updateBookRequest.Genre ?? string.Empty,
-            Price = updateBookRequest.Price ?? default,
-            PublishDate = updateBookRequest.PublishDate ?? default,
+            Price = string.IsNullOrWhiteSpace(updateBookRequest.Price) ? default : double.Parse(updateBookRequest.Price, CultureInfo.InvariantCulture),
+            PublishDate = string.IsNullOrWhiteSpace(updateBookRequest.PublishDate) ? default : DateTime.Parse(updateBookRequest.PublishDate, CultureInfo.InvariantCulture),
         };
     }
 }

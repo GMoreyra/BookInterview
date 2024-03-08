@@ -7,7 +7,7 @@ using global::Api.Contracts.UpdateBook;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
-public static class FakeData
+public static class MockData
 {
     public static Collection<BookEntity> EntityBookMocks() =>
         [
@@ -40,15 +40,15 @@ public static class FakeData
 
     public static Collection<CreateBookRequest> CreateBookRequestMocks() =>
         [
-            new("Author 1", "Test description 1", "Title 1", "Genre 1", 10, DateTime.Parse("2021-01-01", CultureInfo.InvariantCulture)),
-            new("Author 2", "Test description 2", "Title 2", "Genre 2", 20, DateTime.Parse("2021-02-01", CultureInfo.InvariantCulture)),
-            new("Author 3", "Test description 3", "Title 3", "Genre 3", 30, DateTime.Parse("2021-03-01", CultureInfo.InvariantCulture)),
+            new("Author 1", "Test description 1", "Title 1", "Genre 1", "10", "2021-01-01"),
+            new("Author 2", "Test description 2", "Title 2", "Genre 2", "20", "2021-02-01"),
+            new("Author 3", "Test description 3", "Title 3", "Genre 3", "30", "2021-03-01"),
         ];
 
     public static Collection<UpdateBookRequest> UpdateBookRequestMocks() =>
         [
-            new("Author 1", "Test description 1", "Title 1", "Genre 1", 10, DateTime.Parse("2021-01-01", CultureInfo.InvariantCulture)),
-            new("Author 2", "Test description 2", "Title 2", "Genre 2", 20, DateTime.Parse("2021-02-01", CultureInfo.InvariantCulture)),
-            new("Author 3", "Test description 3", "Title 3", "Genre 3", 30, DateTime.Parse("2021-03-01", CultureInfo.InvariantCulture)),
+            new("Author 1", "Test description 1", "Title 1", "Genre 1", "10", "2021-01-01"),
+            new("Author 2", "Test description 2", "Title 2", "Genre 2", "20", "2021-02-01"),
+            new("Author 3", "Test description 3", "Title 3", "Genre 3", "30", "2021-03-01"),
         ];
 }

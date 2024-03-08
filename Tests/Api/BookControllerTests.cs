@@ -35,7 +35,7 @@ public class BooksControllerTests
     public async Task GetBooks_ReturnsAllBooks()
     {
         // Arrange
-        var getBooksReponse = FakeData.GetBooksResponseMocks();
+        var getBooksReponse = MockData.GetBooksResponseMocks();
         _bookServiceMock.Setup(service => service.GetBooks(BookFilterBy.None, null)).ReturnsAsync(getBooksReponse);
 
         // Act
@@ -51,8 +51,8 @@ public class BooksControllerTests
     public async Task UpdateBook_ValidBook_ReturnsUpdatedBook()
     {
         // Arrange
-        var updateBookRequest = FakeData.UpdateBookRequestMocks()[0];
-        var updateBookResponse = FakeData.UpdateBookResponseMocks()[0];
+        var updateBookRequest = MockData.UpdateBookRequestMocks()[0];
+        var updateBookResponse = MockData.UpdateBookResponseMocks()[0];
         _bookServiceMock.Setup(service => service.UpdateBook(It.IsAny<string>(), It.IsAny<UpdateBookRequest>())).ReturnsAsync(updateBookResponse);
 
         // Act
@@ -68,8 +68,8 @@ public class BooksControllerTests
     public async Task AddBook_ValidBook_ReturnsAddedBook()
     {
         // Arrange
-        var createBookResponse = FakeData.CreateBookResponseMocks()[0];
-        var createBookRequest = FakeData.CreateBookRequestMocks()[0];
+        var createBookResponse = MockData.CreateBookResponseMocks()[0];
+        var createBookRequest = MockData.CreateBookRequestMocks()[0];
         _bookServiceMock.Setup(service => service.CreateBook(It.IsAny<CreateBookRequest>())).ReturnsAsync(createBookResponse);
 
         // Act

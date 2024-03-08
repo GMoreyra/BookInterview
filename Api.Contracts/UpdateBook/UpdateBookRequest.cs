@@ -13,5 +13,5 @@ public record UpdateBookRequest(string? Author,
                                 string? Description,
                                 string? Title,
                                 string? Genre,
-                                double? Price,
-                                DateTime? PublishDate);
+                                string? Price,
+                                string? PublishDate) : IBookRequest;
