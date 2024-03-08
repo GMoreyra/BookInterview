@@ -1,21 +1,21 @@
 version: '3.4'
-
 services:
   api:
-    image: ${DOCKER_REGISTRY-}api
+    image: '${DOCKER_REGISTRY-}api'
     build:
       context: .
       dockerfile: Api/Dockerfile
     ports:
-    - "5000:5000"
-    - "5001:5001"
+      - '5000:5000'
+      - '5001:5001'
   book.database:
-    image: postgres:latest
+    image: 'postgres:latest'
     container_name: book.database
     environment:
-    - POSTGRES_DB=books
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=german
+      - POSTGRES_DB=books
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=german
+    volumes:
+      - './.containers/books-db:/var/lib/postgresql/data'
     ports:
-    - "5432:5432"
-
+      - '5432:5432'
