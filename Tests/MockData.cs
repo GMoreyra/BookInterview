@@ -7,7 +7,7 @@ using global::Api.Contracts.UpdateBook;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
-public static class FakeData
+public static class MockData
 {
     public static Collection<BookEntity> EntityBookMocks() =>
         [

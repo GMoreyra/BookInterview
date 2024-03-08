@@ -31,8 +31,8 @@ public class BookServiceTests
     public async Task GetBooks_ValidAttribute_ReturnsExpectedBooks(BookFilterBy attribute, string value)
     {
         // Arrange
-        var expectedBookList = FakeData.EntityBookMocks();
-        var getBookResponse = FakeData.GetBooksResponseMocks().Where(book =>
+        var expectedBookList = MockData.EntityBookMocks();
+        var getBookResponse = MockData.GetBooksResponseMocks().Where(book =>
             (attribute == BookFilterBy.Id && book.Id == value) ||
             (attribute == BookFilterBy.Author && book.Author == value) ||
             (attribute == BookFilterBy.Title && book.Title == value) ||
@@ -61,8 +61,8 @@ public class BookServiceTests
     public async Task GetBooks_InvalidAttribute_ReturnsAllBooks()
     {
         // Arrange
-        var expectedBooks = FakeData.EntityBookMocks();
-        var getBookResponse = FakeData.GetBooksResponseMocks();
+        var expectedBooks = MockData.EntityBookMocks();
+        var getBookResponse = MockData.GetBooksResponseMocks();
 
         _bookRepositoryMock.Setup(repo => repo.GetBooks()).ReturnsAsync(expectedBooks);
 
@@ -77,9 +77,9 @@ public class BookServiceTests
     public async Task UpdateBook_ValidBook_ReturnsUpdatedBook()
     {
         // Arrange
-        var entityBook = FakeData.EntityBookMocks()[0];
-        var updateBookRequest = FakeData.UpdateBookRequestMocks()[0];
-        var updateBookResponse = FakeData.UpdateBookResponseMocks()[0];
+        var entityBook = MockData.EntityBookMocks()[0];
+        var updateBookRequest = MockData.UpdateBookRequestMocks()[0];
+        var updateBookResponse = MockData.UpdateBookResponseMocks()[0];
 
         _bookRepositoryMock.Setup(repo => repo.UpdateBook(It.IsAny<BookEntity>())).ReturnsAsync(entityBook);
 
