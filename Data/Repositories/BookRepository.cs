@@ -20,7 +20,6 @@ public class BookRepository : IBookRepository
     private readonly ILogger<BookRepository> _logger;
 
     private const char PriceCharSeparator = '&';
-    private const double toleranceComparison = 0.01;
     private const string IdPrefix = "B-";
 
     /// <summary>
@@ -112,11 +111,13 @@ public class BookRepository : IBookRepository
 
     public async Task<IEnumerable<BookEntity>> GetBooksByPrice(string? price)
     {
+        double toleranceComparison = 0.01;
+
         IQueryable<BookEntity> query = _bookContext.Books;
 
         if (price is not null)
         {
-            if (price.Equals(PriceCharSeparator))
+            if (price.Contains(PriceCharSeparator, StringComparison.InvariantCultureIgnoreCase))
             {
                 (var minPrice, var maxPrice) = ObtainMinAndMaxPrice(price);
                 query = query.Where(x => x.Price >= minPrice && x.Price <= maxPrice);
@@ -139,9 +140,9 @@ public class BookRepository : IBookRepository
     /// <returns>A tuple with the minimum and maximum prices as doubles.</returns>
     private static (double, double) ObtainMinAndMaxPrice(string price)
     {
-        string[] prices = price.Split('&');
-        double minPrice = Convert.ToDouble(prices[0]);
-        double maxPrice = Convert.ToDouble(prices[1]);
+        string[] prices = price.Split(PriceCharSeparator);
+        double minPrice = double.Parse(prices[0], CultureInfo.InvariantCulture);
+        double maxPrice = double.Parse(prices[1], CultureInfo.InvariantCulture);
 
         return (minPrice, maxPrice);
     }
