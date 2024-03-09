@@ -1,4 +1,4 @@
-﻿namespace Application.Extensions;
+﻿namespace Application.MapExtensions;
 
 using Api.Contracts.CreateBook;
 using Api.Contracts.GetBooks;
