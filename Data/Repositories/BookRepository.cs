@@ -20,7 +20,6 @@ public class BookRepository : IBookRepository
     private readonly ILogger<BookRepository> _logger;
 
     private const char PriceCharSeparator = '&';
-    private const double toleranceComparison = 0.01;
     private const string IdPrefix = "B-";
 
     /// <summary>
@@ -112,6 +111,8 @@ public class BookRepository : IBookRepository
 
     public async Task<IEnumerable<BookEntity>> GetBooksByPrice(string? price)
     {
+        double toleranceComparison = 0.01;
+
         IQueryable<BookEntity> query = _bookContext.Books;
 
         if (price is not null)
