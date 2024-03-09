@@ -185,18 +185,20 @@ public class BooksController : Controller
     [ProducesResponseType(typeof(UpdateBookResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UpdateBookResponse>> UpdateBook([Required] string id, [FromBody] [Required] UpdateBookRequest updateBookRequest)
+    public async Task<ActionResult<UpdateBookResponse>> UpdateBook([Required] string id, [FromBody][Required] UpdateBookRequest updateBookRequest)
     {
         var errorMessage = RequestValidator.ValidateRequest(updateBookRequest);
 
-        if (errorMessage is not null) 
-        { 
+        if (errorMessage is not null)
+        {
             return BadRequest(errorMessage);
         }
 
         var updatedBook = await _bookService.UpdateBook(id, updateBookRequest);
 
-        return updatedBook is null ? NotFound(ErrorMessages.UpdateBookNotFoundErrorMessage) : Ok(updatedBook);
+        return updatedBook is null ?
+            NotFound(ErrorMessages.UpdateBookNotFoundErrorMessage) :
+            Ok(updatedBook);
     }
 
     /// <summary>
@@ -222,7 +224,7 @@ public class BooksController : Controller
     [HttpPut]
     [ProducesResponseType(typeof(CreateBookResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<CreateBookResponse>> CreateBook([FromBody] [Required] CreateBookRequest createBookRequest)
+    public async Task<ActionResult<CreateBookResponse>> CreateBook([FromBody][Required] CreateBookRequest createBookRequest)
     {
         var errorMessage = RequestValidator.ValidateRequest(createBookRequest);
 
@@ -232,7 +234,9 @@ public class BooksController : Controller
         }
 
         var addedBook = await _bookService.CreateBook(createBookRequest);
-        
-        return addedBook is null ? BadRequest(ErrorMessages.CreateBookErrorMessage) : CreatedAtAction(nameof(CreateBook), new { id = addedBook.Id }, addedBook);
+
+        return addedBook is null ?
+            BadRequest(ErrorMessages.CreateBookErrorMessage) :
+            CreatedAtAction(nameof(CreateBook), new { id = addedBook.Id }, addedBook);
     }
 }
