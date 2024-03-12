@@ -9,6 +9,7 @@ using Application.Enums;
 using Application.Interfaces;
 using CrossCutting.Exceptions;
 using CrossCutting.Messages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using ResponseType = System.Net.Mime.MediaTypeNames.Application;
@@ -54,7 +55,7 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="id">The ID of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
-    [HttpGet("/id/{id?}")]
+    [HttpGet("id/{id?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksById(string? id = null)
@@ -69,7 +70,7 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="author">The author of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
-    [HttpGet("/author/{author?}")]
+    [HttpGet("author/{author?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByAuthor(string? author = null)
@@ -84,7 +85,7 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="description">The description of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
-    [HttpGet("/description/{description?}")]
+    [HttpGet("description/{description?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByDescription(string? description = null)
@@ -99,7 +100,7 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="title">The title of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
-    [HttpGet("/title/{title?}")]
+    [HttpGet("title/{title?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByTitle(string? title = null)
@@ -114,7 +115,7 @@ public class BooksController : Controller
     /// </summary>
     /// <param name="genre">The genre of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
-    [HttpGet("/genre/{genre?}")]
+    [HttpGet("genre/{genre?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<List<GetBooksResponse>>> GetBooksByGenre(string? genre = null)
@@ -130,7 +131,7 @@ public class BooksController : Controller
     /// <param name="minPrice">The minimum price of the book.</param>
     /// <param name="maxPrice">The maximum price of the book.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
-    [HttpGet("/price")]
+    [HttpGet("price")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
@@ -157,7 +158,7 @@ public class BooksController : Controller
     /// <param name="month">The month of the publish date.</param>
     /// <param name="day">The day of the publish date.</param>
     /// <returns>A list of <see cref="GetBooksResponse"/>.</returns>
-    [HttpGet("/published/{year?}/{month?}/{day?}")]
+    [HttpGet("published/{year?}/{month?}/{day?}")]
     [ProducesResponseType(typeof(List<GetBooksResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
@@ -181,9 +182,11 @@ public class BooksController : Controller
     /// <param name="id">The ID of the book to update.</param>
     /// <param name="updateBookRequest">The updated book data.</param>
     /// <returns>The updated <see cref="UpdateBookResponse"/>.</returns>
-    [HttpPost("/{id}")]
+    [Authorize]
+    [HttpPost("{id}")]
     [ProducesResponseType(typeof(UpdateBookResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UpdateBookResponse>> UpdateBook([Required] string id, [FromBody][Required] UpdateBookRequest updateBookRequest)
     {
@@ -221,9 +224,11 @@ public class BooksController : Controller
     /// </remarks>
     /// <response code="201">Returns the newly created item</response>
     /// <response code="400">If the item is null</response>
+    [Authorize]
     [HttpPut]
     [ProducesResponseType(typeof(CreateBookResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<CreateBookResponse>> CreateBook([FromBody][Required] CreateBookRequest createBookRequest)
     {
         var errorMessage = RequestValidator.ValidateRequest(createBookRequest);
