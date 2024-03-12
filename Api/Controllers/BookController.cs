@@ -9,6 +9,7 @@ using Application.Enums;
 using Application.Interfaces;
 using CrossCutting.Exceptions;
 using CrossCutting.Messages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using ResponseType = System.Net.Mime.MediaTypeNames.Application;
@@ -181,9 +182,11 @@ public class BooksController : Controller
     /// <param name="id">The ID of the book to update.</param>
     /// <param name="updateBookRequest">The updated book data.</param>
     /// <returns>The updated <see cref="UpdateBookResponse"/>.</returns>
+    [Authorize]
     [HttpPost("/{id}")]
     [ProducesResponseType(typeof(UpdateBookResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UpdateBookResponse>> UpdateBook([Required] string id, [FromBody][Required] UpdateBookRequest updateBookRequest)
     {
@@ -221,9 +224,11 @@ public class BooksController : Controller
     /// </remarks>
     /// <response code="201">Returns the newly created item</response>
     /// <response code="400">If the item is null</response>
+    [Authorize]
     [HttpPut]
     [ProducesResponseType(typeof(CreateBookResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<CreateBookResponse>> CreateBook([FromBody][Required] CreateBookRequest createBookRequest)
     {
         var errorMessage = RequestValidator.ValidateRequest(createBookRequest);
