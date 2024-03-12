@@ -10,7 +10,7 @@ public class JwtOptions
     /// <summary>
     /// The section name of the JWT settings in the configuration file.
     /// </summary>
-    public const string SectionName = "JwtSettings";
+    public const string SectionName = "JwtOptions";
 
     /// <summary>
     /// Gets or sets the issuer of the JWT.
