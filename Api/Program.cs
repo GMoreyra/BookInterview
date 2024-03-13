@@ -1,5 +1,6 @@
 using Api.Configurations;
 using Api.Extensions;
+using Api.Options;
 using Api.Swagger;
 using Application.Initialization;
 using Data.Initialization;
