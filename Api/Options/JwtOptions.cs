@@ -1,4 +1,4 @@
-﻿namespace Api.Configurations;
+﻿namespace Api.Options;
 
 using System.ComponentModel.DataAnnotations;
 

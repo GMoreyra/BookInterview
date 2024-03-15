@@ -1,5 +1,6 @@
 ﻿namespace Api.Configurations;
 
+using Api.Options;
 using CrossCutting.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

@@ -1,5 +1,6 @@
 using Api.Configurations;
 using Api.Extensions;
+using Api.Options;
 using Api.Swagger;
 using Application.Initialization;
 using Data.Initialization;
@@ -36,12 +37,9 @@ builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwa
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.ApplyMigrations();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+app.ApplyMigrations();
 
 app.UseHttpsRedirection();
 
