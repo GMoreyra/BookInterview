@@ -63,3 +63,23 @@ Payload
 "publish_date": "2008-06-01",
 "description": "Test description"
 }
+```
+
+## Implementation:
+
+This API is implemented using .NET 8 for the backend, PostgreSQL for the database, and Dapper and Entity Framework for data access.
+
+## Additional Features:
+
+### SonarAnalyzer:
+
+This project also uses SonarAnalyzer, a set of Roslyn analyzers that report on various types of code smells, bugs, and security vulnerabilities. This helps to maintain high code quality and identify potential issues early in the development process.
+
+### Authentication:
+
+The API includes a dummy authentication system using JWT (JSON Web Tokens). This is a simple, hardcoded system for demonstration purposes and should be replaced with a full authentication system for any real-world application.
+
+### Docker and Docker Compose:
+
+This project also includes Docker and Docker Compose configurations. This allows for easy setup and deployment of the API and the PostgreSQL database. To start the services, simply run `docker-compose up` in the root directory of the project.
+
