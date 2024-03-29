@@ -149,6 +149,10 @@ public class BookRepository : IBookRepository
 
     public async Task<IEnumerable<BookEntity>> GetBooksByPublishDate(string? publishDate)
     {
+        const string YearFormat = "yyyy";
+        const string YearMonthFormat = "yyyy-MM";
+        const string YearMonthDayFormat = "yyyy-MM-dd";
+
         IQueryable<BookEntity> query = _bookContext.Books;
 
         if (publishDate is not null)
@@ -156,16 +160,16 @@ public class BookRepository : IBookRepository
             DateTime parsedDate;
             var formatInfo = new DateTimeFormatInfo();
 
-            if (DateTime.TryParseExact(publishDate, "yyyy", formatInfo, DateTimeStyles.None, out parsedDate))
+            if (DateTime.TryParseExact(publishDate, YearFormat, formatInfo, DateTimeStyles.None, out parsedDate))
             {
                 query = query.Where(x => x.PublishDate.Year == parsedDate.Year);
             }
-            else if (DateTime.TryParseExact(publishDate, "yyyy-MM", formatInfo, DateTimeStyles.None, out parsedDate))
+            else if (DateTime.TryParseExact(publishDate, YearMonthFormat, formatInfo, DateTimeStyles.None, out parsedDate))
             {
                 query = query.Where(x => x.PublishDate.Year == parsedDate.Year
                                           && x.PublishDate.Month == parsedDate.Month);
             }
-            else if (DateTime.TryParseExact(publishDate, "yyyy-MM-dd", formatInfo, DateTimeStyles.None, out parsedDate))
+            else if (DateTime.TryParseExact(publishDate, YearMonthDayFormat, formatInfo, DateTimeStyles.None, out parsedDate))
             {
                 query = query.Where(x => x.PublishDate.Date == parsedDate.Date);
             }
