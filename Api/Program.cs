@@ -1,5 +1,6 @@
 using Api.Configurations;
 using Api.Extensions;
+using Api.Middleware;
 using Api.Options;
 using Api.Swagger;
 using Application.Initialization;
@@ -34,6 +35,8 @@ builder.Services.AddLogging(logging =>
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -41,6 +44,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.ApplyMigrations();
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
