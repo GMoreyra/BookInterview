@@ -111,7 +111,7 @@ public class BookRepository : IBookRepository
 
     public async Task<IEnumerable<BookEntity>> GetBooksByPrice(string? price)
     {
-        double toleranceComparison = 0.01;
+        const double toleranceComparison = 0.01;
 
         IQueryable<BookEntity> query = _bookContext.Books;
 
@@ -185,7 +185,6 @@ public class BookRepository : IBookRepository
         if (lastId == 0)
         {
             return null;
-
         }
 
         book.Id = $"{IdPrefix}{lastId + 1}";
