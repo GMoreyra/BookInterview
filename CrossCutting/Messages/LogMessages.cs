@@ -9,4 +9,5 @@ public static class LogMessages
     public const string ErrorSavingLogMessage = "An error occurred while saving the book: {SaveBook}.";
     public const string ErrorFindBookLogMessage = "An error occurred while searching for the book with ID: {FindBookId}.";
     public const string ErrorUpdatingLogMessage = "An error occurred while updating the book: {UpdateBook}.";
+    public const string ErrorUnhandledExceptionLogMessage = "An unhandled exception occurred: {UnhandledException}.";
 }

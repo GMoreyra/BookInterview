@@ -14,7 +14,6 @@ public static class ToEntityModelExtension
     /// Converts a CreateBookRequest to a BookEntity model.
     /// </summary>
     /// <param name="createBookRequest">The CreateBookRequest to convert.</param>
-    /// <param name="id">The id to assign to the BookEntity. Defaults to an empty string.</param>
     /// <returns>A <see cref="BookEntity"/>.</returns>
     public static BookEntity FromCreateBookRequest(this CreateBookRequest createBookRequest)
     {
@@ -31,12 +30,12 @@ public static class ToEntityModelExtension
     }
 
     /// <summary>
-    /// Converts a CreateBookRequest to a BookEntity model.
+    /// Converts an UpdateBookRequest to a BookEntity model.
     /// </summary>
-    /// <param name="updateBookRequest">The CreateBookRequest to convert.</param>
-    /// <param name="id">The id to assign to the BookEntity. Defaults to an empty string.</param>
+    /// <param name="updateBookRequest">The UpdateBookRequest to convert.</param>
+    /// <param name="id">The id to assign to the BookEntity.</param>
     /// <returns>A <see cref="BookEntity"/>.</returns>
-    public static BookEntity FromUpdateBookRequest(this UpdateBookRequest updateBookRequest, string id = " ")
+    public static BookEntity FromUpdateBookRequest(this UpdateBookRequest updateBookRequest, string id)
     {
         return new()
         {

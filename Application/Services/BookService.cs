@@ -58,19 +58,19 @@ public class BookService : IBookService
 
     public async Task<UpdateBookResponse?> UpdateBook(string id, UpdateBookRequest updateBookRequest)
     {
-        var bookEntity = updateBookRequest.FromUpdateBookRequest(id);
+        BookEntity book = updateBookRequest.FromUpdateBookRequest(id);
 
-        var updatedBook = await _bookRepository.UpdateBook(bookEntity);
+        var updatedBook = await _bookRepository.UpdateBook(book);
 
         return updatedBook?.ToUpdateBookResponse();
     }
 
     public async Task<CreateBookResponse?> CreateBook(CreateBookRequest createBookRequest)
     {
-        var bookEntity = createBookRequest.FromCreateBookRequest();
+        BookEntity book = createBookRequest.FromCreateBookRequest();
 
-        var bookAdded = await _bookRepository.AddBook(bookEntity);
+        var addedBook = await _bookRepository.AddBook(book);
 
-        return bookAdded?.ToCreateBookResponse();
+        return addedBook?.ToCreateBookResponse();
     }
 }

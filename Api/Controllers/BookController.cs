@@ -62,7 +62,7 @@ public class BooksController : Controller
     {
         var books = await _bookService.GetBooks(BookFilterBy.Id, id);
 
-        return books!.Any() ? Ok(books) : NoContent();
+        return books.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ public class BooksController : Controller
     {
         var books = await _bookService.GetBooks(BookFilterBy.Author, author);
 
-        return books!.Any() ? Ok(books) : NoContent();
+        return books.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ public class BooksController : Controller
     {
         var books = await _bookService.GetBooks(BookFilterBy.Description, description);
 
-        return books!.Any() ? Ok(books) : NoContent();
+        return books.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public class BooksController : Controller
     {
         var books = await _bookService.GetBooks(BookFilterBy.Title, title);
 
-        return books!.Any() ? Ok(books) : NoContent();
+        return books.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -122,7 +122,7 @@ public class BooksController : Controller
     {
         var books = await _bookService.GetBooks(BookFilterBy.Genre, genre);
 
-        return books!.Any() ? Ok(books) : NoContent();
+        return books.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -148,7 +148,7 @@ public class BooksController : Controller
 
         var books = await _bookService.GetBooks(BookFilterBy.Price, price);
 
-        return books!.Any() ? Ok(books) : NoContent();
+        return books.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
@@ -173,7 +173,7 @@ public class BooksController : Controller
 
         var books = await _bookService.GetBooks(BookFilterBy.PublishDate, parsedDate.ToString());
 
-        return books!.Any() ? Ok(books) : NoContent();
+        return books.Any() ? Ok(books) : NoContent();
     }
 
     /// <summary>
