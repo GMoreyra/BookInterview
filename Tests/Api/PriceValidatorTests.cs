@@ -1,5 +1,5 @@
 ﻿
-using global::Api.Validators;
+using Api.Validators;
 using Xunit;
 
 namespace Tests.Api;
