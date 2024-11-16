@@ -1,11 +1,11 @@
-﻿namespace Api.Configurations;
-
+﻿
 using Api.Options;
 using CrossCutting.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+namespace Api.Configurations;
 /// <summary>
 /// Provides methods for API initialization.
 /// </summary>

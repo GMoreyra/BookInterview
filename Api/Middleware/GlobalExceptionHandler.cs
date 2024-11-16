@@ -1,9 +1,9 @@
-﻿namespace Api.Middleware;
-
+﻿
 using CrossCutting.Messages;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
+namespace Api.Middleware;
 internal sealed class GlobalExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<GlobalExceptionHandler> _logger;

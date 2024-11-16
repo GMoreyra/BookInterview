@@ -1,10 +1,10 @@
-﻿namespace Application.Interfaces;
-
+﻿
 using Api.Contracts.CreateBook;
 using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
 using Application.Enums;
 
+namespace Application.Interfaces;
 /// <summary>
 /// Defines the contract for a service that manages books in the application.
 /// </summary>

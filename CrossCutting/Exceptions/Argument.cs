@@ -1,8 +1,8 @@
-﻿namespace CrossCutting.Exceptions;
-
+﻿
 using System.Globalization;
 using System.Linq.Expressions;
 
+namespace CrossCutting.Exceptions;
 /// <summary>
 /// Provides helper methods for argument validation.
 /// </summary>

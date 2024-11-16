@@ -1,7 +1,7 @@
-﻿namespace Api.Validators;
-
+﻿
 using System.Globalization;
 
+namespace Api.Validators;
 /// <summary>
 /// Provides validation for publish date values.
 /// </summary>

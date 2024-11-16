@@ -1,5 +1,4 @@
-﻿namespace Application.Services;
-
+﻿
 using Api.Contracts.CreateBook;
 using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
@@ -10,6 +9,7 @@ using CrossCutting.Exceptions;
 using Data.Entities;
 using Data.Interfaces;
 
+namespace Application.Services;
 public class BookService : IBookService
 {
     private readonly IBookRepository _bookRepository;

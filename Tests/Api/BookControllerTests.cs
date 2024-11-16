@@ -1,5 +1,4 @@
-﻿namespace Tests.Api;
-
+﻿
 using global::Api.Contracts.CreateBook;
 using global::Api.Contracts.UpdateBook;
 using global::Api.Controllers;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
+namespace Tests.Api;
 public class BooksControllerTests
 {
     private readonly Mock<IBookService> _bookServiceMock;

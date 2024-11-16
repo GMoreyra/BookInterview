@@ -1,5 +1,4 @@
-﻿namespace Data.Initialization;
-
+﻿
 using Data.Contexts;
 using Data.Interfaces;
 using Data.Repositories;
@@ -9,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using System.Data.Common;
 
+namespace Data.Initialization;
 /// <summary>
 /// Provides extension methods for configuring data repositories.
 /// This class is responsible for registering the necessary repositories to the provided service collection.

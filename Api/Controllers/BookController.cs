@@ -1,4 +1,3 @@
-namespace Api.Controllers;
 
 using Api.Contracts.CreateBook;
 using Api.Contracts.GetBooks;
@@ -14,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using ResponseType = System.Net.Mime.MediaTypeNames.Application;
 
+namespace Api.Controllers;
 /// <summary>
 /// Controller for managing books in the system.
 /// </summary>

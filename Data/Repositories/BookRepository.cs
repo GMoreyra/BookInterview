@@ -1,5 +1,4 @@
-﻿namespace Data.Repositories;
-
+﻿
 using CrossCutting.Exceptions;
 using CrossCutting.Messages;
 using Dapper;
@@ -14,6 +13,7 @@ using Npgsql;
 using System.Data.Common;
 using System.Globalization;
 
+namespace Data.Repositories;
 public class BookRepository : IBookRepository
 {
     private readonly BookContext _bookContext;

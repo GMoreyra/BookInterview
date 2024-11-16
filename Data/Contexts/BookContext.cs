@@ -1,10 +1,10 @@
-﻿namespace Data.Contexts;
-
+﻿
 using Data.DummyGenerator;
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
+namespace Data.Contexts;
 /// <summary>
 /// The context for accessing the database.
 /// </summary>

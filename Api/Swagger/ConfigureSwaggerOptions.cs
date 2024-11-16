@@ -1,10 +1,10 @@
-﻿namespace Api.Swagger;
-
+﻿
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
+namespace Api.Swagger;
 /// <summary>
 /// Configures the options for SwaggerGen.
 /// </summary>

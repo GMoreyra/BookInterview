@@ -1,8 +1,8 @@
-﻿namespace Api.Extensions;
-
+﻿
 using Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 
+namespace Api.Extensions;
 /// <summary>
 /// Contains extension methods for applying migrations.
 /// </summary>

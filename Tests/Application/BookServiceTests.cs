@@ -1,5 +1,4 @@
-﻿namespace Tests.Application;
-
+﻿
 using Data.Entities;
 using Data.Interfaces;
 using global::Api.Contracts.CreateBook;
@@ -9,6 +8,7 @@ using Moq;
 using System.Globalization;
 using Xunit;
 
+namespace Tests.Application;
 public class BookServiceTests
 {
     private readonly Mock<IBookRepository> _bookRepositoryMock;

@@ -1,7 +1,7 @@
-﻿namespace Data.Interfaces;
-
+﻿
 using Data.Entities;
 
+namespace Data.Interfaces;
 /// <summary>
 /// Represents a repository for managing books.
 /// </summary>

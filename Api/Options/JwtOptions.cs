@@ -1,7 +1,7 @@
-﻿namespace Api.Options;
-
+﻿
 using System.ComponentModel.DataAnnotations;
 
+namespace Api.Options;
 /// <summary>
 /// Represents the settings required for JWT authentication.
 /// </summary>

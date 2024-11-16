@@ -1,11 +1,11 @@
-﻿namespace Api.Identity;
-
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
+namespace Api.Identity;
 /// <summary>
 /// Controller responsible for identity related operations such as token generation.
 /// </summary>
