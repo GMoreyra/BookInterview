@@ -19,6 +19,13 @@ public static class MigrationExtensions
 
         using BookContext dbContext = scope.ServiceProvider.GetRequiredService<BookContext>();
 
+        dbContext.Database.EnsureCreated();
+
+        if (dbContext.Books.Any())
+        {
+            return;
+        }
+
         dbContext.Database.Migrate();
     }
 }

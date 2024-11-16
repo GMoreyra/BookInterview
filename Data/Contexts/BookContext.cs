@@ -16,9 +16,9 @@ public class BookContext : DbContext
     {
         _configuration = configuration;
     }
-    
+
     public virtual DbSet<BookEntity> Books { get; set; }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
         optionsBuilder.UseNpgsql(_configuration.GetConnectionString("PostgresDB"));
 
