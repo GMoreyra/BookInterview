@@ -9,7 +9,7 @@ namespace Api.Identity;
 /// <summary>
 /// Controller responsible for identity related operations such as token generation.
 /// </summary>
-public class IdentityController : ControllerBase
+internal class IdentityController : ControllerBase
 {
     private const string TokenKey = "thisKeyShouldBeInAzureKeyVaultOrSomewhereSafe";
     private static readonly TimeSpan TokenExpiration = TimeSpan.FromMinutes(30);

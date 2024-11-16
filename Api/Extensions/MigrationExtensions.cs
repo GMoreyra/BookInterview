@@ -6,7 +6,7 @@ namespace Api.Extensions;
 /// <summary>
 /// Contains extension methods for applying migrations.
 /// </summary>
-public static class MigrationExtensions
+internal static class MigrationExtensions
 {
     /// <summary>
     /// Applies any pending migrations for the context to the database.

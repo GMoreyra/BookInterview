@@ -4,18 +4,11 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Middleware;
-internal sealed class GlobalExceptionHandler : IExceptionHandler
+internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
-    private readonly ILogger<GlobalExceptionHandler> _logger;
-
-    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
-    {
-        _logger = logger;
-    }
-
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        _logger.LogError(exception, LogMessages.ErrorUnhandledExceptionLogMessage, exception.Message);
+        logger.LogError(exception, LogMessages.ErrorUnhandledExceptionLogMessage, exception.Message);
 
         var problemDetails = new ProblemDetails
         {
