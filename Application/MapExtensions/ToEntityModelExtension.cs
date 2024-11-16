@@ -1,10 +1,10 @@
-﻿namespace Application.MapExtensions;
-
+﻿
 using Api.Contracts.CreateBook;
 using Api.Contracts.UpdateBook;
 using Data.Entities;
 using System.Globalization;
 
+namespace Application.MapExtensions;
 /// <summary>
 /// Provides extension methods for converting DTOs to Entity models.
 /// </summary>

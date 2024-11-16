@@ -19,7 +19,7 @@ public static class RequestValidator
     {
         StringBuilder message = new();
 
-        if (!DateTime.TryParse(request.PublishDate, CultureInfo.InvariantCulture, out DateTime publishDate))
+        if (!DateTime.TryParse(request.PublishDate, CultureInfo.InvariantCulture, out _))
         {
             message.AppendLine(ErrorMessages.PublishDateErrorMessage);
         }

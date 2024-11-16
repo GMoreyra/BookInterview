@@ -1,23 +1,23 @@
-﻿namespace Tests.Application;
-
+﻿
+using Api.Contracts.CreateBook;
+using Application.Enums;
+using Application.Services;
 using Data.Entities;
 using Data.Interfaces;
-using global::Api.Contracts.CreateBook;
-using global::Application.Enums;
-using global::Application.Services;
-using Moq;
+using NSubstitute;
 using System.Globalization;
 using Xunit;
 
+namespace Tests.Application;
 public class BookServiceTests
 {
-    private readonly Mock<IBookRepository> _bookRepositoryMock;
+    private readonly IBookRepository _bookRepositoryMock;
     private readonly BookService _bookService;
 
     public BookServiceTests()
     {
-        _bookRepositoryMock = new Mock<IBookRepository>();
-        _bookService = new BookService(_bookRepositoryMock.Object);
+        _bookRepositoryMock = Substitute.For<IBookRepository>();
+        _bookService = new BookService(_bookRepositoryMock);
     }
 
     [Theory]
@@ -42,13 +42,13 @@ public class BookServiceTests
             (attribute == BookFilterBy.PublishDate && book.PublishDate.ToString() == value)
         );
 
-        _bookRepositoryMock.Setup(repo => repo.GetBooksById(value)).ReturnsAsync(expectedBookList.Where(x => x.Id == value));
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByAuthor(value)).ReturnsAsync(expectedBookList.Where(x => x.Author == value));
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByTitle(value)).ReturnsAsync(expectedBookList.Where(x => x.Title == value));
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByGenre(value)).ReturnsAsync(expectedBookList.Where(x => x.Genre == value));
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByDescription(value)).ReturnsAsync(expectedBookList.Where(x => x.Description == value));
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByPrice(value)).ReturnsAsync(expectedBookList.Where(x => x.Price.ToString() == value));
-        _bookRepositoryMock.Setup(repo => repo.GetBooksByPublishDate(value)).ReturnsAsync(expectedBookList.Where(x => x.PublishDate.ToString() == value));
+        _bookRepositoryMock.GetBooksById(value).Returns(expectedBookList.Where(x => x.Id == value));
+        _bookRepositoryMock.GetBooksByAuthor(value).Returns(expectedBookList.Where(x => x.Author == value));
+        _bookRepositoryMock.GetBooksByTitle(value).Returns(expectedBookList.Where(x => x.Title == value));
+        _bookRepositoryMock.GetBooksByGenre(value).Returns(expectedBookList.Where(x => x.Genre == value));
+        _bookRepositoryMock.GetBooksByDescription(value).Returns(expectedBookList.Where(x => x.Description == value));
+        _bookRepositoryMock.GetBooksByPrice(value).Returns(expectedBookList.Where(x => x.Price.ToString() == value));
+        _bookRepositoryMock.GetBooksByPublishDate(value).Returns(expectedBookList.Where(x => x.PublishDate.ToString() == value));
 
         // Act
         var result = await _bookService.GetBooks(attribute, value);
@@ -64,7 +64,7 @@ public class BookServiceTests
         var expectedBooks = MockData.EntityBookMocks();
         var getBookResponse = MockData.GetBooksResponseMocks();
 
-        _bookRepositoryMock.Setup(repo => repo.GetBooks()).ReturnsAsync(expectedBooks);
+        _bookRepositoryMock.GetBooks().Returns(expectedBooks);
 
         // Act
         var result = await _bookService.GetBooks((BookFilterBy)int.MaxValue, null);
@@ -81,7 +81,7 @@ public class BookServiceTests
         var updateBookRequest = MockData.UpdateBookRequestMocks()[0];
         var updateBookResponse = MockData.UpdateBookResponseMocks()[0];
 
-        _bookRepositoryMock.Setup(repo => repo.UpdateBook(It.IsAny<BookEntity>())).ReturnsAsync(entityBook);
+        _bookRepositoryMock.UpdateBook(Arg.Any<BookEntity>()).Returns(entityBook);
 
         // Act
         var result = await _bookService.UpdateBook(string.Empty, updateBookRequest);
@@ -98,7 +98,7 @@ public class BookServiceTests
         var createBookRequest = new CreateBookRequest("Author 11", "Test description 11", "Title 11", "Genre 11", "110", "2021-11-01");
         var createBookResponse = new CreateBookResponse("B-11", "Author 11", "Test description 11", "Title 11", "Genre 11", 110, DateTime.Parse("2021-11-01", CultureInfo.InvariantCulture));
 
-        _bookRepositoryMock.Setup(repo => repo.AddBook(It.IsAny<BookEntity>())).ReturnsAsync(addedBook);
+        _bookRepositoryMock.AddBook(Arg.Any<BookEntity>()).Returns(addedBook);
 
         // Act
         var result = await _bookService.CreateBook(createBookRequest);

@@ -1,5 +1,4 @@
-﻿namespace Tests;
-
+﻿
 using Data.Entities;
 using global::Api.Contracts.CreateBook;
 using global::Api.Contracts.GetBooks;
@@ -7,6 +6,7 @@ using global::Api.Contracts.UpdateBook;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
+namespace Tests;
 public static class MockData
 {
     public static Collection<BookEntity> EntityBookMocks() =>

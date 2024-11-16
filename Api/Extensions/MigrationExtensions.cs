@@ -1,12 +1,12 @@
-﻿namespace Api.Extensions;
-
+﻿
 using Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 
+namespace Api.Extensions;
 /// <summary>
 /// Contains extension methods for applying migrations.
 /// </summary>
-public static class MigrationExtensions
+internal static class MigrationExtensions
 {
     /// <summary>
     /// Applies any pending migrations for the context to the database.
@@ -18,6 +18,13 @@ public static class MigrationExtensions
         using var scope = app.ApplicationServices.CreateScope();
 
         using BookContext dbContext = scope.ServiceProvider.GetRequiredService<BookContext>();
+
+        dbContext.Database.EnsureCreated();
+
+        if (dbContext.Books.Any())
+        {
+            return;
+        }
 
         dbContext.Database.Migrate();
     }

@@ -1,14 +1,16 @@
 using Api.Configurations;
 using Api.Extensions;
-using Api.Middleware;
 using Api.Options;
 using Api.Swagger;
 using Application.Initialization;
 using Data.Initialization;
 using Microsoft.Extensions.Options;
+using ServiceDefaults;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.AddOptions<JwtOptions>()
             .Bind(builder.Configuration.GetSection(JwtOptions.SectionName))
@@ -35,16 +37,15 @@ builder.Services.AddLogging(logging =>
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddProblemDetails();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 app.ApplyMigrations();
 
-app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -52,4 +53,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

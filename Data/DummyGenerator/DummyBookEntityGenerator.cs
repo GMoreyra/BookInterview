@@ -1,8 +1,8 @@
-﻿namespace Data.DummyGenerator;
-
+﻿
 using Data.Entities;
 using System.Globalization;
 
+namespace Data.DummyGenerator;
 /// <summary>
 /// A class to generate dummy book entities for testing purposes.
 /// </summary>

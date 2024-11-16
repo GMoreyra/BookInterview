@@ -1,24 +1,24 @@
-﻿namespace Tests.Api;
-
-using global::Api.Contracts.CreateBook;
-using global::Api.Contracts.UpdateBook;
-using global::Api.Controllers;
-using global::Application.Enums;
-using global::Application.Interfaces;
+﻿
+using Api.Contracts.CreateBook;
+using Api.Contracts.UpdateBook;
+using Api.Controllers;
+using Application.Enums;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
+using NSubstitute;
 using Xunit;
 
+namespace Tests.Api;
 public class BooksControllerTests
 {
-    private readonly Mock<IBookService> _bookServiceMock;
+    private readonly IBookService _bookServiceMock;
     private readonly BooksController _booksController;
 
     public BooksControllerTests()
     {
-        _bookServiceMock = new Mock<IBookService>();
+        _bookServiceMock = Substitute.For<IBookService>();
 
-        _booksController = new BooksController(_bookServiceMock.Object);
+        _booksController = new BooksController(_bookServiceMock);
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class BooksControllerTests
     {
         // Arrange
         var getBooksReponse = MockData.GetBooksResponseMocks();
-        _bookServiceMock.Setup(service => service.GetBooks(BookFilterBy.None, null)).ReturnsAsync(getBooksReponse);
+        _bookServiceMock.GetBooks(BookFilterBy.None, null).Returns(getBooksReponse);
 
         // Act
         var result = await _booksController.GetBooks();
@@ -53,7 +53,7 @@ public class BooksControllerTests
         // Arrange
         var updateBookRequest = MockData.UpdateBookRequestMocks()[0];
         var updateBookResponse = MockData.UpdateBookResponseMocks()[0];
-        _bookServiceMock.Setup(service => service.UpdateBook(It.IsAny<string>(), It.IsAny<UpdateBookRequest>())).ReturnsAsync(updateBookResponse);
+        _bookServiceMock.UpdateBook(Arg.Any<string>(), Arg.Any<UpdateBookRequest>()).Returns(updateBookResponse);
 
         // Act
         var result = await _booksController.UpdateBook(string.Empty, updateBookRequest);
@@ -70,7 +70,7 @@ public class BooksControllerTests
         // Arrange
         var createBookResponse = MockData.CreateBookResponseMocks()[0];
         var createBookRequest = MockData.CreateBookRequestMocks()[0];
-        _bookServiceMock.Setup(service => service.CreateBook(It.IsAny<CreateBookRequest>())).ReturnsAsync(createBookResponse);
+        _bookServiceMock.CreateBook(Arg.Any<CreateBookRequest>()).Returns(createBookResponse);
 
         // Act
         var result = await _booksController.CreateBook(createBookRequest);

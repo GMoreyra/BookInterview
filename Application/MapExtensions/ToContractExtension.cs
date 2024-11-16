@@ -1,10 +1,10 @@
-﻿namespace Application.MapExtensions;
-
+﻿
 using Api.Contracts.CreateBook;
 using Api.Contracts.GetBooks;
 using Api.Contracts.UpdateBook;
 using Data.Entities;
 
+namespace Application.MapExtensions;
 public static class ToContractExtension
 {
     public static CreateBookResponse ToCreateBookResponse(this BookEntity bookEntity)

@@ -1,9 +1,9 @@
-﻿namespace Tests.Api;
-
-using global::Api.Validators;
+﻿
+using Api.Validators;
 using System.Globalization;
 using Xunit;
 
+namespace Tests.Api;
 public class PublishDateValidatorTests
 {
     [Theory]
